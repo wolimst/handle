@@ -1,3 +1,73 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --background-color: #eaeaea;
+  --text-color: #333;
+  --text-color-secondary: #a8a8a8;
+  --anchor-text-color: #2563eb;
+  --anchor-button-color: var(--text-color);
+  --modal-background-color: #cecececc;
+  --primary-color: #3b82f6;
+  --secondary-color: #06b6d4;
+  --neutral-color: #6b7280;
+  --wordle-correct-color: #6aaa64;
+  --wordle-present-color: #c9b458;
+  --wordle-absent-color: #787c7e;
+}
+
+:root.dark-theme {
+  --background-color: #292c34;
+  --text-color: #cbd5e1;
+  --text-color-secondary: #555;
+  --anchor-text-color: #3b82f6;
+  --anchor-button-color: var(--text-color);
+  --modal-background-color: #222222cc;
+  --primary-color: #3b82f6;
+  --secondary-color: #0891b2;
+  --neutral-color: #94a3b8;
+  --wordle-correct-color: #538d4e;
+  --wordle-present-color: #b59f3b;
+  --wordle-absent-color: #3a3a3c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Noto, Cantarell, 'Helvetica Neue', Helvetica, Arial,
+    'Source Han Sans', 'Noto Sans KR', 'Apple SD Gothic Neo',
+    'Apple SD 산돌고딕 Neo', 'Nanum Gothic', '나눔고딕', 'Malgun Gothic',
+    '맑은고딕', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol';
+}
+
+a {
+  color: var(--anchor-text-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  color: var(--anchor-button-color);
+}
+
+.btn:not(:disabled):hover {
+  filter: brightness(0.8) contrast(1.2);
+}
