@@ -1,0 +1,9 @@
+{
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "semi": false,
+  "singleQuote": true,
+  "importOrderSeparation": true,
+  "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
+  "svelteSortOrder": "options-scripts-markup-styles"
+}
