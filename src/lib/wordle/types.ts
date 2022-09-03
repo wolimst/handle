@@ -4,12 +4,10 @@ export type Status = 'playing' | 'win' | 'lose'
 
 /**
  * Result of a guess against the answer.
- *
- * If the guess is not valid, `result` property will be undefined
  */
 export interface GuessResult {
   readonly guess: Hangul.Word
-  readonly result: readonly SyllableResult[] | undefined
+  readonly result: readonly SyllableResult[]
 }
 
 export interface SyllableResult {

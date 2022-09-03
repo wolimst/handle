@@ -1,5 +1,5 @@
 import type { GuessResult, Status, SyllableResult } from './types'
-import { getRandomAnswer, getWordList } from './words'
+import { getRandomAnswer } from './words'
 import type * as Hangul from '@/lib/hangul'
 
 export class _Wordle {
@@ -44,28 +44,14 @@ export class _Wordle {
    * Compare the guess against the answer, update the game status if necessary,
    * and return the comparison result.
    *
-   * `GuessResult.result` will be undefined, if the guess is not valid,
-   * e.g. the guess word length is not equal to the answer word length
-   * or the guess word is not in word list
-   *
-   * Game object's state won't be changed, if `Game.status` is not 'playing'
-   *
-   * @param guess
+   * @throws if the status is not 'playing'
+   * @throws if the word length of the guess is not equal to that of the answer
    */
   submitGuess(guess: Hangul.Word): GuessResult {
-    if (
-      this.#status !== 'playing' ||
-      guess.length !== this.#answer.length ||
-      // TODO: improve word list check performance if it affects UX.
-      //       The performance can be improved using hash set or bisect.
-      //       If bisect is chosen, add word list test that checks whether
-      //       the word list is sorted.
-      getWordList(guess.length).every((word) => word.value !== guess.value)
-    ) {
-      return {
-        guess,
-        result: undefined,
-      }
+    if (this.status !== 'playing') {
+      throw new Error('invalid wordle status')
+    } else if (guess.length !== this.#answer.length) {
+      throw new Error('wrong guess length')
     }
 
     const guessResult = doGuess(guess, this.#answer)
