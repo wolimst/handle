@@ -97,10 +97,10 @@ export async function getDrawableSyllable(
 }
 
 interface ClosedPath {
-  commands: opentype.PathCommand[]
-  center: {
-    x: number
-    y: number
+  readonly commands: opentype.PathCommand[]
+  readonly center: {
+    readonly x: number
+    readonly y: number
   }
 }
 
@@ -133,9 +133,9 @@ function getClosedPaths(glyphPath: opentype.Path): ClosedPath[] {
 }
 
 interface JamoPaths {
-  leadingConsonantPath: DProperty
-  vowelPaths: DProperty[]
-  trailingConsonantPaths: DProperty[]
+  readonly leadingConsonantPath: DProperty
+  readonly vowelPaths: readonly DProperty[]
+  readonly trailingConsonantPaths: readonly DProperty[]
 }
 
 // Comparison functions to sort ClosedPath[] by their center points

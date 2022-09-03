@@ -47,7 +47,7 @@ const leadingConsonants: readonly Consonant[] = [
   'ㅎ',
 ]
 
-const vowels: readonly Vowel[][] = [
+const vowels: readonly (readonly Vowel[])[] = [
   ['ㅏ'],
   ['ㅐ'],
   ['ㅑ'],
@@ -71,7 +71,7 @@ const vowels: readonly Vowel[][] = [
   ['ㅣ'],
 ]
 
-const trailingConsonants: readonly Consonant[][] = [
+const trailingConsonants: readonly (readonly Consonant[])[] = [
   [],
   ['ㄱ'],
   ['ㄲ'],
@@ -103,9 +103,9 @@ const trailingConsonants: readonly Consonant[][] = [
 ]
 
 interface DecomposedSyllable {
-  leadingConsonant: Consonant
-  vowels: Vowel[]
-  trailingConsonants: Consonant[]
+  readonly leadingConsonant: Consonant
+  readonly vowels: readonly Vowel[]
+  readonly trailingConsonants: readonly Consonant[]
 }
 
 /**
