@@ -2,7 +2,7 @@ import type { GuessResult, Status, SyllableResult } from './types'
 import { getRandomAnswer, getWordList } from './words'
 import type * as Hangul from '@/lib/hangul'
 
-export class Wordle {
+export class _Wordle {
   readonly #nGuesses: number
   readonly #answer: Hangul.Word
   #status: Status

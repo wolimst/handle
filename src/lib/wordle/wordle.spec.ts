@@ -7,7 +7,7 @@
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { JamoResult, Status } from './types'
-import { Wordle } from './wordle'
+import { _Wordle } from './wordle'
 import * as WordsModule from './words'
 import { toWord } from '@/lib/hangul'
 
@@ -26,10 +26,10 @@ const LOSS: Status = 'lose'
 
 describe('tests for wordle class', () => {
   const answerGetterMock = vi.spyOn(WordsModule, 'getRandomAnswer')
-  function initWordle(nGuesses: number, answer: string): Wordle {
+  function initWordle(nGuesses: number, answer: string): _Wordle {
     answerGetterMock.mockReturnValueOnce(toWord(answer))
     const dummyAnswerLength = 0
-    return new Wordle(nGuesses, dummyAnswerLength, 'dummySeed')
+    return new _Wordle(nGuesses, dummyAnswerLength, 'dummySeed')
   }
 
   describe('submitGuess(Hangul.Word) -> GuessResult', () => {
