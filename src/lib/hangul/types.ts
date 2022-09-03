@@ -3,12 +3,12 @@
  * @see {@link Syllable}
  */
 export interface Word {
-  value: string
+  readonly value: string
   /**
    * number of syllables in the word
    */
-  length: number
-  syllables: readonly Syllable[]
+  readonly length: number
+  readonly syllables: readonly Syllable[]
 }
 
 /**
@@ -33,10 +33,10 @@ export interface Word {
  * @see {@link Consonant} and {@link Vowel}
  */
 export interface Syllable {
-  value: string
-  leadingConsonant: Consonant
-  vowels: readonly Vowel[]
-  trailingConsonants: readonly Consonant[]
+  readonly value: string
+  readonly leadingConsonant: Consonant
+  readonly vowels: readonly Vowel[]
+  readonly trailingConsonants: readonly Consonant[]
 }
 
 /**

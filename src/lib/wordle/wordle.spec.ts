@@ -11,6 +11,11 @@ import { Wordle } from './wordle'
 import * as WordsModule from './words'
 import { toWord } from '@/lib/hangul'
 
+// Mock structuredClone() because it is not implemented in jsdom
+global.structuredClone = vi.fn(<T>(obj: T): T => {
+  return JSON.parse(JSON.stringify(obj))
+})
+
 const CORRECT: JamoResult = 'correct'
 const PRESENT: JamoResult = 'present'
 const ABSENT: JamoResult = 'absent'
@@ -561,7 +566,7 @@ describe('wordle game', () => {
         expect(res1.result![1].leadingConsonant).toStrictEqual(CORRECT)
         expect(res1.result![1].vowels).toStrictEqual([CORRECT])
         expect(res1.result![1].trailingConsonants).toStrictEqual([CORRECT])
-        expect(game.guesses).toStrictEqual([res1])
+        expect(game.guessResults).toStrictEqual([res1])
         expect(game.status).toStrictEqual(WIN)
       })
 
@@ -578,7 +583,7 @@ describe('wordle game', () => {
         expect(res1.result![1].leadingConsonant).toStrictEqual(ABSENT)
         expect(res1.result![1].vowels).toStrictEqual([ABSENT, CORRECT])
         expect(res1.result![1].trailingConsonants).toStrictEqual([ABSENT])
-        expect(game.guesses).toStrictEqual([res1])
+        expect(game.guessResults).toStrictEqual([res1])
         expect(game.status).toStrictEqual(PLAYING)
 
         const res2 = game.submitGuess(toWord('정답'))
@@ -591,7 +596,7 @@ describe('wordle game', () => {
         expect(res2.result![1].leadingConsonant).toStrictEqual(CORRECT)
         expect(res2.result![1].vowels).toStrictEqual([CORRECT])
         expect(res2.result![1].trailingConsonants).toStrictEqual([CORRECT])
-        expect(game.guesses).toStrictEqual([res1, res2])
+        expect(game.guessResults).toStrictEqual([res1, res2])
         expect(game.status).toStrictEqual(WIN)
       })
 
@@ -608,7 +613,7 @@ describe('wordle game', () => {
         expect(res1.result![1].leadingConsonant).toStrictEqual(ABSENT)
         expect(res1.result![1].vowels).toStrictEqual([ABSENT])
         expect(res1.result![1].trailingConsonants).toStrictEqual([ABSENT])
-        expect(game.guesses).toStrictEqual([res1])
+        expect(game.guessResults).toStrictEqual([res1])
         expect(game.status).toStrictEqual(PLAYING)
 
         const res2 = game.submitGuess(toWord('바람'))
@@ -621,7 +626,7 @@ describe('wordle game', () => {
         expect(res2.result![1].leadingConsonant).toStrictEqual(ABSENT)
         expect(res2.result![1].vowels).toStrictEqual([CORRECT])
         expect(res2.result![1].trailingConsonants).toStrictEqual([ABSENT])
-        expect(game.guesses).toStrictEqual([res1, res2])
+        expect(game.guessResults).toStrictEqual([res1, res2])
         expect(game.status).toStrictEqual(PLAYING)
 
         const res3 = game.submitGuess(toWord('바다'))
@@ -634,7 +639,7 @@ describe('wordle game', () => {
         expect(res3.result![1].leadingConsonant).toStrictEqual(CORRECT)
         expect(res3.result![1].vowels).toStrictEqual([CORRECT])
         expect(res3.result![1].trailingConsonants).toStrictEqual([])
-        expect(game.guesses).toStrictEqual([res1, res2, res3])
+        expect(game.guessResults).toStrictEqual([res1, res2, res3])
         expect(game.status).toStrictEqual(PLAYING)
 
         const res4 = game.submitGuess(toWord(answer))
@@ -647,7 +652,7 @@ describe('wordle game', () => {
         expect(res4.result![1].leadingConsonant).toStrictEqual(CORRECT)
         expect(res4.result![1].vowels).toStrictEqual([CORRECT])
         expect(res4.result![1].trailingConsonants).toStrictEqual([CORRECT])
-        expect(game.guesses).toStrictEqual([res1, res2, res3, res4])
+        expect(game.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(game.status).toStrictEqual(WIN)
       })
 
@@ -658,7 +663,7 @@ describe('wordle game', () => {
         const res2 = game.submitGuess(toWord('바람'))
         const res3 = game.submitGuess(toWord('바다'))
         const res4 = game.submitGuess(toWord('구름'))
-        expect(game.guesses).toStrictEqual([res1, res2, res3, res4])
+        expect(game.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(game.status).toStrictEqual(LOSS)
       })
 
@@ -666,15 +671,15 @@ describe('wordle game', () => {
         const game = initWordle(nGuesses, answer)
 
         const res1 = game.submitGuess(toWord(answer))
-        expect(game.guesses).toStrictEqual([res1])
+        expect(game.guessResults).toStrictEqual([res1])
         expect(game.status).toStrictEqual(WIN)
 
         game.submitGuess(toWord(answer))
-        expect(game.guesses).toStrictEqual([res1])
+        expect(game.guessResults).toStrictEqual([res1])
         expect(game.status).toStrictEqual(WIN)
 
         game.submitGuess(toWord('언덕'))
-        expect(game.guesses).toStrictEqual([res1])
+        expect(game.guessResults).toStrictEqual([res1])
         expect(game.status).toStrictEqual(WIN)
       })
 
@@ -685,16 +690,38 @@ describe('wordle game', () => {
         const res2 = game.submitGuess(toWord('바람'))
         const res3 = game.submitGuess(toWord('바다'))
         const res4 = game.submitGuess(toWord('구름'))
-        expect(game.guesses).toStrictEqual([res1, res2, res3, res4])
+        expect(game.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(game.status).toStrictEqual(LOSS)
 
         game.submitGuess(toWord('언덕'))
-        expect(game.guesses).toStrictEqual([res1, res2, res3, res4])
+        expect(game.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(game.status).toStrictEqual(LOSS)
 
         game.submitGuess(toWord(answer))
-        expect(game.guesses).toStrictEqual([res1, res2, res3, res4])
+        expect(game.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(game.status).toStrictEqual(LOSS)
+      })
+    })
+  })
+
+  describe('invariants', () => {
+    const nGuesses = 4
+    const answer = '정답'
+
+    describe('getters should return cloned data instead of references', () => {
+      test('guessResults', () => {
+        const wordle = initWordle(nGuesses, answer)
+
+        const res1 = wordle.submitGuess(toWord('하늘'))
+        const guessResults = wordle.guessResults
+        expect(guessResults).toStrictEqual([res1])
+        expect(guessResults).not.toBe(wordle.guessResults)
+        guessResults.forEach((result, i) => {
+          expect(result).not.toBe(wordle.guessResults[i])
+        })
+
+        wordle.submitGuess(toWord('바다'))
+        expect(guessResults).not.toStrictEqual(wordle.guessResults)
       })
     })
   })

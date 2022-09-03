@@ -8,9 +8,8 @@ export type Status = 'playing' | 'win' | 'lose'
  * If the guess is not valid, `result` property will be undefined
  */
 export interface GuessResult {
-  // TODO: make type immutable
-  guess: Hangul.Word
-  result: SyllableResult[] | undefined
+  readonly guess: Hangul.Word
+  readonly result: readonly SyllableResult[] | undefined
 }
 
 export interface SyllableResult {
@@ -22,10 +21,10 @@ export interface SyllableResult {
    * necessarily true, i.e., there are cases where all JamoResults are `correct`
    * while `exact` is false.
    */
-  exact: boolean
-  leadingConsonant: JamoResult
-  vowels: JamoResult[]
-  trailingConsonants: JamoResult[]
+  readonly exact: boolean
+  readonly leadingConsonant: JamoResult
+  readonly vowels: readonly JamoResult[]
+  readonly trailingConsonants: readonly JamoResult[]
 }
 
 export type JamoResult = 'correct' | 'present' | 'absent'

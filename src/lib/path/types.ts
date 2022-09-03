@@ -34,14 +34,14 @@ export interface Font {
 }
 
 export interface DrawableSyllable extends Hangul.Syllable {
-  leadingConsonantPath: DProperty
-  vowelPaths: readonly DProperty[]
-  trailingConsonantPaths: readonly DProperty[]
-  boundingBox: {
-    x1: number
-    y1: number
-    x2: number
-    y2: number
+  readonly leadingConsonantPath: DProperty
+  readonly vowelPaths: readonly DProperty[]
+  readonly trailingConsonantPaths: readonly DProperty[]
+  readonly boundingBox: {
+    readonly x1: number
+    readonly y1: number
+    readonly x2: number
+    readonly y2: number
   }
 }
 
@@ -57,10 +57,10 @@ export interface SyllableColor {
    * `undefined` is for transparent background, since RGBA colors might not be
    * supported in some old browsers
    */
-  background: string | undefined
-  leadingConsonant: string
-  vowels: readonly string[]
-  trailingConsonant: readonly string[]
+  readonly background: string | undefined
+  readonly leadingConsonant: string
+  readonly vowels: readonly string[]
+  readonly trailingConsonant: readonly string[]
 }
 
 /**

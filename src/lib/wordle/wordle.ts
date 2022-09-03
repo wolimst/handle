@@ -6,7 +6,7 @@ export class Wordle {
   readonly #nGuesses: number
   readonly #answer: Hangul.Word
   #status: Status
-  #guesses: GuessResult[]
+  readonly #guessResults: GuessResult[]
 
   /**
    * Initialize a Hangul wordle game
@@ -21,7 +21,7 @@ export class Wordle {
     this.#nGuesses = nGuesses
     this.#answer = getRandomAnswer(answerLength, answerSeed)
     this.#status = 'playing'
-    this.#guesses = []
+    this.#guessResults = []
   }
 
   get nGuesses(): number {
@@ -36,8 +36,8 @@ export class Wordle {
     return this.#status
   }
 
-  get guesses(): GuessResult[] {
-    return [...this.#guesses]
+  get guessResults(): readonly GuessResult[] {
+    return structuredClone(this.#guessResults)
   }
 
   /**
@@ -69,11 +69,11 @@ export class Wordle {
     }
 
     const guessResult = doGuess(guess, this.#answer)
-    this.#guesses.push(guessResult)
+    this.#guessResults.push(guessResult)
 
     if (guess.value === this.#answer.value) {
       this.#status = 'win'
-    } else if (this.#guesses.length >= this.#nGuesses) {
+    } else if (this.#guessResults.length >= this.#nGuesses) {
       this.#status = 'lose'
     }
 
@@ -83,7 +83,7 @@ export class Wordle {
 
 function doGuess(guess: Hangul.Word, answer: Hangul.Word): GuessResult {
   // Initialize all results as 'absent'
-  const guessResult: SyllableResult[] = guess.syllables.map((syllable) => {
+  const guessResult = guess.syllables.map((syllable) => {
     return {
       exact: false,
       leadingConsonant: 'absent',
@@ -178,6 +178,6 @@ function doGuess(guess: Hangul.Word, answer: Hangul.Word): GuessResult {
 
   return {
     guess,
-    result: guessResult,
+    result: guessResult as readonly SyllableResult[],
   }
 }
