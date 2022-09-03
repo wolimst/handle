@@ -1,13 +1,13 @@
 import { Keyboard } from './keyboard'
 import type { Status } from './types'
-import { Wordle } from './wordle'
+import { _Wordle } from './wordle'
 
 export class Game {
   readonly #nWordles: number
   readonly #nGuesses: number
   readonly #answerLength: number
 
-  readonly #wordles: readonly Wordle[]
+  readonly #wordles: readonly _Wordle[]
   readonly #keyboard: Keyboard
 
   constructor(nWordles: number, nGuesses: number, answerLength: number) {
@@ -22,7 +22,7 @@ export class Game {
       .fill(0)
       .map((_, i) => {
         const seed = `${date}-${i}`
-        return new Wordle(nGuesses, answerLength, seed)
+        return new _Wordle(nGuesses, answerLength, seed)
       })
     this.#keyboard = new Keyboard(answerLength)
   }
