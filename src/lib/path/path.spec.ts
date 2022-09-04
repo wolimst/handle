@@ -1,8 +1,6 @@
 import { getDrawableSyllable, FONT } from '.'
 import * as Hangul from '@/lib/hangul'
 
-const itIf = (condition: boolean) => (condition ? it : it.skip)
-
 describe('getDrawableSyllable()', () => {
   describe('should create valid Jamo paths except for known undrawable syllables', () => {
     const hangulCodePoints = Array(Hangul.LAST_SYLLABLE - Hangul.FIRST_SYLLABLE)
@@ -18,7 +16,7 @@ describe('getDrawableSyllable()', () => {
       // This will fail if the glyph consist of connected Jamo paths, assuming
       // number of paths for each Jamo (FONT.jamoClosedPathCount) are correct
       // and consistent for all glyphs
-      itIf(doTest)(`${syllable.value}`, async () => {
+      it.runIf(doTest)(`${syllable.value}`, async () => {
         const drawableSyllable = await getDrawableSyllable(syllable)
 
         // Each Jamo path should not be empty
