@@ -1,4 +1,4 @@
-import type { GuessResult, Status, SyllableResult } from './types'
+import type { GuessResult, Status, SyllableResult, WordleData } from './types'
 import { getRandomAnswer } from './words'
 import type * as Hangul from '@/lib/hangul'
 
@@ -38,6 +38,13 @@ export class _Wordle {
 
   get guessResults(): readonly GuessResult[] {
     return structuredClone(this.#guessResults)
+  }
+
+  get data(): WordleData {
+    return {
+      guessResults: this.guessResults,
+      status: this.status,
+    }
   }
 
   /**

@@ -26,3 +26,23 @@ export interface SyllableResult {
 }
 
 export type JamoResult = 'correct' | 'present' | 'absent'
+
+export type GuessError =
+  | 'invalidStatus'
+  | 'wrongLength'
+  | 'invalidSyllable'
+  | 'unknownWord'
+
+export interface WordleData {
+  readonly guessResults: readonly GuessResult[]
+  readonly status: Status
+}
+
+export interface GameData {
+  readonly nWordles: number
+  readonly nGuesses: number
+  readonly answerLength: number
+  readonly guesses: readonly Hangul.Word[]
+  readonly status: Status
+  readonly wordleData: readonly WordleData[]
+}

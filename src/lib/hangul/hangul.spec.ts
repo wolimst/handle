@@ -1,5 +1,78 @@
-import { getCodePointLength, toWord } from '.'
+import {
+  FIRST_SYLLABLE,
+  LAST_SYLLABLE,
+  isHangul,
+  getCodePointLength,
+  toWord,
+} from '.'
 import type { Word } from './types'
+
+describe('isHangul(str: string) => boolean', () => {
+  it('should return true for empty string', () => {
+    expect(isHangul('')).toBeTruthy()
+  })
+
+  it('should return true for Hangul string', () => {
+    expect(isHangul('ㄱ')).toBeTruthy()
+    expect(isHangul('ㄳ')).toBeTruthy()
+    expect(isHangul('ㅎ')).toBeTruthy()
+    expect(isHangul('ㅏ')).toBeTruthy()
+    expect(isHangul('ㅘ')).toBeTruthy()
+    expect(isHangul('ㅣ')).toBeTruthy()
+
+    expect(isHangul(String.fromCodePoint(FIRST_SYLLABLE))).toBeTruthy()
+    expect(isHangul('꽋')).toBeTruthy()
+    expect(isHangul(String.fromCodePoint(LAST_SYLLABLE))).toBeTruthy()
+
+    expect(isHangul('ㄱㅏ')).toBeTruthy()
+    expect(isHangul('ㄱㄱ')).toBeTruthy()
+    expect(isHangul('ㄱㅏㅇ')).toBeTruthy()
+
+    expect(isHangul('가ㄱ')).toBeTruthy()
+    expect(isHangul('ㄱ가')).toBeTruthy()
+
+    expect(isHangul('구름')).toBeTruthy()
+    expect(isHangul('긴수염고래')).toBeTruthy()
+  })
+
+  it('should return false for string that contains non-Hangul string', () => {
+    expect(isHangul('*')).toBeFalsy()
+    expect(isHangul('Aa')).toBeFalsy()
+    expect(isHangul('あ漢')).toBeFalsy()
+    expect(isHangul('😊')).toBeFalsy()
+    expect(isHangul('한글Aaあ漢😊')).toBeFalsy()
+  })
+
+  it('should return false for Hangul characters that cannot be input in Dubeolsik keyboard layout', () => {
+    // Some of Hangul Jamo *clusters*
+    // They are different characters from Jamo of Duboelsik keyboard input
+    expect(isHangul('ᄀ')).toBeFalsy()
+    expect(isHangul('ᄒ')).toBeFalsy()
+    expect(isHangul('ᅡ')).toBeFalsy()
+    expect(isHangul('ᅵ')).toBeFalsy()
+    expect(isHangul('ᆨ')).toBeFalsy()
+    expect(isHangul('ᇂ')).toBeFalsy()
+    expect(isHangul('ᄫ')).toBeFalsy()
+    expect(isHangul('ᆋ')).toBeFalsy()
+
+    // Some of Hangul Jamo Extended-A unicode characters
+    expect(isHangul('ꥠ')).toBeFalsy()
+    expect(isHangul('ꥪ')).toBeFalsy()
+    expect(isHangul('ꥼ')).toBeFalsy()
+
+    // Some of Hangul Jamo Extended-B unicode characters
+    expect(isHangul('ힰ')).toBeFalsy()
+    expect(isHangul('ퟆ')).toBeFalsy()
+    expect(isHangul('ퟻ')).toBeFalsy()
+
+    // Some of Obsolete Hangul characters
+    expect(isHangul('ㅥ')).toBeFalsy()
+    expect(isHangul('ㆅ')).toBeFalsy()
+    expect(isHangul('ㆋ')).toBeFalsy()
+    expect(isHangul('ㆍ')).toBeFalsy()
+    expect(isHangul('ㆎ')).toBeFalsy()
+  })
+})
 
 describe('getCodePointLength(str: string) => number', () => {
   it('should return 0 for empty string', () => {
