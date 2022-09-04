@@ -552,6 +552,10 @@ describe('tests for wordle class', () => {
         expect(res1.result[1].trailingConsonants).toStrictEqual([CORRECT])
         expect(wordle.guessResults).toStrictEqual([res1])
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1],
+          status: WIN,
+        })
       })
 
       test('win at second guess', () => {
@@ -569,6 +573,10 @@ describe('tests for wordle class', () => {
         expect(res1.result[1].trailingConsonants).toStrictEqual([ABSENT])
         expect(wordle.guessResults).toStrictEqual([res1])
         expect(wordle.status).toStrictEqual(PLAYING)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1],
+          status: PLAYING,
+        })
 
         const res2 = wordle.submitGuess(toWord('정답'))
         expect(res2.result).toHaveLength(2)
@@ -582,6 +590,10 @@ describe('tests for wordle class', () => {
         expect(res2.result[1].trailingConsonants).toStrictEqual([CORRECT])
         expect(wordle.guessResults).toStrictEqual([res1, res2])
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1, res2],
+          status: WIN,
+        })
       })
 
       test('win at last guess', () => {
@@ -599,6 +611,10 @@ describe('tests for wordle class', () => {
         expect(res1.result[1].trailingConsonants).toStrictEqual([ABSENT])
         expect(wordle.guessResults).toStrictEqual([res1])
         expect(wordle.status).toStrictEqual(PLAYING)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1],
+          status: PLAYING,
+        })
 
         const res2 = wordle.submitGuess(toWord('바람'))
         expect(res2.result).toHaveLength(2)
@@ -612,6 +628,10 @@ describe('tests for wordle class', () => {
         expect(res2.result[1].trailingConsonants).toStrictEqual([ABSENT])
         expect(wordle.guessResults).toStrictEqual([res1, res2])
         expect(wordle.status).toStrictEqual(PLAYING)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1, res2],
+          status: PLAYING,
+        })
 
         const res3 = wordle.submitGuess(toWord('바다'))
         expect(res3.result).toHaveLength(2)
@@ -625,6 +645,10 @@ describe('tests for wordle class', () => {
         expect(res3.result[1].trailingConsonants).toStrictEqual([])
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3])
         expect(wordle.status).toStrictEqual(PLAYING)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1, res2, res3],
+          status: PLAYING,
+        })
 
         const res4 = wordle.submitGuess(toWord(answer))
         expect(res4.result).toHaveLength(2)
@@ -638,6 +662,10 @@ describe('tests for wordle class', () => {
         expect(res4.result[1].trailingConsonants).toStrictEqual([CORRECT])
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1, res2, res3, res4],
+          status: WIN,
+        })
       })
 
       test('loss after last guess', () => {
@@ -649,6 +677,10 @@ describe('tests for wordle class', () => {
         const res4 = wordle.submitGuess(toWord('구름'))
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(wordle.status).toStrictEqual(LOSS)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1, res2, res3, res4],
+          status: LOSS,
+        })
       })
 
       test('submitting guess after a win should throw and cause no status change', () => {
@@ -657,14 +689,26 @@ describe('tests for wordle class', () => {
         const res1 = wordle.submitGuess(toWord(answer))
         expect(wordle.guessResults).toStrictEqual([res1])
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1],
+          status: WIN,
+        })
 
         expect(() => wordle.submitGuess(toWord(answer))).toThrowError()
         expect(wordle.guessResults).toStrictEqual([res1])
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1],
+          status: WIN,
+        })
 
         expect(() => wordle.submitGuess(toWord('언덕'))).toThrowError()
         expect(wordle.guessResults).toStrictEqual([res1])
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1],
+          status: WIN,
+        })
       })
 
       test('submitting guess after a loss should throw and cause no status change', () => {
@@ -676,14 +720,26 @@ describe('tests for wordle class', () => {
         const res4 = wordle.submitGuess(toWord('구름'))
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(wordle.status).toStrictEqual(LOSS)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1, res2, res3, res4],
+          status: LOSS,
+        })
 
         expect(() => wordle.submitGuess(toWord('언덕'))).toThrowError()
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(wordle.status).toStrictEqual(LOSS)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1, res2, res3, res4],
+          status: LOSS,
+        })
 
         expect(() => wordle.submitGuess(toWord(answer))).toThrowError()
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
         expect(wordle.status).toStrictEqual(LOSS)
+        expect(wordle.data).toStrictEqual({
+          guessResults: [res1, res2, res3, res4],
+          status: LOSS,
+        })
       })
     })
   })
@@ -706,6 +762,22 @@ describe('tests for wordle class', () => {
 
         wordle.submitGuess(toWord('바다'))
         expect(guessResults).not.toStrictEqual(wordle.guessResults)
+      })
+
+      test('data', () => {
+        const wordle = initWordle(nGuesses, answer)
+
+        const res1 = wordle.submitGuess(toWord('하늘'))
+        const data = wordle.data
+        expect(data).toStrictEqual({
+          status: PLAYING,
+          guessResults: [res1],
+        })
+        expect(data).not.toBe(wordle.data)
+        expect(data.guessResults).not.toBe(wordle.guessResults)
+
+        wordle.submitGuess(toWord('바다'))
+        expect(data).not.toStrictEqual(wordle.data)
       })
     })
   })

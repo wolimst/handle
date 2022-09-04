@@ -1,4 +1,3 @@
-import { getWordList } from './words'
 import * as Hangul from '@/lib/hangul'
 
 export class Keyboard {
@@ -14,30 +13,27 @@ export class Keyboard {
     return this.#value
   }
 
+  /**
+   * Set the given string if it consists of modern Hangul characters and its
+   * length is equal or shorter than the length of the answer
+   */
   set value(str: string) {
-    if (Hangul.getCodePointLength(str) <= this.#answerLength) {
+    if (
+      Hangul.isHangul(str) &&
+      Hangul.getCodePointLength(str) <= this.#answerLength
+    ) {
       this.#value = str
     }
   }
 
+  /**
+   * Convert the keyboard input value to {@link Hangul.Word} object.
+   */
   get guess(): Hangul.Word {
     return Hangul.toWord(this.#value)
   }
 
   codePointLength(): number {
     return Hangul.getCodePointLength(this.#value)
-  }
-
-  isInvalidGuess(): boolean {
-    const guess = this.guess
-    return (
-      guess.length !== this.#answerLength ||
-      // TODO: improve word list check performance if it affects UX.
-      //       The performance can be improved using hash set or bisect.
-      //       If bisect is chosen, add word list test that checks whether
-      //       the word list is sorted.
-      // TODO: remove duplicated word list check in wordle impl
-      getWordList(guess.length).every((word) => word.value !== guess.value)
-    )
   }
 }

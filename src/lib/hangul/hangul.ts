@@ -13,16 +13,31 @@ function isHangulSyllables(str: string): boolean {
   })
 }
 
-// Hangul Jamo unicode block range: 0x1100..0x11ff
-// Contains old consonants and vowels, such as 'ㅸ'
-const FIRST_JAMO = 0x1100
-const LAST_JAMO = 0x11ff
+// Hangul Compatibility Jamo unicode block range: 0x3130..0x318f
+const FIRST_JAMO = 0x3131 // 0x3130 is unused
+const LAST_JAMO = 0x3163 // 0x3164..0x318f are not used in modern Korean
 
 function isHangulJamo(str: string): boolean {
   return Array.from(str).every((codePointChar) => {
     const codePoint = codePointChar.codePointAt(0)
     return codePoint && FIRST_JAMO <= codePoint && codePoint <= LAST_JAMO
   })
+}
+
+/**
+ * Check whether the given string consists of Hangul Jamo or syllable.
+ *
+ * Assume the string is typed using Dubeolsik keyboard layout,
+ * i.e. Hangul characters that are not used in modern Korean are not counted as
+ * Hangul by this function.
+ *
+ * @returns true if the string is empty or consists of modern Hangul characters, otherwise false
+ */
+export function isHangul(str: string): boolean {
+  return Array.from(str).every(
+    (codePointChar) =>
+      isHangulSyllables(codePointChar) || isHangulJamo(codePointChar)
+  )
 }
 
 const leadingConsonants: readonly Consonant[] = [
