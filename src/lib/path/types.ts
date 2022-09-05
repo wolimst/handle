@@ -33,21 +33,34 @@ export interface Font {
   readonly jamoClosedPathCount: JamoClosedPathCount
 }
 
+export type Drawable = DrawableString | DrawableSyllable
+
+export interface DrawableString {
+  readonly value: string
+  readonly path: DProperty
+  readonly boundingBox: BoundingBox
+}
+
 export interface DrawableSyllable extends Hangul.Syllable {
   readonly leadingConsonantPath: DProperty
   readonly vowelPaths: readonly DProperty[]
   readonly trailingConsonantPaths: readonly DProperty[]
-  readonly boundingBox: {
-    readonly x1: number
-    readonly y1: number
-    readonly x2: number
-    readonly y2: number
-  }
+  readonly boundingBox: BoundingBox
+}
+
+export interface BoundingBox {
+  readonly x1: number
+  readonly y1: number
+  readonly x2: number
+  readonly y2: number
 }
 
 /**
- * Jamo colors of a syllable. Each color should be represented as a valid hex
- * string.
+ * Jamo colors of a syllable.
+ *
+ * Each color should be represented as a string that can be accepted in CSS,
+ * e.g. `'#1E2952'`, `'RGB(30, 41, 82)'`, `'skyblue'`,
+ * `'var(--your-color-variable)'`, etc.
  *
  * Colors of vowels and trailing consonants should be sorted in the keyboard
  * typing order of the syllable, as same as in {@link Hangul.Syllable}

@@ -15,6 +15,8 @@
   --wordle-correct-color: #6aaa64;
   --wordle-present-color: #c9b458;
   --wordle-absent-color: #787c7e;
+  --wordle-exact-color: #333;
+  --wordle-exact-background-color: #6aaa64;
 }
 
 :root.dark-theme {
@@ -29,7 +31,9 @@
   --neutral-color: #94a3b8;
   --wordle-correct-color: #538d4e;
   --wordle-present-color: #b59f3b;
-  --wordle-absent-color: #3a3a3c;
+  --wordle-absent-color: #787c7e;
+  --wordle-exact-color: #cbd5e1;
+  --wordle-exact-background-color: #538d4e;
 }
 
 * {
