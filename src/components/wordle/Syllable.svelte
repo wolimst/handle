@@ -1,6 +1,7 @@
 <script lang="ts">
   import type * as Hangul from '@/lib/hangul'
   import * as Path from '@/lib/path'
+  import { onMount } from 'svelte'
 
   export let syllable: Hangul.Syllable | undefined = undefined
   // Default colors to distinguish Jamo
@@ -11,7 +12,7 @@
     trailingConsonant: ['#FEDA8B', '#F67E4B'],
   }
 
-  // TODO apply background color
+  let svgElement: SVGElement
 
   function assert() {
     const isValidHexString = [
@@ -58,6 +59,7 @@
           (path, i) => [path, colors.trailingConsonant[i]]
         ),
       ]
+      svgElement.style.backgroundColor = colors.background || ''
     }
 
     loaded = true
@@ -65,13 +67,15 @@
 
   function onChange(...args: any) {
     assert()
-    draw()
+    onMount(() => {
+      draw()
+    })
   }
 
   $: onChange(syllable, colors)
 </script>
 
-<svg {viewBox}>
+<svg {viewBox} bind:this={svgElement}>
   {#if loaded}
     {#each paths as path}
       <path d={path[0]} fill={path[1]} />
