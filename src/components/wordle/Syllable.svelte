@@ -9,7 +9,7 @@
    * This prop should have one of following three types:
    * - `Path.DrawableSyllable`: for a Hangul syllable
    * - `Path.DrawableString`: for a string consists of single codepoint character
-   * - `undefined`: for a empty string. Only surrounding box will be drawn.
+   * - `undefined`: for a empty string
    *
    * Default is `undefined`.
    */
