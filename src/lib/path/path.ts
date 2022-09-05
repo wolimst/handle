@@ -1,4 +1,4 @@
-import type { DProperty, DrawableSyllable, Font } from './types'
+import type { DProperty, DrawableString, DrawableSyllable, Font } from './types'
 import type * as Hangul from '@/lib/hangul'
 import * as opentype from 'opentype.js'
 
@@ -76,17 +76,27 @@ async function loadFont() {
   loading = false
 }
 
-export async function getDrawableSyllable(
-  syllable: Hangul.Syllable
-): Promise<DrawableSyllable> {
+async function getPath(str: string): Promise<opentype.Path> {
   await loadFont()
   if (!fontInstance) {
     throw new Error('failed to load font')
   }
+  return fontInstance.charToGlyph(str).getPath(0, FONT.fontSize, FONT.fontSize)
+}
 
-  const path = fontInstance
-    .charToGlyph(syllable.value)
-    .getPath(0, FONT.fontSize, FONT.fontSize)
+export async function getDrawableString(str: string): Promise<DrawableString> {
+  const path = await getPath(str)
+  return {
+    value: str,
+    path: getDPropertyFromPathCommands(path.commands),
+    boundingBox: path.getBoundingBox(),
+  }
+}
+
+export async function getDrawableSyllable(
+  syllable: Hangul.Syllable
+): Promise<DrawableSyllable> {
+  const path = await getPath(syllable.value)
   const closedPaths: ClosedPath[] = getClosedPaths(path)
   const drawableSyllable: DrawableSyllable = {
     ...syllable,
@@ -97,7 +107,7 @@ export async function getDrawableSyllable(
 }
 
 interface ClosedPath {
-  readonly commands: opentype.PathCommand[]
+  readonly commands: readonly opentype.PathCommand[]
   readonly center: {
     readonly x: number
     readonly y: number
@@ -205,28 +215,37 @@ function sortAndSplice<T>(
   return array.splice(-lastN, lastN)
 }
 
-function getDProperty(paths: ClosedPath[], fractionDigits = 2): DProperty {
+function getDProperty(
+  paths: readonly ClosedPath[],
+  fractionDigits = 2
+): DProperty {
+  const commands = paths.flatMap((path) => path.commands)
+  return getDPropertyFromPathCommands(commands, fractionDigits)
+}
+
+function getDPropertyFromPathCommands(
+  commands: readonly opentype.PathCommand[],
+  fractionDigits = 2
+): DProperty {
   let d = ''
-  paths
-    .flatMap((path) => path.commands)
-    .forEach((command) => {
-      d += command.type
-      let coords: number[] = []
-      if (command.type === 'M' || command.type === 'L') {
-        coords = [command.x, command.y]
-      } else if (command.type === 'C') {
-        coords = [
-          command.x1,
-          command.y1,
-          command.x2,
-          command.y2,
-          command.x,
-          command.y,
-        ]
-      } else if (command.type === 'Q') {
-        coords = [command.x1, command.y1, command.x, command.y]
-      }
-      d += coords.map((n) => n.toFixed(fractionDigits)).join(' ')
-    })
+  commands.forEach((command) => {
+    d += command.type
+    let coords: number[] = []
+    if (command.type === 'M' || command.type === 'L') {
+      coords = [command.x, command.y]
+    } else if (command.type === 'C') {
+      coords = [
+        command.x1,
+        command.y1,
+        command.x2,
+        command.y2,
+        command.x,
+        command.y,
+      ]
+    } else if (command.type === 'Q') {
+      coords = [command.x1, command.y1, command.x, command.y]
+    }
+    d += coords.map((n) => n.toFixed(fractionDigits)).join(' ')
+  })
   return d
 }

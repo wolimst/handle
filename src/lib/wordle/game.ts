@@ -31,7 +31,7 @@ export class Game {
     this.#nGuesses = nGuesses
     this.#answerLength = answerLength
 
-    const date = new Date().toLocaleDateString('UTC', {
+    const date = new Date().toLocaleDateString('ko', {
       timeZone: 'Asia/Seoul',
     })
     this.#wordles = Array(nWordles)

@@ -1,10 +1,22 @@
 <script lang="ts">
   import Syllable from '@/components/wordle/Syllable.svelte'
   import * as Hangul from '@/lib/hangul'
-  import type * as Path from '@/lib/path'
+  import * as Path from '@/lib/path'
   import { inView } from '@/lib/svelte-actions/inView'
 
-  const colors: Path.SyllableColor = {
+  let jamoList: Path.DrawableString[] = []
+  async function loadJamo() {
+    jamoList = await Promise.all(
+      Array(Hangul.LAST_JAMO - Hangul.FIRST_JAMO)
+        .fill(0)
+        .map((_, i) => Hangul.FIRST_JAMO + i)
+        .map((codePoint) => String.fromCodePoint(codePoint))
+        .map((jamo) => Path.getDrawableString(jamo))
+    )
+  }
+  loadJamo()
+
+  const syllableColors: Path.SyllableColor = {
     background: undefined,
     leadingConsonant: '#1956B0',
     vowels: ['#60AB9E', '#A6BE54'],
@@ -14,8 +26,8 @@
   let page = 0
   const loadSize = 1000
 
-  let syllables: Hangul.Syllable[] = []
-  function load() {
+  let syllableList: Path.DrawableSyllable[] = []
+  async function loadSyllables() {
     const start = Hangul.FIRST_SYLLABLE + page * loadSize
     if (Hangul.LAST_SYLLABLE < start) {
       return
@@ -25,21 +37,35 @@
       .fill(0)
       .map((_, i) => start + i)
     const str = String.fromCodePoint(...codePoints)
-    syllables.push(...Hangul.toWord(str).syllables)
-    syllables = syllables
+    const newSyllables = await Promise.all(
+      Hangul.toWord(str).syllables.map(Path.getDrawableSyllable)
+    )
+    syllableList = syllableList.concat(newSyllables)
 
     page += 1
   }
-
-  load()
+  loadSyllables()
 </script>
 
-<div class="tw-flex tw-flex-wrap tw-gap-1 tw-container">
-  {#each syllables as syllable}
-    <div class="tw-w-12 tw-h-12">
-      <Syllable {syllable} {colors} />
-    </div>
-  {/each}
+<div class="tw-container tw-flex tw-flex-col tw-gap-4">
+  <div class="tw-flex tw-flex-wrap tw-gap-1">
+    {#each jamoList as jamo}
+      <div
+        class="tw-w-16 tw-h-16 tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary"
+      >
+        <Syllable drawable={jamo} />
+      </div>
+    {/each}
+  </div>
+  <div class="tw-flex tw-flex-wrap tw-gap-1">
+    {#each syllableList as syllable}
+      <div
+        class="tw-w-16 tw-h-16 tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary"
+      >
+        <Syllable drawable={syllable} {syllableColors} />
+      </div>
+    {/each}
 
-  <div use:inView on:enter={() => load()} />
+    <div use:inView on:enter={() => loadSyllables()} />
+  </div>
 </div>
