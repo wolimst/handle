@@ -77,10 +77,10 @@
   $: syllableColors = getColors(guess)
 </script>
 
-<div class="tw-inline-flex tw-gap-1">
+<div class="tw-inline-flex tw-gap-1 tw-min-w-0 tw-min-h-0">
   {#each { length: answerLength } as _, i}
     <div
-      class="tw-w-16 tw-h-16 tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary tw-overflow-hidden"
+      class="tw-w-16 tw-aspect-square tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary tw-overflow-hidden"
     >
       {#await drawables then d}
         {#if i < d.length}
