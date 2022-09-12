@@ -1,5 +1,46 @@
-import { getDrawableSyllable, FONT } from '.'
+import { FONT, getUndrawableSyllablesInWord, getDrawableSyllable } from '.'
 import * as Hangul from '@/lib/hangul'
+
+describe('getUndrawableSyllablesInWord()', () => {
+  const drawableSyllable = '가'
+  const undrawableSyllables = FONT.undrawableSyllables
+
+  test('should return empty string for empty input', () => {
+    const word = ''
+    expect(getUndrawableSyllablesInWord(Hangul.toWord(word))).toStrictEqual('')
+  })
+
+  test('no undrawable syllable exists in input', () => {
+    const word1 = drawableSyllable
+    expect(getUndrawableSyllablesInWord(Hangul.toWord(word1))).toStrictEqual('')
+
+    const word2 = drawableSyllable + drawableSyllable
+    expect(getUndrawableSyllablesInWord(Hangul.toWord(word2))).toStrictEqual('')
+  })
+
+  test('one undrawable syllable exists in input ', () => {
+    const word = Array.from(undrawableSyllables)[0]
+    const result = getUndrawableSyllablesInWord(Hangul.toWord(word))
+    expect(result).toStrictEqual(word)
+  })
+
+  test('multiple undrawable syllable exist in input', () => {
+    const word = drawableSyllable + undrawableSyllables
+    const result = getUndrawableSyllablesInWord(Hangul.toWord(word))
+    expect(result).toContain(undrawableSyllables)
+    expect(result).toHaveLength(undrawableSyllables.length)
+  })
+
+  test('result should not contain duplicates', () => {
+    const word = undrawableSyllables + drawableSyllable + undrawableSyllables
+    const result = getUndrawableSyllablesInWord(Hangul.toWord(word))
+    expect(result).toContain(undrawableSyllables)
+    expect(result).toHaveLength(undrawableSyllables.length)
+  })
+})
+
+// Skipped because it's a simple wrapper around opentype.Glyph.getPath()
+describe.skip('getDrawableString()')
 
 describe('getDrawableSyllable()', () => {
   describe('should create valid Jamo paths except for known undrawable syllables', () => {

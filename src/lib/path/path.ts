@@ -49,6 +49,16 @@ export const FONT: Font = {
     ㅡ: 1,
     ㅣ: 1,
   },
+} as const
+
+export function getUndrawableSyllablesInWord(word: Hangul.Word): string {
+  return Array.from(FONT.undrawableSyllables).reduce((result, syllable) => {
+    if (word.value.includes(syllable) && !result.includes(syllable)) {
+      return result + syllable
+    } else {
+      return result
+    }
+  }, '')
 }
 
 let fontInstance: opentype.Font | undefined
