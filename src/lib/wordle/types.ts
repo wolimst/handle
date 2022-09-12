@@ -27,6 +27,10 @@ export interface SyllableResult {
 
 export type JamoResult = 'correct' | 'present' | 'absent'
 
+export type KeyHints = {
+  [key in Hangul.Jamo]?: JamoResult
+}
+
 export type GuessError =
   | 'invalidStatus'
   | 'wrongLength'
@@ -35,6 +39,7 @@ export type GuessError =
 
 export interface WordleData {
   readonly guessResults: readonly GuessResult[]
+  readonly keyHints: KeyHints
   readonly status: Status
 }
 

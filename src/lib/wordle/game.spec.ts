@@ -72,6 +72,7 @@ describe('tests for game class', () => {
           wordleData: [
             {
               guessResults: [],
+              keyHints: {},
               status: PLAYING,
             },
           ],
@@ -207,18 +208,14 @@ describe('tests for game class', () => {
         expect(game.data.status).toStrictEqual(WIN)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 1).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(WIN)
+        const data = game.data
 
         game.keyboard.value = guesses[1]
         const guessError2 = game.submitGuess()
         expect(guessError2).toStrictEqual(ERR_STATUS)
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 1)
         expect(game.status).toStrictEqual(WIN)
-        expect(game.data.status).toStrictEqual(WIN)
-        expect(game.data.guesses).toStrictEqual(guesses.slice(0, 1).map(toWord))
-        expect(game.data.wordleData[0].status).toStrictEqual(WIN)
-        expect(game.data.wordleData[0].guessResults).toHaveLength(
-          game.data.guesses.length
-        )
+        expect(game.data).toStrictEqual(data)
       })
 
       test('submitting guess after a loss should return error and cause no status change', () => {
@@ -241,18 +238,14 @@ describe('tests for game class', () => {
         expect(game.data.status).toStrictEqual(LOSS)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 3).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(LOSS)
+        const data = game.data
 
         game.keyboard.value = guesses[3]
         const guessError4 = game.submitGuess()
         expect(guessError4).toStrictEqual(ERR_STATUS)
         expect(game.remainingGuesses).toStrictEqual(0)
         expect(game.status).toStrictEqual(LOSS)
-        expect(game.data.status).toStrictEqual(LOSS)
-        expect(game.data.guesses).toStrictEqual(guesses.slice(0, 3).map(toWord))
-        expect(game.data.wordleData[0].status).toStrictEqual(LOSS)
-        expect(game.data.wordleData[0].guessResults).toHaveLength(
-          game.data.guesses.length
-        )
+        expect(game.data).toStrictEqual(data)
       })
 
       test('submitting invalid guess should return error cause no status change', () => {
@@ -272,70 +265,45 @@ describe('tests for game class', () => {
         game.keyboard.value = guesses[0] // 1st valid guess
         const guessError1 = game.submitGuess()
         expect(guessError1).toBeUndefined()
+        const dataAfterGuess1 = game.data
 
         game.keyboard.value = guesses[1] // 1st invalid guess
         const guessError2 = game.submitGuess()
         expect(guessError2).toStrictEqual(ERR_LENGTH)
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 1)
         expect(game.status).toStrictEqual(PLAYING)
-        expect(game.data.status).toStrictEqual(PLAYING)
-        expect(game.data.guesses).toStrictEqual(
-          validGuesses.slice(0, 1).map(toWord)
-        )
-        expect(game.data.wordleData[0].status).toStrictEqual(PLAYING)
-        expect(game.data.wordleData[0].guessResults).toHaveLength(
-          game.data.guesses.length
-        )
+        expect(game.data).toStrictEqual(dataAfterGuess1)
 
         game.keyboard.value = guesses[2] // 2nd valid guess
         const guessError3 = game.submitGuess()
         expect(guessError3).toBeUndefined()
+        const dataAfterGuess3 = game.data
 
         game.keyboard.value = guesses[3] // 2nd invalid guess
         const guessError4 = game.submitGuess()
         expect(guessError4).toStrictEqual(ERR_LENGTH)
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 2)
         expect(game.status).toStrictEqual(PLAYING)
-        expect(game.data.status).toStrictEqual(PLAYING)
-        expect(game.data.guesses).toStrictEqual(
-          validGuesses.slice(0, 2).map(toWord)
-        )
-        expect(game.data.wordleData[0].status).toStrictEqual(PLAYING)
-        expect(game.data.wordleData[0].guessResults).toHaveLength(
-          game.data.guesses.length
-        )
+        expect(game.data).toStrictEqual(dataAfterGuess3)
 
         game.keyboard.value = guesses[4] // 3rd invalid guess
         const guessError5 = game.submitGuess()
         expect(guessError5).toStrictEqual(ERR_WORD)
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 2)
         expect(game.status).toStrictEqual(PLAYING)
-        expect(game.data.status).toStrictEqual(PLAYING)
-        expect(game.data.guesses).toStrictEqual(
-          validGuesses.slice(0, 2).map(toWord)
-        )
-        expect(game.data.wordleData[0].status).toStrictEqual(PLAYING)
-        expect(game.data.wordleData[0].guessResults).toHaveLength(
-          game.data.guesses.length
-        )
+        expect(game.data).toStrictEqual(dataAfterGuess3)
 
         game.keyboard.value = guesses[5] // 3rd valid guess, game result is loss
         const guessError6 = game.submitGuess()
         expect(guessError6).toBeUndefined()
+        const dataAfterGuess6 = game.data
 
         game.keyboard.value = guesses[6] // 4rd invalid guess after loss
         const guessError7 = game.submitGuess()
         expect(guessError7).toMatch(new RegExp(`(${ERR_STATUS}|${ERR_WORD})`))
         expect(game.remainingGuesses).toStrictEqual(0)
         expect(game.status).toStrictEqual(LOSS)
-        expect(game.data.status).toStrictEqual(LOSS)
-        expect(game.data.guesses).toStrictEqual(
-          validGuesses.slice(0, 3).map(toWord)
-        )
-        expect(game.data.wordleData[0].status).toStrictEqual(LOSS)
-        expect(game.data.wordleData[0].guessResults).toHaveLength(
-          game.data.guesses.length
-        )
+        expect(game.data).toStrictEqual(dataAfterGuess6)
       })
     })
 

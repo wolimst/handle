@@ -1,4 +1,11 @@
-import type { GuessResult, Status, SyllableResult, WordleData } from './types'
+import type {
+  GuessResult,
+  JamoResult,
+  KeyHints,
+  Status,
+  SyllableResult,
+  WordleData,
+} from './types'
 import { getRandomAnswer } from './words'
 import type * as Hangul from '@/lib/hangul'
 
@@ -7,6 +14,7 @@ export class _Wordle {
   readonly #answer: Hangul.Word
   #status: Status
   readonly #guessResults: GuessResult[]
+  readonly #keyHints: KeyHints
 
   /**
    * Initialize a Hangul wordle game
@@ -22,6 +30,7 @@ export class _Wordle {
     this.#answer = getRandomAnswer(answerLength, answerSeed)
     this.#status = 'playing'
     this.#guessResults = []
+    this.#keyHints = {}
   }
 
   get nGuesses(): number {
@@ -40,15 +49,20 @@ export class _Wordle {
     return structuredClone(this.#guessResults)
   }
 
+  get keyHints(): KeyHints {
+    return structuredClone(this.#keyHints)
+  }
+
   get data(): WordleData {
     return {
       guessResults: this.guessResults,
+      keyHints: this.keyHints,
       status: this.status,
     }
   }
 
   /**
-   * Compare the guess against the answer, update the game status if necessary,
+   * Compare the guess against the answer, update the game states accordingly,
    * and return the comparison result.
    *
    * @throws if the status is not 'playing'
@@ -64,13 +78,34 @@ export class _Wordle {
     const guessResult = doGuess(guess, this.#answer)
     this.#guessResults.push(guessResult)
 
+    // Update key hints if the new JamoResult is superior
+    for (let i = 0; i < guessResult.guess.length; i++) {
+      const syllable = guessResult.guess.syllables[i]
+      const jamo = [
+        syllable.leadingConsonant,
+        ...syllable.vowels,
+        ...syllable.trailingConsonants,
+      ]
+      const results = [
+        guessResult.result[i].leadingConsonant,
+        ...guessResult.result[i].vowels,
+        ...guessResult.result[i].trailingConsonants,
+      ]
+
+      for (let j = 0; j < jamo.length; j++) {
+        if (compareJamoResult(this.#keyHints[jamo[j]], results[j]) > 0) {
+          this.#keyHints[jamo[j]] = results[j]
+        }
+      }
+    }
+
     if (guess.value === this.#answer.value) {
       this.#status = 'win'
     } else if (this.#guessResults.length >= this.#nGuesses) {
       this.#status = 'lose'
     }
 
-    return guessResult
+    return structuredClone(guessResult)
   }
 }
 
@@ -173,4 +208,15 @@ function doGuess(guess: Hangul.Word, answer: Hangul.Word): GuessResult {
     guess,
     result: guessResult as readonly SyllableResult[],
   }
+}
+
+const jamoResultOrder: readonly (JamoResult | undefined)[] = [
+  undefined,
+  'absent',
+  'present',
+  'correct',
+] as const
+
+function compareJamoResult(r1?: JamoResult, r2?: JamoResult): number {
+  return jamoResultOrder.indexOf(r2) - jamoResultOrder.indexOf(r1)
 }
