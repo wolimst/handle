@@ -11,10 +11,11 @@
 
   $: value = $keyboard
   $: {
-    const setResult = keyboard.setValue(value)
-    if (!setResult) {
+    const setError = keyboard.setValue(value)
+    if (setError !== undefined) {
       value = $keyboard
     }
+    // TODO: show validation error
   }
 </script>
 

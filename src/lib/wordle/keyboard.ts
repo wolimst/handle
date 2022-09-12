@@ -1,3 +1,4 @@
+import type { KeyboardError } from './types'
 import * as Hangul from '@/lib/hangul'
 
 export class Keyboard {
@@ -17,13 +18,17 @@ export class Keyboard {
    * Set the given string if it consists of modern Hangul characters and its
    * length is equal or shorter than the length of the answer
    */
-  set value(str: string) {
-    if (
-      Hangul.isHangul(str) &&
-      Hangul.getCodePointLength(str) <= this.#answerLength
-    ) {
-      this.#value = str
+  setValue(str: string): KeyboardError | undefined {
+    if (Hangul.getCodePointLength(str) > this.#answerLength) {
+      return 'lengthExceeded'
     }
+
+    if (!Hangul.isHangul(str)) {
+      return 'nonHangul'
+    }
+
+    this.#value = str
+    return undefined
   }
 
   /**

@@ -7,7 +7,7 @@ interface GameStore extends Readable<Wordle.GameData> {
 }
 
 interface KeyboardStore extends Readable<string> {
-  setValue(value: string): boolean
+  setValue(value: string): Wordle.KeyboardError | undefined
 }
 
 interface UIConstants {
@@ -46,14 +46,12 @@ export function initStores(
 
   keyboard = {
     subscribe: keyboardStore.subscribe,
-    setValue: (value: string): boolean => {
-      // TODO change setter to return boolean
-      keyboardImpl.value = value
-      if (keyboardImpl.value === value) {
+    setValue: (value: string): Wordle.KeyboardError | undefined => {
+      const setError = keyboardImpl.setValue(value)
+      if (setError === undefined) {
         keyboardStore.set(value)
-        return true
       }
-      return false
+      return setError
     },
   }
 

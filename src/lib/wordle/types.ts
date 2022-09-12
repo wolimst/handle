@@ -34,8 +34,10 @@ export type KeyHints = {
 export type GuessError =
   | 'invalidStatus'
   | 'wrongLength'
-  | 'invalidSyllable'
-  | 'unknownWord'
+  | 'notInWordList'
+  | 'undrawableSyllable'
+
+export type KeyboardError = 'lengthExceeded' | 'nonHangul'
 
 export interface WordleData {
   readonly guessResults: readonly GuessResult[]

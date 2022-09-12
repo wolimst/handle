@@ -3,6 +3,7 @@ import type { Status, GameData, GuessError } from './types'
 import { _Wordle } from './wordle'
 import { getWordList } from './words'
 import type * as Hangul from '@/lib/hangul'
+import * as Path from '@/lib/path'
 
 export class Game {
   readonly #nWordles: number
@@ -107,19 +108,19 @@ export class Game {
       return 'wrongLength'
     }
 
-    // TODO: handle GuessError 'invalidSyllable' if necessary.
-    //       Currently it is not possible to happen, because `Hangul.Word` type
-    //       only contains valid syllables.
-
     if (isGuessNotInWordList(guess)) {
-      return 'unknownWord'
+      return 'notInWordList'
+    }
+
+    if (Path.getUndrawableSyllablesInWord(guess) !== '') {
+      return 'undrawableSyllable'
     }
 
     this.#guesses.push(guess)
     this.#wordles
       .filter((wordle) => wordle.status === 'playing')
       .forEach((wordle) => wordle.submitGuess(guess))
-    this.#keyboard.value = ''
+    this.#keyboard.setValue('')
 
     return undefined
   }
