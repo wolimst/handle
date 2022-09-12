@@ -51,9 +51,12 @@
         if (result.exact) {
           return {
             background: Color.exactBackgroundColor,
-            leadingConsonant: Color.baseTextColor,
-            vowels: [Color.baseTextColor, Color.baseTextColor],
-            trailingConsonant: [Color.baseTextColor, Color.baseTextColor],
+            leadingConsonant: Color.invertedTextColor,
+            vowels: [Color.invertedTextColor, Color.invertedTextColor],
+            trailingConsonant: [
+              Color.invertedTextColor,
+              Color.invertedTextColor,
+            ],
           }
         } else {
           return {
