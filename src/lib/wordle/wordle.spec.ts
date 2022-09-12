@@ -532,7 +532,7 @@ describe('tests for wordle class', () => {
     })
   })
 
-  describe('wordle game play and status checks', () => {
+  describe('wordle game play and state checks', () => {
     describe('nGuesses: 4, answer: "정답"', () => {
       const nGuesses = 4
       const answer = '정답'
@@ -551,9 +551,18 @@ describe('tests for wordle class', () => {
         expect(res1.result[1].vowels).toStrictEqual([CORRECT])
         expect(res1.result[1].trailingConsonants).toStrictEqual([CORRECT])
         expect(wordle.guessResults).toStrictEqual([res1])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅈ: CORRECT,
+          ㅓ: CORRECT,
+          ㅇ: CORRECT,
+          ㄷ: CORRECT,
+          ㅏ: CORRECT,
+          ㅂ: CORRECT,
+        })
         expect(wordle.status).toStrictEqual(WIN)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
+          keyHints: wordle.keyHints,
           status: WIN,
         })
       })
@@ -572,9 +581,19 @@ describe('tests for wordle class', () => {
         expect(res1.result[1].vowels).toStrictEqual([ABSENT, CORRECT])
         expect(res1.result[1].trailingConsonants).toStrictEqual([ABSENT])
         expect(wordle.guessResults).toStrictEqual([res1])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅈ: CORRECT,
+          ㅓ: CORRECT,
+          ㅇ: CORRECT,
+          ㅎ: ABSENT,
+          ㅗ: ABSENT,
+          ㅏ: CORRECT,
+          ㄱ: ABSENT,
+        })
         expect(wordle.status).toStrictEqual(PLAYING)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
+          keyHints: wordle.keyHints,
           status: PLAYING,
         })
 
@@ -589,9 +608,21 @@ describe('tests for wordle class', () => {
         expect(res2.result[1].vowels).toStrictEqual([CORRECT])
         expect(res2.result[1].trailingConsonants).toStrictEqual([CORRECT])
         expect(wordle.guessResults).toStrictEqual([res1, res2])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅈ: CORRECT,
+          ㅓ: CORRECT,
+          ㅇ: CORRECT,
+          ㅎ: ABSENT,
+          ㅗ: ABSENT,
+          ㅏ: CORRECT,
+          ㄱ: ABSENT,
+          ㄷ: CORRECT,
+          ㅂ: CORRECT,
+        })
         expect(wordle.status).toStrictEqual(WIN)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2],
+          keyHints: wordle.keyHints,
           status: WIN,
         })
       })
@@ -610,9 +641,17 @@ describe('tests for wordle class', () => {
         expect(res1.result[1].vowels).toStrictEqual([ABSENT])
         expect(res1.result[1].trailingConsonants).toStrictEqual([ABSENT])
         expect(wordle.guessResults).toStrictEqual([res1])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅎ: ABSENT,
+          ㅏ: PRESENT,
+          ㄴ: ABSENT,
+          ㅡ: ABSENT,
+          ㄹ: ABSENT,
+        })
         expect(wordle.status).toStrictEqual(PLAYING)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
+          keyHints: wordle.keyHints,
           status: PLAYING,
         })
 
@@ -627,9 +666,19 @@ describe('tests for wordle class', () => {
         expect(res2.result[1].vowels).toStrictEqual([CORRECT])
         expect(res2.result[1].trailingConsonants).toStrictEqual([ABSENT])
         expect(wordle.guessResults).toStrictEqual([res1, res2])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅎ: ABSENT,
+          ㅏ: CORRECT,
+          ㄴ: ABSENT,
+          ㅡ: ABSENT,
+          ㄹ: ABSENT,
+          ㅂ: PRESENT,
+          ㅁ: ABSENT,
+        })
         expect(wordle.status).toStrictEqual(PLAYING)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2],
+          keyHints: wordle.keyHints,
           status: PLAYING,
         })
 
@@ -644,9 +693,20 @@ describe('tests for wordle class', () => {
         expect(res3.result[1].vowels).toStrictEqual([CORRECT])
         expect(res3.result[1].trailingConsonants).toStrictEqual([])
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅎ: ABSENT,
+          ㅏ: CORRECT,
+          ㄴ: ABSENT,
+          ㅡ: ABSENT,
+          ㄹ: ABSENT,
+          ㅂ: PRESENT,
+          ㅁ: ABSENT,
+          ㄷ: CORRECT,
+        })
         expect(wordle.status).toStrictEqual(PLAYING)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3],
+          keyHints: wordle.keyHints,
           status: PLAYING,
         })
 
@@ -661,9 +721,23 @@ describe('tests for wordle class', () => {
         expect(res4.result[1].vowels).toStrictEqual([CORRECT])
         expect(res4.result[1].trailingConsonants).toStrictEqual([CORRECT])
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅎ: ABSENT,
+          ㅏ: CORRECT,
+          ㄴ: ABSENT,
+          ㅡ: ABSENT,
+          ㄹ: ABSENT,
+          ㅂ: CORRECT,
+          ㅁ: ABSENT,
+          ㄷ: CORRECT,
+          ㅈ: CORRECT,
+          ㅓ: CORRECT,
+          ㅇ: CORRECT,
+        })
         expect(wordle.status).toStrictEqual(WIN)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
+          keyHints: wordle.keyHints,
           status: WIN,
         })
       })
@@ -676,9 +750,22 @@ describe('tests for wordle class', () => {
         const res3 = wordle.submitGuess(toWord('바다'))
         const res4 = wordle.submitGuess(toWord('구름'))
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅎ: ABSENT,
+          ㅏ: CORRECT,
+          ㄴ: ABSENT,
+          ㅡ: ABSENT,
+          ㄹ: ABSENT,
+          ㅂ: PRESENT,
+          ㅁ: ABSENT,
+          ㄷ: CORRECT,
+          ㄱ: ABSENT,
+          ㅜ: ABSENT,
+        })
         expect(wordle.status).toStrictEqual(LOSS)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
+          keyHints: wordle.keyHints,
           status: LOSS,
         })
       })
@@ -688,25 +775,52 @@ describe('tests for wordle class', () => {
 
         const res1 = wordle.submitGuess(toWord(answer))
         expect(wordle.guessResults).toStrictEqual([res1])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅈ: CORRECT,
+          ㅓ: CORRECT,
+          ㅇ: CORRECT,
+          ㄷ: CORRECT,
+          ㅏ: CORRECT,
+          ㅂ: CORRECT,
+        })
         expect(wordle.status).toStrictEqual(WIN)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
+          keyHints: wordle.keyHints,
           status: WIN,
         })
 
         expect(() => wordle.submitGuess(toWord(answer))).toThrowError()
         expect(wordle.guessResults).toStrictEqual([res1])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅈ: CORRECT,
+          ㅓ: CORRECT,
+          ㅇ: CORRECT,
+          ㄷ: CORRECT,
+          ㅏ: CORRECT,
+          ㅂ: CORRECT,
+        })
         expect(wordle.status).toStrictEqual(WIN)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
+          keyHints: wordle.keyHints,
           status: WIN,
         })
 
         expect(() => wordle.submitGuess(toWord('언덕'))).toThrowError()
         expect(wordle.guessResults).toStrictEqual([res1])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅈ: CORRECT,
+          ㅓ: CORRECT,
+          ㅇ: CORRECT,
+          ㄷ: CORRECT,
+          ㅏ: CORRECT,
+          ㅂ: CORRECT,
+        })
         expect(wordle.status).toStrictEqual(WIN)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
+          keyHints: wordle.keyHints,
           status: WIN,
         })
       })
@@ -719,25 +833,64 @@ describe('tests for wordle class', () => {
         const res3 = wordle.submitGuess(toWord('바다'))
         const res4 = wordle.submitGuess(toWord('구름'))
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅎ: ABSENT,
+          ㅏ: CORRECT,
+          ㄴ: ABSENT,
+          ㅡ: ABSENT,
+          ㄹ: ABSENT,
+          ㅂ: PRESENT,
+          ㅁ: ABSENT,
+          ㄷ: CORRECT,
+          ㄱ: ABSENT,
+          ㅜ: ABSENT,
+        })
         expect(wordle.status).toStrictEqual(LOSS)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
+          keyHints: wordle.keyHints,
           status: LOSS,
         })
 
         expect(() => wordle.submitGuess(toWord('언덕'))).toThrowError()
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅎ: ABSENT,
+          ㅏ: CORRECT,
+          ㄴ: ABSENT,
+          ㅡ: ABSENT,
+          ㄹ: ABSENT,
+          ㅂ: PRESENT,
+          ㅁ: ABSENT,
+          ㄷ: CORRECT,
+          ㄱ: ABSENT,
+          ㅜ: ABSENT,
+        })
         expect(wordle.status).toStrictEqual(LOSS)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
+          keyHints: wordle.keyHints,
           status: LOSS,
         })
 
         expect(() => wordle.submitGuess(toWord(answer))).toThrowError()
         expect(wordle.guessResults).toStrictEqual([res1, res2, res3, res4])
+        expect(wordle.keyHints).toStrictEqual({
+          ㅎ: ABSENT,
+          ㅏ: CORRECT,
+          ㄴ: ABSENT,
+          ㅡ: ABSENT,
+          ㄹ: ABSENT,
+          ㅂ: PRESENT,
+          ㅁ: ABSENT,
+          ㄷ: CORRECT,
+          ㄱ: ABSENT,
+          ㅜ: ABSENT,
+        })
         expect(wordle.status).toStrictEqual(LOSS)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
+          keyHints: wordle.keyHints,
           status: LOSS,
         })
       })
@@ -764,17 +917,43 @@ describe('tests for wordle class', () => {
         expect(guessResults).not.toStrictEqual(wordle.guessResults)
       })
 
+      test('keyHints', () => {
+        const wordle = initWordle(nGuesses, answer)
+
+        wordle.submitGuess(toWord('하늘'))
+        const keyHints = wordle.keyHints
+        expect(keyHints).toStrictEqual({
+          ㅎ: ABSENT,
+          ㅏ: PRESENT,
+          ㄴ: ABSENT,
+          ㅡ: ABSENT,
+          ㄹ: ABSENT,
+        })
+        expect(keyHints).not.toBe(wordle.keyHints)
+
+        wordle.submitGuess(toWord('바다'))
+        expect(keyHints).not.toStrictEqual(wordle.keyHints)
+      })
+
       test('data', () => {
         const wordle = initWordle(nGuesses, answer)
 
         const res1 = wordle.submitGuess(toWord('하늘'))
         const data = wordle.data
         expect(data).toStrictEqual({
-          status: PLAYING,
           guessResults: [res1],
+          keyHints: {
+            ㅎ: ABSENT,
+            ㅏ: PRESENT,
+            ㄴ: ABSENT,
+            ㅡ: ABSENT,
+            ㄹ: ABSENT,
+          },
+          status: PLAYING,
         })
         expect(data).not.toBe(wordle.data)
         expect(data.guessResults).not.toBe(wordle.guessResults)
+        expect(data.keyHints).not.toBe(wordle.keyHints)
 
         wordle.submitGuess(toWord('바다'))
         expect(data).not.toStrictEqual(wordle.data)

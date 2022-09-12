@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --background-color: #eaeaea;
+  --background-color: #fff;
   --text-color: #333;
   --text-color-secondary: #a8a8a8;
+  --text-color-invert: #fff;
   --anchor-text-color: #2563eb;
   --anchor-button-color: var(--text-color);
   --modal-background-color: #cecececc;
@@ -17,12 +18,14 @@
   --wordle-absent-color: #787c7e;
   --wordle-exact-color: #333;
   --wordle-exact-background-color: #6aaa64;
+  --keyboard-background-color: #d1d5da;
 }
 
 :root.dark-theme {
   --background-color: #292c34;
   --text-color: #cbd5e1;
   --text-color-secondary: #555;
+  --text-color-invert: #333;
   --anchor-text-color: #3b82f6;
   --anchor-button-color: var(--text-color);
   --modal-background-color: #222222cc;
@@ -34,6 +37,7 @@
   --wordle-absent-color: #787c7e;
   --wordle-exact-color: #cbd5e1;
   --wordle-exact-background-color: #538d4e;
+  --keyboard-background-color: #606263;
 }
 
 * {

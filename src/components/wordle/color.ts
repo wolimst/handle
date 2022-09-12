@@ -1,6 +1,7 @@
 import type * as Wordle from '@/lib/wordle'
 
 export const baseTextColor = 'var(--text-color)'
+export const invertedTextColor = 'var(--text-color-invert)'
 
 export const correctTextColor = 'var(--wordle-correct-color)'
 export const presentTextColor = 'var(--wordle-present-color'
