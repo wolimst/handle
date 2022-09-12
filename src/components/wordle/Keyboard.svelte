@@ -1,9 +1,19 @@
 <script lang="ts">
-  import * as Wordle from '@/lib/wordle'
+  import { keyboard } from './store'
 
-  export let keyboard: Wordle.Keyboard
+  $: value = $keyboard
+  $: {
+    const setResult = keyboard.setValue(value)
+    if (!setResult) {
+      value = $keyboard
+    }
+  }
 </script>
 
-<form on:submit|preventDefault on:input>
-  <input type="text" bind:value={keyboard.value} />
-</form>
+<div class="tw-container">
+  <div class="tw-flex tw-flex-nowrap tw-justify-center">
+    <form on:submit|preventDefault>
+      <input type="text" bind:value />
+    </form>
+  </div>
+</div>

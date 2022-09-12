@@ -1,8 +1,9 @@
 <script lang="ts">
   import Syllable from './Syllable.svelte'
   import * as Color from './color'
+  import { game } from './store'
   import * as Path from '@/lib/path'
-  import * as Wordle from '@/lib/wordle'
+  import type * as Wordle from '@/lib/wordle'
 
   /**
    * A guess data to dispay and color the syllables.
@@ -17,7 +18,6 @@
    * Default is `undefined`.
    */
   export let guess: Wordle.GuessResult | string | undefined = undefined
-  export let answerLength: number
 
   type Guess = Wordle.GuessResult | string | undefined
 
@@ -78,7 +78,7 @@
 </script>
 
 <div class="tw-inline-flex tw-gap-1 tw-min-w-0 tw-min-h-0">
-  {#each { length: answerLength } as _, i}
+  {#each { length: $game.answerLength } as _, i}
     <div
       class="tw-w-16 tw-aspect-square tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary tw-overflow-hidden"
     >
