@@ -1,6 +1,6 @@
 <script lang="ts">
   import { game, ui } from './store'
-  import type * as Hangul from '@/lib/hangul'
+  import * as Hangul from '@/lib/hangul'
   import type * as Wordle from '@/lib/wordle'
 
   export let key: string
@@ -22,7 +22,7 @@
   }
 
   function isJamoKey(key: string): key is Hangul.Jamo {
-    return true
+    return Hangul.getCodePointLength(key) === 1 && Hangul.isHangulJamo(key)
   }
 
   function getKeyHintColor(result?: Wordle.JamoResult): string {
@@ -48,7 +48,7 @@
   {disabled}
 >
   <div
-    class="tw-w-full tw-h-full tw-absolute tw-text-lg tw-font-bold {textColor} tw-bg-transparent tw-flex tw-flex-nowrap tw-justify-center tw-items-center"
+    class="tw-w-full tw-h-full tw-absolute tw-top-0 tw-text-lg tw-font-bold {textColor} tw-bg-transparent tw-flex tw-flex-nowrap tw-justify-center tw-items-center"
   >
     <slot>{key}</slot>
   </div>

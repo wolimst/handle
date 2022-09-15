@@ -17,7 +17,7 @@ function isHangulSyllables(str: string): boolean {
 export const FIRST_JAMO = 0x3131 // 0x3130 is unused
 export const LAST_JAMO = 0x3163 // 0x3164..0x318f are not used in modern Korean
 
-function isHangulJamo(str: string): boolean {
+export function isHangulJamo(str: string): boolean {
   return Array.from(str).every((codePointChar) => {
     const codePoint = codePointChar.codePointAt(0)
     return codePoint && FIRST_JAMO <= codePoint && codePoint <= LAST_JAMO
