@@ -1,11 +1,73 @@
 import {
+  FIRST_JAMO,
+  LAST_JAMO,
   FIRST_SYLLABLE,
   LAST_SYLLABLE,
   isHangul,
+  isHangulJamo,
   getCodePointLength,
   toWord,
 } from '.'
 import type { Word } from './types'
+
+describe('isHangulJamo(str: string) => boolean', () => {
+  it('should return true for empty string', () => {
+    expect(isHangulJamo('')).toBeTruthy()
+  })
+
+  it('should return true for string consists of Hangul Jamo', () => {
+    expect(isHangulJamo(String.fromCodePoint(FIRST_JAMO))).toBeTruthy()
+    expect(isHangulJamo(String.fromCodePoint(LAST_JAMO))).toBeTruthy()
+
+    expect(isHangulJamo('ㄱ')).toBeTruthy()
+    expect(isHangulJamo('ㄳ')).toBeTruthy()
+    expect(isHangulJamo('ㅎ')).toBeTruthy()
+    expect(isHangulJamo('ㅏ')).toBeTruthy()
+    expect(isHangulJamo('ㅘ')).toBeTruthy()
+    expect(isHangulJamo('ㅣ')).toBeTruthy()
+
+    expect(isHangulJamo('ㄱㄱ')).toBeTruthy()
+    expect(isHangulJamo('ㄱㅜㄹㅡㅁ')).toBeTruthy()
+  })
+
+  it('should return false for string that contains non-Hangul Jamo', () => {
+    expect(isHangulJamo('*')).toBeFalsy()
+    expect(isHangulJamo('Aa')).toBeFalsy()
+    expect(isHangulJamo('あ漢')).toBeFalsy()
+    expect(isHangulJamo('😊')).toBeFalsy()
+    expect(isHangulJamo('ㅈㅏㅁㅗAaあ漢😊')).toBeFalsy()
+  })
+
+  it('should return false for Hangul Jamo that cannot be input in Dubeolsik keyboard layout', () => {
+    // Some of Hangul Jamo *clusters*
+    // They are different characters from Jamo of Dubeolsik keyboard input
+    expect(isHangulJamo('ᄀ')).toBeFalsy()
+    expect(isHangulJamo('ᄒ')).toBeFalsy()
+    expect(isHangulJamo('ᅡ')).toBeFalsy()
+    expect(isHangulJamo('ᅵ')).toBeFalsy()
+    expect(isHangulJamo('ᆨ')).toBeFalsy()
+    expect(isHangulJamo('ᇂ')).toBeFalsy()
+    expect(isHangulJamo('ᄫ')).toBeFalsy()
+    expect(isHangulJamo('ᆋ')).toBeFalsy()
+
+    // Some of Hangul Jamo Extended-A unicode characters
+    expect(isHangulJamo('ꥠ')).toBeFalsy()
+    expect(isHangulJamo('ꥪ')).toBeFalsy()
+    expect(isHangulJamo('ꥼ')).toBeFalsy()
+
+    // Some of Hangul Jamo Extended-B unicode characters
+    expect(isHangulJamo('ힰ')).toBeFalsy()
+    expect(isHangulJamo('ퟆ')).toBeFalsy()
+    expect(isHangulJamo('ퟻ')).toBeFalsy()
+
+    // Some of Obsolete Hangul characters
+    expect(isHangulJamo('ㅥ')).toBeFalsy()
+    expect(isHangulJamo('ㆅ')).toBeFalsy()
+    expect(isHangulJamo('ㆋ')).toBeFalsy()
+    expect(isHangulJamo('ㆍ')).toBeFalsy()
+    expect(isHangulJamo('ㆎ')).toBeFalsy()
+  })
+})
 
 describe('isHangul(str: string) => boolean', () => {
   it('should return true for empty string', () => {
@@ -45,7 +107,7 @@ describe('isHangul(str: string) => boolean', () => {
 
   it('should return false for Hangul characters that cannot be input in Dubeolsik keyboard layout', () => {
     // Some of Hangul Jamo *clusters*
-    // They are different characters from Jamo of Duboelsik keyboard input
+    // They are different characters from Jamo of Dubeolsik keyboard input
     expect(isHangul('ᄀ')).toBeFalsy()
     expect(isHangul('ᄒ')).toBeFalsy()
     expect(isHangul('ᅡ')).toBeFalsy()
