@@ -22,6 +22,7 @@ interface UIStore extends Readable<UIConstants> {
 export let game: GameStore
 export let keyboard: KeyboardStore
 export let ui: UIStore
+export const alert = writable('')
 
 export function initStores(
   nWordles: number,

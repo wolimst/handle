@@ -18,6 +18,7 @@ module.exports = {
         'app-wordle-present': 'var(--wordle-present-color)',
         'app-wordle-absent': 'var(--wordle-absent-color)',
         'app-keyboard-bg': 'var(--keyboard-background-color)',
+        'app-alert-bg': 'var(--alert-background-color)',
       },
     },
   },
