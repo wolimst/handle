@@ -102,7 +102,7 @@
     loaded = true
   }
 
-  function onChange(...args: any) {
+  function onChange(..._args: any) {
     assert()
     onMount(() => {
       draw()
