@@ -1,7 +1,9 @@
 <script lang="ts">
+  import Alert from './Alert.svelte'
   import Guess from './Guess.svelte'
   import Keyboard from './Keyboard.svelte'
-  import { game, keyboard, ui } from './store'
+  import { getAlertMessage } from './message'
+  import { alert, game, keyboard, ui } from './store'
 
   function assert() {
     if (game === undefined || keyboard === undefined || ui === undefined) {
@@ -10,11 +12,18 @@
   }
 
   function submitGuess() {
-    game.submitGuess()
+    const guessError = game.submitGuess()
+    if (guessError) {
+      $alert = getAlertMessage(guessError)
+    }
   }
 
   assert()
 </script>
+
+<div class="tw-flex tw-flex-nowrap tw-justify-center">
+  <Alert />
+</div>
 
 <div class="tw-container tw-mb-12">
   {#each { length: $ui.nRows } as _, rowIndex}

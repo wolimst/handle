@@ -19,6 +19,7 @@
   --wordle-exact-color: #333;
   --wordle-exact-background-color: #6aaa64;
   --keyboard-background-color: #d1d5da;
+  --alert-background-color: #f7f7f7;
 }
 
 :root.dark-theme {
@@ -38,6 +39,7 @@
   --wordle-exact-color: #cbd5e1;
   --wordle-exact-background-color: #538d4e;
   --keyboard-background-color: #606263;
+  --alert-background-color: #373b46;
 }
 
 * {
