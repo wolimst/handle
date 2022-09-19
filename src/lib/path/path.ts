@@ -104,7 +104,7 @@ export async function getDrawableString(str: string): Promise<DrawableString> {
 }
 
 export async function getDrawableSyllable(
-  syllable: Hangul.Syllable
+  syllable: Hangul.DubeolsikSyllable
 ): Promise<DrawableSyllable> {
   const path = await getPath(syllable.value)
   const closedPaths: ClosedPath[] = getClosedPaths(path)
@@ -165,7 +165,7 @@ const compareByXYDesc = (a: ClosedPath, b: ClosedPath) =>
   b.center.x - a.center.x + b.center.y - a.center.y
 
 function getJamoPaths(
-  syllable: Hangul.Syllable,
+  syllable: Hangul.DubeolsikSyllable,
   closedPaths: ClosedPath[]
 ): JamoPaths {
   const paths = [...closedPaths]

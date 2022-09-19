@@ -44,9 +44,11 @@ describe.skip('getDrawableString()')
 
 describe('getDrawableSyllable()', () => {
   describe('should create valid Jamo paths except for known undrawable syllables', () => {
-    const hangulCodePoints = Array(Hangul.LAST_SYLLABLE - Hangul.FIRST_SYLLABLE)
+    const hangulCodePoints = Array(
+      Hangul.LAST_SYLLABLE_CODEPOINT - Hangul.FIRST_SYLLABLE_CODEPOINT
+    )
       .fill(0)
-      .map((_, i) => Hangul.FIRST_SYLLABLE + i)
+      .map((_, i) => Hangul.FIRST_SYLLABLE_CODEPOINT + i)
     const str = String.fromCodePoint(...hangulCodePoints)
     const syllables = Hangul.toWord(str).syllables
 

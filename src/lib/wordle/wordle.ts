@@ -120,7 +120,7 @@ function doGuess(guess: Hangul.Word, answer: Hangul.Word): GuessResult {
     }
   })
 
-  const answerJamoCount: { [key in Hangul.Jamo]?: number } = {}
+  const answerJamoCount: { [key in Hangul.DubeolsikJamo]?: number } = {}
   for (const syllable of answer.syllables) {
     const jamoList = [
       syllable.leadingConsonant,
@@ -132,7 +132,7 @@ function doGuess(guess: Hangul.Word, answer: Hangul.Word): GuessResult {
     })
   }
 
-  const decreaseJamoCount = (key: Hangul.Jamo) => {
+  const decreaseJamoCount = (key: Hangul.DubeolsikJamo) => {
     const count = answerJamoCount[key]
     if (count) {
       answerJamoCount[key] = count - 1

@@ -28,7 +28,7 @@ export interface SyllableResult {
 export type JamoResult = 'correct' | 'present' | 'absent'
 
 export type KeyHints = {
-  [key in Hangul.Jamo]?: JamoResult
+  [key in Hangul.DubeolsikJamo]?: JamoResult
 }
 
 export type GuessError =

@@ -1,13 +1,10 @@
 import {
-  FIRST_JAMO,
-  LAST_JAMO,
-  FIRST_SYLLABLE,
-  LAST_SYLLABLE,
-  isHangul,
-  isHangulJamo,
-  getCodePointLength,
-  toWord,
-} from '.'
+  FIRST_JAMO_CODEPOINT,
+  LAST_JAMO_CODEPOINT,
+  FIRST_SYLLABLE_CODEPOINT,
+  LAST_SYLLABLE_CODEPOINT,
+} from './constants'
+import { isHangul, isHangulJamo, getCodePointLength, toWord } from './hangul'
 import type { Word } from './types'
 
 describe('isHangulJamo(str: string) => boolean', () => {
@@ -16,8 +13,10 @@ describe('isHangulJamo(str: string) => boolean', () => {
   })
 
   it('should return true for string consists of Hangul Jamo', () => {
-    expect(isHangulJamo(String.fromCodePoint(FIRST_JAMO))).toBeTruthy()
-    expect(isHangulJamo(String.fromCodePoint(LAST_JAMO))).toBeTruthy()
+    expect(
+      isHangulJamo(String.fromCodePoint(FIRST_JAMO_CODEPOINT))
+    ).toBeTruthy()
+    expect(isHangulJamo(String.fromCodePoint(LAST_JAMO_CODEPOINT))).toBeTruthy()
 
     expect(isHangulJamo('ㄱ')).toBeTruthy()
     expect(isHangulJamo('ㄳ')).toBeTruthy()
@@ -82,9 +81,11 @@ describe('isHangul(str: string) => boolean', () => {
     expect(isHangul('ㅘ')).toBeTruthy()
     expect(isHangul('ㅣ')).toBeTruthy()
 
-    expect(isHangul(String.fromCodePoint(FIRST_SYLLABLE))).toBeTruthy()
+    expect(
+      isHangul(String.fromCodePoint(FIRST_SYLLABLE_CODEPOINT))
+    ).toBeTruthy()
     expect(isHangul('꽋')).toBeTruthy()
-    expect(isHangul(String.fromCodePoint(LAST_SYLLABLE))).toBeTruthy()
+    expect(isHangul(String.fromCodePoint(LAST_SYLLABLE_CODEPOINT))).toBeTruthy()
 
     expect(isHangul('ㄱㅏ')).toBeTruthy()
     expect(isHangul('ㄱㄱ')).toBeTruthy()

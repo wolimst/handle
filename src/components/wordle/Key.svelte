@@ -21,7 +21,7 @@
     }
   }
 
-  function isJamoKey(key: string): key is Hangul.Jamo {
+  function isJamoKey(key: string): key is Hangul.DubeolsikJamo {
     return Hangul.getCodePointLength(key) === 1 && Hangul.isHangulJamo(key)
   }
 
