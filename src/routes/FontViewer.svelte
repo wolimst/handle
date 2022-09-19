@@ -7,9 +7,9 @@
   let jamoList: Path.DrawableString[] = []
   async function loadJamo() {
     jamoList = await Promise.all(
-      Array(Hangul.LAST_JAMO - Hangul.FIRST_JAMO)
+      Array(Hangul.LAST_JAMO_CODEPOINT - Hangul.FIRST_JAMO_CODEPOINT)
         .fill(0)
-        .map((_, i) => Hangul.FIRST_JAMO + i)
+        .map((_, i) => Hangul.FIRST_JAMO_CODEPOINT + i)
         .map((codePoint) => String.fromCodePoint(codePoint))
         .map((jamo) => Path.getDrawableString(jamo))
     )
@@ -28,8 +28,8 @@
 
   let syllableList: Path.DrawableSyllable[] = []
   async function loadSyllables() {
-    const start = Hangul.FIRST_SYLLABLE + page * loadSize
-    if (Hangul.LAST_SYLLABLE < start) {
+    const start = Hangul.FIRST_SYLLABLE_CODEPOINT + page * loadSize
+    if (Hangul.LAST_SYLLABLE_CODEPOINT < start) {
       return
     }
 

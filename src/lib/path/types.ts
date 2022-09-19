@@ -33,6 +33,13 @@ export interface Font {
   readonly jamoClosedPathCount: JamoClosedPathCount
 }
 
+/**
+ * Number of closed paths to draw each Jamo using the font
+ */
+export type JamoClosedPathCount = {
+  readonly [key in Hangul.DubeolsikJamo]: number
+}
+
 export type Drawable = DrawableString | DrawableSyllable
 
 export interface DrawableString {
@@ -41,12 +48,17 @@ export interface DrawableString {
   readonly boundingBox: BoundingBox
 }
 
-export interface DrawableSyllable extends Hangul.Syllable {
+export interface DrawableSyllable extends Hangul.DubeolsikSyllable {
   readonly leadingConsonantPath: DProperty
   readonly vowelPaths: readonly DProperty[]
   readonly trailingConsonantPaths: readonly DProperty[]
   readonly boundingBox: BoundingBox
 }
+
+/**
+ * SVG Path element's d property
+ */
+export type DProperty = string
 
 export interface BoundingBox {
   readonly x1: number
@@ -63,7 +75,7 @@ export interface BoundingBox {
  * `'var(--your-color-variable)'`, etc.
  *
  * Colors of vowels and trailing consonants should be sorted in the keyboard
- * typing order of the syllable, as same as in {@link Hangul.Syllable}
+ * typing order of the syllable, as same as in {@link Hangul.DubeolsikSyllable}
  */
 export interface SyllableColor {
   /**
@@ -75,15 +87,3 @@ export interface SyllableColor {
   readonly vowels: readonly string[]
   readonly trailingConsonant: readonly string[]
 }
-
-/**
- * Number of closed paths to draw each Jamo using the font
- */
-export type JamoClosedPathCount = {
-  readonly [key in Hangul.Jamo]: number
-}
-
-/**
- * SVG Path element's d property
- */
-export type DProperty = string
