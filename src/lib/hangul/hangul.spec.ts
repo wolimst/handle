@@ -4,7 +4,14 @@ import {
   FIRST_SYLLABLE_CODEPOINT,
   LAST_SYLLABLE_CODEPOINT,
 } from './constants'
-import { isHangul, isHangulJamo, getCodePointLength, toWord } from './hangul'
+import {
+  isHangul,
+  isHangulJamo,
+  isHangulSyllables,
+  getCodePointLength,
+  toWord,
+  compose,
+} from './hangul'
 import type { Word } from './types'
 
 describe('isHangulJamo(str: string) => boolean', () => {
@@ -30,6 +37,7 @@ describe('isHangulJamo(str: string) => boolean', () => {
   })
 
   it('should return false for string that contains non-Hangul Jamo', () => {
+    expect(isHangulJamo('글자')).toBeFalsy()
     expect(isHangulJamo('*')).toBeFalsy()
     expect(isHangulJamo('Aa')).toBeFalsy()
     expect(isHangulJamo('あ漢')).toBeFalsy()
@@ -65,6 +73,33 @@ describe('isHangulJamo(str: string) => boolean', () => {
     expect(isHangulJamo('ㆋ')).toBeFalsy()
     expect(isHangulJamo('ㆍ')).toBeFalsy()
     expect(isHangulJamo('ㆎ')).toBeFalsy()
+  })
+})
+
+describe('isHangulSyllables(str: string) => boolean', () => {
+  it('should return true for empty string', () => {
+    expect(isHangulSyllables('')).toBeTruthy()
+  })
+
+  it('should return true for Hangul syllables', () => {
+    expect(
+      isHangulSyllables(String.fromCodePoint(FIRST_SYLLABLE_CODEPOINT))
+    ).toBeTruthy()
+    expect(isHangulSyllables('꽋')).toBeTruthy()
+    expect(
+      isHangulSyllables(String.fromCodePoint(LAST_SYLLABLE_CODEPOINT))
+    ).toBeTruthy()
+    expect(isHangulSyllables('구름')).toBeTruthy()
+    expect(isHangulSyllables('긴수염고래')).toBeTruthy()
+  })
+
+  it('should return false for string that contains non-Hangul string', () => {
+    expect(isHangulSyllables('ㅈㅏㅁㅗ')).toBeFalsy()
+    expect(isHangulSyllables('*')).toBeFalsy()
+    expect(isHangulSyllables('Aa')).toBeFalsy()
+    expect(isHangulSyllables('あ漢')).toBeFalsy()
+    expect(isHangulSyllables('😊')).toBeFalsy()
+    expect(isHangulSyllables('한글Aaあ漢😊')).toBeFalsy()
   })
 })
 
@@ -333,5 +368,40 @@ describe('toWord(str: string) -> Word', () => {
         },
       ],
     })
+  })
+})
+
+describe('compose(l: LeadingConsonant, v: Vowel, t?: TrailingConsonant) => string', () => {
+  test('compose LV', () => {
+    expect(compose('ㄱ', 'ㅏ')).toStrictEqual('가')
+    expect(compose('ㄲ', 'ㅏ')).toStrictEqual('까')
+    expect(compose('ㅎ', 'ㅣ')).toStrictEqual('히')
+  })
+
+  test('compose LVV', () => {
+    expect(compose('ㄱ', 'ㅘ')).toStrictEqual('과')
+    expect(compose('ㄲ', 'ㅘ')).toStrictEqual('꽈')
+    expect(compose('ㅎ', 'ㅢ')).toStrictEqual('희')
+  })
+
+  test('compose LVT', () => {
+    expect(compose('ㄱ', 'ㅏ', 'ㄱ')).toStrictEqual('각')
+    expect(compose('ㄲ', 'ㅣ', 'ㄲ')).toStrictEqual('끾')
+  })
+
+  test('compose LVTT', () => {
+    expect(compose('ㄱ', 'ㅏ', 'ㅄ')).toStrictEqual('값')
+    expect(compose('ㄲ', 'ㅏ', 'ㅄ')).toStrictEqual('깞')
+  })
+
+  test('compose LVVT', () => {
+    expect(compose('ㄱ', 'ㅘ', 'ㄱ')).toStrictEqual('곽')
+    expect(compose('ㄲ', 'ㅘ', 'ㄱ')).toStrictEqual('꽉')
+  })
+
+  test('compose LVVTT', () => {
+    expect(compose('ㄲ', 'ㅘ')).toStrictEqual('꽈')
+    expect(compose('ㄲ', 'ㅘ', 'ㄳ')).toStrictEqual('꽋')
+    expect(compose('ㅎ', 'ㅢ', 'ㄺ')).toStrictEqual('흵')
   })
 })

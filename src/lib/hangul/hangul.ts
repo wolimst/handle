@@ -4,10 +4,18 @@ import {
   FIRST_SYLLABLE_CODEPOINT,
   LAST_SYLLABLE_CODEPOINT,
   LEADING_CONSONANTS,
+  VOWELS,
   VOWELS_DECOMPOSED,
+  TRAILING_CONSONANTS,
   TRAILING_CONSONANTS_DECOMPOSED,
 } from './constants'
-import type { DubeolsikJamo, DubeolsikSyllable, Word } from './types'
+import type {
+  DubeolsikSyllable,
+  LeadingConsonant,
+  TrailingConsonant,
+  Vowel,
+  Word,
+} from './types'
 
 /**
  * Return code points length of the given string
@@ -27,7 +35,7 @@ export function isHangulJamo(str: string): boolean {
   })
 }
 
-function isHangulSyllables(str: string): boolean {
+export function isHangulSyllables(str: string): boolean {
   return Array.from(str).every((codePointChar) => {
     const codePoint = codePointChar.codePointAt(0)
     return (
@@ -65,7 +73,7 @@ const syllablesPerLeadingConsonant =
  *
  * @param str a string consists of one Hangul syllable
  */
-function toDubeolsikSyllable(str: string): DubeolsikSyllable {
+export function _toDubeolsikSyllable(str: string): DubeolsikSyllable {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const syllableIndex = str.codePointAt(0)! - FIRST_SYLLABLE_CODEPOINT
 
@@ -95,11 +103,36 @@ function toDubeolsikSyllable(str: string): DubeolsikSyllable {
  */
 export function toWord(str: string): Word {
   const syllableList = Array.from(str).filter(isHangulSyllables)
-  const syllableObjects = syllableList.map(toDubeolsikSyllable)
+  const syllableObjects = syllableList.map(_toDubeolsikSyllable)
 
   return {
     value: syllableList.join(''),
     length: syllableObjects.length,
     syllables: syllableObjects,
   }
+}
+
+/**
+ * Compose an Hangul syllable from the given jamo.
+ *
+ * # Example
+ *
+ * - compose('ㄱ', 'ㅏ') === '가'
+ * - compose('ㄱ', 'ㅏ', 'ㅄ') === '값'
+ */
+export function compose(
+  leadingConsonant: LeadingConsonant,
+  vowel: Vowel,
+  trailingConsonant?: TrailingConsonant
+): string {
+  const tConsonant = trailingConsonant || ''
+  const l = LEADING_CONSONANTS.indexOf(leadingConsonant)
+  const v = VOWELS.indexOf(vowel)
+  const t = TRAILING_CONSONANTS.indexOf(tConsonant)
+  const codePoint =
+    FIRST_SYLLABLE_CODEPOINT +
+    l * syllablesPerLeadingConsonant +
+    v * TRAILING_CONSONANTS_DECOMPOSED.length +
+    t
+  return String.fromCodePoint(codePoint)
 }
