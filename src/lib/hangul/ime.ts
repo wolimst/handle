@@ -8,7 +8,6 @@ import {
   getCodePointLength,
   isHangul,
   isHangulJamo,
-  isHangulSyllables,
   _toDubeolsikSyllable,
 } from './hangul'
 import type {
@@ -67,12 +66,13 @@ export class DubeolsikIME {
   }
 
   type(jamo: DubeolsikJamo) {
-    const lastSyllable = this.#value.at(-1)
-    if (lastSyllable === undefined) {
+    const length = this.#value.length
+    if (length === 0) {
       this.#value.push(new ComposingSyllable(jamo))
       return
     }
 
+    const lastSyllable = this.#value[length - 1]
     const newSyllable = lastSyllable.addJamo(jamo)
     if (newSyllable !== undefined) {
       this.#value.push(newSyllable)
@@ -83,11 +83,12 @@ export class DubeolsikIME {
    * Delete the last {@link DubeolsikJamo} from the IME input value
    */
   delete() {
-    const lastSyllable = this.#value.at(-1)
-    if (lastSyllable === undefined) {
+    const length = this.#value.length
+    if (length === 0) {
       return
     }
 
+    const lastSyllable = this.#value[length - 1]
     lastSyllable.popJamo()
     if (lastSyllable.isEmpty()) {
       this.#value.pop()
