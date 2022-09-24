@@ -1,4 +1,5 @@
 import { N_WORDLES_PER_ROW } from '@/constants'
+import type { DubeolsikJamo } from '@/lib/hangul'
 import * as Wordle from '@/lib/wordle'
 import { readable, writable, type Readable } from 'svelte/store'
 
@@ -8,6 +9,8 @@ interface GameStore extends Readable<Wordle.GameData> {
 
 interface KeyboardStore extends Readable<string> {
   setValue(value: string): Wordle.KeyboardError | undefined
+  type(jamo: DubeolsikJamo): Wordle.KeyboardError | undefined
+  delete(): void
 }
 
 interface UIConstants {
@@ -53,6 +56,17 @@ export function initStores(
         keyboardStore.set(value)
       }
       return setError
+    },
+    type: (jamo: DubeolsikJamo): Wordle.KeyboardError | undefined => {
+      const setError = keyboardImpl.type(jamo)
+      if (setError === undefined) {
+        keyboardStore.set(keyboardImpl.value)
+      }
+      return setError
+    },
+    delete() {
+      keyboardImpl.delete()
+      keyboardStore.set(keyboardImpl.value)
     },
   }
 

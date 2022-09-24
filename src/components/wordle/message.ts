@@ -1,8 +1,8 @@
 import { FONT } from '@/lib/path'
-import type { GuessError } from '@/lib/wordle'
+import type { GuessError, KeyboardError } from '@/lib/wordle'
 
-export function getAlertMessage(guessError: GuessError): string {
-  switch (guessError) {
+export function getGuessErrorMessage(error: GuessError): string {
+  switch (error) {
     case 'invalidStatus':
       return '게임이 이미 끝났어요.'
     case 'wrongLength':
@@ -13,7 +13,20 @@ export function getAlertMessage(guessError: GuessError): string {
       return `앗, 사용할 수 없는 글자가 포함되어 있어요. (${FONT.undrawableSyllables})`
     default:
       // eslint-disable-next-line no-case-declarations
-      const _exhaustiveCheck: never = guessError
+      const _exhaustiveCheck: never = error
+      return _exhaustiveCheck
+  }
+}
+
+export function getKeyboardErrorMessage(error: KeyboardError): string {
+  switch (error) {
+    case 'lengthExceeded':
+      return '글자가 꽉 찼어요.'
+    case 'nonHangul':
+      return '한글을 입력해 주세요.'
+    default:
+      // eslint-disable-next-line no-case-declarations
+      const _exhaustiveCheck: never = error
       return _exhaustiveCheck
   }
 }

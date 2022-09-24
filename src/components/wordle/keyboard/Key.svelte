@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { game, ui } from './store'
+  import { game, ui } from '../store'
   import * as Hangul from '@/lib/hangul'
   import type * as Wordle from '@/lib/wordle'
 
@@ -39,12 +39,11 @@
         return 'tw-bg-transparent'
     }
   }
-
-  // TODO: handle on:click event
 </script>
 
 <button
   class="{width} tw-h-14 tw-rounded tw-bg-app-keyboard-bg tw-relative tw-overflow-hidden"
+  on:click
   {disabled}
 >
   <div
