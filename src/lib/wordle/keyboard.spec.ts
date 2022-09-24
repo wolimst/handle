@@ -100,8 +100,43 @@ describe('tests for keyboard class', () => {
     })
   })
 
+  describe('type(jamo: DubeolsikJamo) => KeyboardError | undefined', () => {
+    it('should update the keyboard input value if its length is not longer than the answer length', () => {
+      const keyboard = new Keyboard(answerLength)
+
+      expect(keyboard.type('ㄱ')).toBeUndefined()
+      expect(keyboard.value).toStrictEqual('ㄱ')
+
+      expect(keyboard.type('ㅜ')).toBeUndefined()
+      expect(keyboard.value).toStrictEqual('구')
+
+      expect(keyboard.type('ㄹ')).toBeUndefined()
+      expect(keyboard.value).toStrictEqual('굴')
+
+      expect(keyboard.type('ㅡ')).toBeUndefined()
+      expect(keyboard.value).toStrictEqual('구르')
+
+      expect(keyboard.type('ㅁ')).toBeUndefined()
+      expect(keyboard.value).toStrictEqual('구름')
+    })
+
+    it('should return an error if the input value length become longer than the answer length', () => {
+      const keyboard = new Keyboard(answerLength)
+      keyboard.setValue('가나')
+
+      expect(keyboard.type('ㄷ')).toBeUndefined()
+      expect(keyboard.value).toStrictEqual('가낟')
+
+      expect(keyboard.type('ㅏ')).toStrictEqual(ERR_LENGTH)
+      expect(keyboard.value).toStrictEqual('가낟')
+    })
+
+    // More detailed typing tests are done in tests for DubeolsikIME
+  })
+
   // Skip tests on following methods because they are just simple wrappers for
   // tested functions in Hangul library
   describe.skip('getter for guess property')
+  describe.skip('delete()')
   describe.skip('codePointLength() => number')
 })
