@@ -5,6 +5,7 @@
   import Key from './Key.svelte'
   import BackspaceIcon from '@/components/ui/icons/Backspace.svelte'
   import * as Hangul from '@/lib/hangul'
+  import { config } from '@/stores/app'
   import { createEventDispatcher, onDestroy, onMount } from 'svelte'
 
   const dispatch = createEventDispatcher()
@@ -57,13 +58,15 @@
 </script>
 
 <div class="tw-container">
-  <div class="tw-flex tw-flex-nowrap tw-justify-center tw-mb-4">
-    <InputForm
-      on:submit
-      on:focus={() => (isFormFocused = true)}
-      on:blur={() => (isFormFocused = false)}
-    />
-  </div>
+  {#if $config.showInputForm}
+    <div class="tw-flex tw-flex-nowrap tw-justify-center tw-mb-6">
+      <InputForm
+        on:submit
+        on:focus={() => (isFormFocused = true)}
+        on:blur={() => (isFormFocused = false)}
+      />
+    </div>
+  {/if}
 
   <div
     class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5"
@@ -100,23 +103,44 @@
   <div
     class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5"
   >
-    <Key
-      key={ENTER_KEY}
-      size="wide"
-      on:click={() => onClick(ENTER_KEY)}
-      on:submit
-    >
-      입력
-    </Key>
-    {#each row4 as key}
-      <Key {key} on:click={() => onClick(key)} />
-    {/each}
-    <Key
-      key={BACKSPACE_KEY}
-      size="wide"
-      on:click={() => onClick(BACKSPACE_KEY)}
-    >
-      <BackspaceIcon />
-    </Key>
+    {#if !$config.switchEnterAndBackspacePosition}
+      <Key
+        key={ENTER_KEY}
+        size="wide"
+        on:click={() => onClick(ENTER_KEY)}
+        on:submit
+      >
+        입력
+      </Key>
+      {#each row4 as key}
+        <Key {key} on:click={() => onClick(key)} />
+      {/each}
+      <Key
+        key={BACKSPACE_KEY}
+        size="wide"
+        on:click={() => onClick(BACKSPACE_KEY)}
+      >
+        <BackspaceIcon />
+      </Key>
+    {:else}
+      <Key
+        key={BACKSPACE_KEY}
+        size="wide"
+        on:click={() => onClick(BACKSPACE_KEY)}
+      >
+        <BackspaceIcon />
+      </Key>
+      {#each row4 as key}
+        <Key {key} on:click={() => onClick(key)} />
+      {/each}
+      <Key
+        key={ENTER_KEY}
+        size="wide"
+        on:click={() => onClick(ENTER_KEY)}
+        on:submit
+      >
+        입력
+      </Key>
+    {/if}
   </div>
 </div>
