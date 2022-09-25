@@ -24,7 +24,12 @@
   $: dispatch('toggle', checked)
 </script>
 
-<div class="tw-inline-flex tw-items-center tw-content-center tw-gap-3">
+<div
+  class="tw-w-full tw-inline-flex tw-justify-between tw-items-center tw-gap-3"
+>
+  <div class="tw-text-app-text tw-align-middle">
+    <slot />
+  </div>
   <label for={label} class="tw-cursor-pointer">
     <div class="tw-relative">
       <input id={label} type="checkbox" class="tw-sr-only" bind:checked />
@@ -34,7 +39,6 @@
       />
     </div>
   </label>
-  <slot />
 </div>
 
 <style>

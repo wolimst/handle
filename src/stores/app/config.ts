@@ -4,6 +4,8 @@ import { get } from 'svelte/store'
 
 const defaultConfig: Config = {
   darkTheme: window.matchMedia('(prefers-color-scheme: dark)').matches,
+  showInputForm: false,
+  switchEnterAndBackspacePosition: false,
 }
 
 const store = persistentStore('config', defaultConfig)
