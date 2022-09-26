@@ -27,7 +27,7 @@ export let keyboard: KeyboardStore
 export let ui: UIStore
 export const alert = writable('')
 
-export function initStores(
+export function initializeWordleStores(
   nWordles: number,
   nGuesses: number,
   answerLength: number

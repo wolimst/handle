@@ -6,15 +6,16 @@
   import AppIcon from '@/components/ui/icons/App.svelte'
   import FontIcon from '@/components/ui/icons/Font.svelte'
   import GitHubIcon from '@/components/ui/icons/GitHub.svelte'
-  import { PRODUCTION, ROUTES } from '@/constants'
+  import { APP_NAME, PRODUCTION, ROUTES } from '@/constants'
 </script>
 
 <nav
-  class="tw-inline-flex tw-justify-between tw-gap-4 tw-w-full tw-px-6 tw-py-3 tw-border-b tw-border-solid tw-border-app-text-secondary"
+  class="tw-inline-flex tw-justify-between tw-gap-4 tw-w-full tw-px-6 tw-py-2 tw-border-b tw-border-solid tw-border-app-text-secondary"
 >
   <div class="tw-inline-flex tw-gap-4">
-    <LinkButton link={ROUTES.home}>
-      <AppIcon />
+    <LinkButton link={ROUTES.home} underline={false}>
+      <AppIcon width={32} />
+      <span class="tw-ml-2 tw-font-medium">{APP_NAME}</span>
     </LinkButton>
   </div>
   <div class="tw-inline-flex tw-gap-4">
