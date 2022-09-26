@@ -1,5 +1,7 @@
 import type * as Hangul from '@/lib/hangul'
 
+export type GameType = 'daily' | 'free' | 'custom'
+
 export type Status = 'playing' | 'win' | 'lose'
 
 /**
