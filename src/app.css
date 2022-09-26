@@ -81,3 +81,8 @@ a:hover {
 .btn:not(:disabled):hover {
   filter: brightness(0.8) contrast(1.2);
 }
+
+.btn:disabled {
+  filter: brightness(0.6);
+  cursor: not-allowed;
+}
