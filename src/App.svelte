@@ -1,6 +1,7 @@
 <script lang="ts">
   import Wordle from './routes/Wordle.svelte'
   import Nav from '@/Nav.svelte'
+  import PageNotFound from '@/NotFound.svelte'
   import { PRODUCTION, ROUTES } from '@/constants'
   import FontViewer from '@/routes/FontViewer.svelte'
   import Home from '@/routes/Home.svelte'
@@ -26,5 +27,9 @@
         <FontViewer />
       </Route>
     {/if}
+
+    <Route>
+      <PageNotFound />
+    </Route>
   </main>
 </Router>
