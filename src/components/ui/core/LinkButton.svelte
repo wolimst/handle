@@ -1,8 +1,12 @@
 <script lang="ts">
   export let link: string = ''
+  export let underline = true
+  export let disabled = false
+
+  $: underlineClass = underline ? 'hover:tw-underline' : 'hover:tw-no-underline'
 </script>
 
-<a class="btn" href={link}>
+<a class={`btn ${underlineClass}`} href={link} {disabled}>
   <slot />
 </a>
 
