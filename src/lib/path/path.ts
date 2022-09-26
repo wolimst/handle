@@ -8,7 +8,7 @@ export const FONT: Font = {
   name: 'Binggrae',
   urls: [
     // TODO: Add default CDN
-    'resources/fonts/Binggrae.otf',
+    '/resources/fonts/Binggrae.otf',
     'https://fonts.cdnfonts.com/s/18622/Binggrae.woff',
   ],
   fontSize: 72,
