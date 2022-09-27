@@ -73,6 +73,17 @@ export class Game {
     }
   }
 
+  /**
+   * Return the answers of the wordles if all games are finished, otherwise undefined
+   */
+  get answers(): readonly string[] | undefined {
+    if (this.status === 'playing') {
+      return undefined
+    }
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return this.#wordles.map((wordle) => wordle.answer!)
+  }
+
   get remainingGuesses(): number {
     return this.#nGuesses - this.#guesses.length
   }

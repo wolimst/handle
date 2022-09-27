@@ -21,19 +21,25 @@ const ERR_UNDRAWABLE: GuessError = 'undrawableSyllable'
 
 describe('tests for game class', () => {
   const answerLength = 2
-  const answers = ['첫째', '둘째', '셋째', '넷째', '다섯', '여섯', '정답'].map(
-    toWord
-  )
+
+  const ANSWER1 = '첫째'
+  const ANSWER2 = '둘째'
+  const ANSWER3 = '셋째'
+  const ANSWER4 = '넷째'
+  const ANSWER5 = '다섯'
+  const ANSWER6 = '여섯'
+  const ANSWER7_OR_HIGHER = '정답'
+
   function initGame(nWordles: number, nGuesses: number): Game {
     const answerGetterMock = vi.spyOn(WordsModule, 'getRandomAnswer')
     answerGetterMock
-      .mockReturnValueOnce(answers[0])
-      .mockReturnValueOnce(answers[1])
-      .mockReturnValueOnce(answers[2])
-      .mockReturnValueOnce(answers[3])
-      .mockReturnValueOnce(answers[4])
-      .mockReturnValueOnce(answers[5])
-      .mockReturnValue(answers[6])
+      .mockReturnValueOnce(toWord(ANSWER1))
+      .mockReturnValueOnce(toWord(ANSWER2))
+      .mockReturnValueOnce(toWord(ANSWER3))
+      .mockReturnValueOnce(toWord(ANSWER4))
+      .mockReturnValueOnce(toWord(ANSWER5))
+      .mockReturnValueOnce(toWord(ANSWER6))
+      .mockReturnValue(toWord(ANSWER7_OR_HIGHER))
     return new Game(nWordles, nGuesses, answerLength)
   }
 
@@ -65,6 +71,7 @@ describe('tests for game class', () => {
 
         expect(game.remainingGuesses).toStrictEqual(nGuesses)
         expect(game.status).toStrictEqual(PLAYING)
+        expect(game.answers).toBeUndefined()
         expect(game.data).toStrictEqual<GameData>({
           nWordles: nWordles,
           nGuesses: nGuesses,
@@ -109,13 +116,14 @@ describe('tests for game class', () => {
 
       test('win at first guess', () => {
         const game = initGame(nWordles, nGuesses)
-        const guesses = ['첫째']
+        const guesses = [ANSWER1]
 
         game.keyboard.setValue(guesses[0])
         const guessError = game.submitGuess()
         expect(guessError).toBeUndefined()
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 1)
         expect(game.status).toStrictEqual(WIN)
+        expect(game.answers).toStrictEqual([ANSWER1])
         expect(game.data.status).toStrictEqual(WIN)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 1).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(WIN)
@@ -123,13 +131,14 @@ describe('tests for game class', () => {
 
       test('win at second guess', () => {
         const game = initGame(nWordles, nGuesses)
-        const guesses = ['추측', '첫째']
+        const guesses = ['추측', ANSWER1]
 
         game.keyboard.setValue(guesses[0])
         const guessError1 = game.submitGuess()
         expect(guessError1).toBeUndefined()
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 1)
         expect(game.status).toStrictEqual(PLAYING)
+        expect(game.answers).toBeUndefined()
         expect(game.data.status).toStrictEqual(PLAYING)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 1).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(PLAYING)
@@ -139,6 +148,7 @@ describe('tests for game class', () => {
         expect(guessError2).toBeUndefined()
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 2)
         expect(game.status).toStrictEqual(WIN)
+        expect(game.answers).toStrictEqual([ANSWER1])
         expect(game.data.status).toStrictEqual(WIN)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 2).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(WIN)
@@ -146,13 +156,14 @@ describe('tests for game class', () => {
 
       test('win at last guess', () => {
         const game = initGame(nWordles, nGuesses)
-        const guesses = ['추측', '추측', '첫째']
+        const guesses = ['추측', '추측', ANSWER1]
 
         game.keyboard.setValue(guesses[0])
         const guessError1 = game.submitGuess()
         expect(guessError1).toBeUndefined()
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 1)
         expect(game.status).toStrictEqual(PLAYING)
+        expect(game.answers).toBeUndefined()
         expect(game.data.status).toStrictEqual(PLAYING)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 1).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(PLAYING)
@@ -162,6 +173,7 @@ describe('tests for game class', () => {
         expect(guessError2).toBeUndefined()
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 2)
         expect(game.status).toStrictEqual(PLAYING)
+        expect(game.answers).toBeUndefined()
         expect(game.data.status).toStrictEqual(PLAYING)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 2).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(PLAYING)
@@ -171,6 +183,7 @@ describe('tests for game class', () => {
         expect(guessError3).toBeUndefined()
         expect(game.remainingGuesses).toStrictEqual(0)
         expect(game.status).toStrictEqual(WIN)
+        expect(game.answers).toStrictEqual([ANSWER1])
         expect(game.data.status).toStrictEqual(WIN)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 3).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(WIN)
@@ -193,6 +206,7 @@ describe('tests for game class', () => {
         expect(guessError3).toBeUndefined()
         expect(game.remainingGuesses).toStrictEqual(0)
         expect(game.status).toStrictEqual(LOSS)
+        expect(game.answers).toStrictEqual([ANSWER1])
         expect(game.data.status).toStrictEqual(LOSS)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 3).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(LOSS)
@@ -207,6 +221,7 @@ describe('tests for game class', () => {
         expect(guessError1).toBeUndefined()
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 1)
         expect(game.status).toStrictEqual(WIN)
+        expect(game.answers).toStrictEqual([ANSWER1])
         expect(game.data.status).toStrictEqual(WIN)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 1).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(WIN)
@@ -217,12 +232,13 @@ describe('tests for game class', () => {
         expect(guessError2).toStrictEqual(ERR_STATUS)
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 1)
         expect(game.status).toStrictEqual(WIN)
+        expect(game.answers).toStrictEqual([ANSWER1])
         expect(game.data).toStrictEqual(data)
       })
 
       test('submitting guess after a loss should return error and cause no status change', () => {
         const game = initGame(nWordles, nGuesses)
-        const guesses = ['추측', '추측', '추측', '첫째']
+        const guesses = ['추측', '추측', '추측', ANSWER1]
 
         game.keyboard.setValue(guesses[0])
         const guessError1 = game.submitGuess()
@@ -237,6 +253,7 @@ describe('tests for game class', () => {
         expect(guessError3).toBeUndefined()
         expect(game.remainingGuesses).toStrictEqual(0)
         expect(game.status).toStrictEqual(LOSS)
+        expect(game.answers).toStrictEqual([ANSWER1])
         expect(game.data.status).toStrictEqual(LOSS)
         expect(game.data.guesses).toStrictEqual(guesses.slice(0, 3).map(toWord))
         expect(game.data.wordleData[0].status).toStrictEqual(LOSS)
@@ -247,6 +264,7 @@ describe('tests for game class', () => {
         expect(guessError4).toStrictEqual(ERR_STATUS)
         expect(game.remainingGuesses).toStrictEqual(0)
         expect(game.status).toStrictEqual(LOSS)
+        expect(game.answers).toStrictEqual([ANSWER1])
         expect(game.data).toStrictEqual(data)
       })
 
@@ -274,6 +292,7 @@ describe('tests for game class', () => {
         expect(guessError2).toStrictEqual(ERR_LENGTH)
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 1)
         expect(game.status).toStrictEqual(PLAYING)
+        expect(game.answers).toBeUndefined()
         expect(game.data).toStrictEqual(dataAfterGuess1)
 
         game.keyboard.setValue(guesses[2]) // 2nd valid guess
@@ -286,6 +305,7 @@ describe('tests for game class', () => {
         expect(guessError4).toStrictEqual(ERR_LENGTH)
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 2)
         expect(game.status).toStrictEqual(PLAYING)
+        expect(game.answers).toBeUndefined()
         expect(game.data).toStrictEqual(dataAfterGuess3)
 
         game.keyboard.setValue(guesses[4]) // 3rd invalid guess
@@ -293,6 +313,7 @@ describe('tests for game class', () => {
         expect(guessError5).toStrictEqual(ERR_WORD)
         expect(game.remainingGuesses).toStrictEqual(nGuesses - 2)
         expect(game.status).toStrictEqual(PLAYING)
+        expect(game.answers).toBeUndefined()
         expect(game.data).toStrictEqual(dataAfterGuess3)
 
         game.keyboard.setValue(guesses[5]) // 3rd valid guess, game result is loss
@@ -305,10 +326,11 @@ describe('tests for game class', () => {
         expect(guessError7).toMatch(new RegExp(`(${ERR_STATUS}|${ERR_WORD})`))
         expect(game.remainingGuesses).toStrictEqual(0)
         expect(game.status).toStrictEqual(LOSS)
+        expect(game.answers).toStrictEqual([ANSWER1])
         expect(game.data).toStrictEqual(dataAfterGuess6)
       })
     })
 
-    describe.todo('nWordles = 2')
+    describe.todo('nWordles >= 2')
   })
 })
