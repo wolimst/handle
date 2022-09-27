@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getKeyboardErrorMessage } from '../message'
-  import { keyboard, notification } from '../store'
+  import { game, keyboard, notification } from '../store'
   import InputForm from './InputForm.svelte'
   import Key from './Key.svelte'
   import BackspaceIcon from '@/components/ui/icons/Backspace.svelte'
@@ -26,18 +26,23 @@
   }
 
   function onClick(key: string) {
-    if (isJamoKey(key)) {
-      const error = keyboard.type(key)
-      if (error) {
-        $notification = {
-          type: 'error',
-          message: getKeyboardErrorMessage(error),
-        }
-      }
-    } else if (key === ENTER_KEY) {
+    if (key === ENTER_KEY) {
       dispatch('submit')
-    } else if (key === BACKSPACE_KEY) {
-      keyboard.delete()
+      return
+    }
+
+    if ($game.status === 'playing') {
+      if (isJamoKey(key)) {
+        const error = keyboard.type(key)
+        if (error) {
+          $notification = {
+            type: 'error',
+            message: getKeyboardErrorMessage(error),
+          }
+        }
+      } else if (key === BACKSPACE_KEY) {
+        keyboard.delete()
+      }
     }
   }
 
