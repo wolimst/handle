@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getKeyboardErrorMessage } from '../message'
-  import { alert, keyboard } from '../store'
+  import { keyboard, notification } from '../store'
   import InputForm from './InputForm.svelte'
   import Key from './Key.svelte'
   import BackspaceIcon from '@/components/ui/icons/Backspace.svelte'
@@ -29,7 +29,10 @@
     if (isJamoKey(key)) {
       const error = keyboard.type(key)
       if (error) {
-        $alert = getKeyboardErrorMessage(error)
+        $notification = {
+          type: 'error',
+          message: getKeyboardErrorMessage(error),
+        }
       }
     } else if (key === ENTER_KEY) {
       dispatch('submit')

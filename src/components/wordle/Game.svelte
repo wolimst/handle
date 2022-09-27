@@ -1,9 +1,13 @@
 <script lang="ts">
-  import Alert from './Alert.svelte'
   import Guess from './Guess.svelte'
+  import Alert from './Notification.svelte'
   import Keyboard from './keyboard/Keyboard.svelte'
-  import { getGuessErrorMessage } from './message'
-  import { alert, game, keyboard, ui } from './store'
+  import {
+    getGuessErrorMessage,
+    getLossMessage,
+    getWinMessage,
+  } from './message'
+  import { game, keyboard, notification, ui } from './store'
 
   function assert() {
     if (game === undefined || keyboard === undefined || ui === undefined) {
@@ -13,8 +17,24 @@
 
   function submitGuess() {
     const guessError = game.submitGuess()
-    if (guessError) {
-      $alert = getGuessErrorMessage(guessError)
+
+    if ($game.status === 'win') {
+      $notification = {
+        type: 'win',
+        message: getWinMessage(),
+      }
+    } else if ($game.status === 'lose') {
+      $notification = {
+        type: 'loss',
+        message: getLossMessage(game.getAnswers()!),
+      }
+    } else {
+      if (guessError) {
+        $notification = {
+          type: 'error',
+          message: getGuessErrorMessage(guessError),
+        }
+      }
     }
   }
 
