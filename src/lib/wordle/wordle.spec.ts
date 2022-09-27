@@ -560,6 +560,7 @@ describe('tests for wordle class', () => {
           ㅂ: CORRECT,
         })
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
           keyHints: wordle.keyHints,
@@ -591,6 +592,7 @@ describe('tests for wordle class', () => {
           ㄱ: ABSENT,
         })
         expect(wordle.status).toStrictEqual(PLAYING)
+        expect(wordle.answer).toBeUndefined()
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
           keyHints: wordle.keyHints,
@@ -620,6 +622,7 @@ describe('tests for wordle class', () => {
           ㅂ: CORRECT,
         })
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2],
           keyHints: wordle.keyHints,
@@ -649,6 +652,7 @@ describe('tests for wordle class', () => {
           ㄹ: ABSENT,
         })
         expect(wordle.status).toStrictEqual(PLAYING)
+        expect(wordle.answer).toBeUndefined()
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
           keyHints: wordle.keyHints,
@@ -676,6 +680,7 @@ describe('tests for wordle class', () => {
           ㅁ: ABSENT,
         })
         expect(wordle.status).toStrictEqual(PLAYING)
+        expect(wordle.answer).toBeUndefined()
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2],
           keyHints: wordle.keyHints,
@@ -704,6 +709,7 @@ describe('tests for wordle class', () => {
           ㄷ: CORRECT,
         })
         expect(wordle.status).toStrictEqual(PLAYING)
+        expect(wordle.answer).toBeUndefined()
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3],
           keyHints: wordle.keyHints,
@@ -735,6 +741,7 @@ describe('tests for wordle class', () => {
           ㅇ: CORRECT,
         })
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
           keyHints: wordle.keyHints,
@@ -763,6 +770,7 @@ describe('tests for wordle class', () => {
           ㅜ: ABSENT,
         })
         expect(wordle.status).toStrictEqual(LOSS)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
           keyHints: wordle.keyHints,
@@ -784,6 +792,7 @@ describe('tests for wordle class', () => {
           ㅂ: CORRECT,
         })
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
           keyHints: wordle.keyHints,
@@ -801,6 +810,7 @@ describe('tests for wordle class', () => {
           ㅂ: CORRECT,
         })
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
           keyHints: wordle.keyHints,
@@ -818,6 +828,7 @@ describe('tests for wordle class', () => {
           ㅂ: CORRECT,
         })
         expect(wordle.status).toStrictEqual(WIN)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1],
           keyHints: wordle.keyHints,
@@ -846,6 +857,7 @@ describe('tests for wordle class', () => {
           ㅜ: ABSENT,
         })
         expect(wordle.status).toStrictEqual(LOSS)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
           keyHints: wordle.keyHints,
@@ -867,6 +879,7 @@ describe('tests for wordle class', () => {
           ㅜ: ABSENT,
         })
         expect(wordle.status).toStrictEqual(LOSS)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
           keyHints: wordle.keyHints,
@@ -888,6 +901,7 @@ describe('tests for wordle class', () => {
           ㅜ: ABSENT,
         })
         expect(wordle.status).toStrictEqual(LOSS)
+        expect(wordle.answer).toStrictEqual(answer)
         expect(wordle.data).toStrictEqual({
           guessResults: [res1, res2, res3, res4],
           keyHints: wordle.keyHints,

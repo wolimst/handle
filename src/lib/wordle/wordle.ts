@@ -45,6 +45,16 @@ export class _Wordle {
     return this.#status
   }
 
+  /**
+   * Return the answer if the game is finished, otherwise undefined
+   */
+  get answer(): string | undefined {
+    if (this.#status === 'playing') {
+      return undefined
+    }
+    return this.#answer.value
+  }
+
   get guessResults(): readonly GuessResult[] {
     return structuredClone(this.#guessResults)
   }
