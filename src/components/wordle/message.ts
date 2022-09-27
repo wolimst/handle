@@ -1,6 +1,14 @@
 import { FONT } from '@/lib/path'
 import type { GuessError, KeyboardError } from '@/lib/wordle'
 
+export function getWinMessage(): string {
+  return '정답! 대단해요!'
+}
+
+export function getLossMessage(answers: readonly string[]): string {
+  return `아쉬워요. 정답은 [${answers.join(', ')}] 이에요.`
+}
+
 export function getGuessErrorMessage(error: GuessError): string {
   switch (error) {
     case 'invalidStatus':

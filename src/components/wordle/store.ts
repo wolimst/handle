@@ -5,6 +5,7 @@ import { readable, writable, type Readable } from 'svelte/store'
 
 interface GameStore extends Readable<Wordle.GameData> {
   submitGuess(): Wordle.GuessError | undefined
+  getAnswers(): readonly string[] | undefined
 }
 
 interface KeyboardStore extends Readable<string> {
@@ -22,10 +23,15 @@ interface UIStore extends Readable<UIConstants> {
   nWordlesAtRow: (rowIndex: number) => number
 }
 
+interface Notification {
+  type?: 'win' | 'loss' | 'error'
+  message: string
+}
+
 export let game: GameStore
 export let keyboard: KeyboardStore
 export let ui: UIStore
-export const alert = writable('')
+export const notification = writable<Notification>({ message: '' })
 
 export function initializeWordleStores(
   nWordles: number,
@@ -45,6 +51,9 @@ export function initializeWordleStores(
       gameStore.set(gameImpl.data)
       keyboardStore.set(keyboardImpl.value)
       return result
+    },
+    getAnswers: (): readonly string[] | undefined => {
+      return gameImpl.answers
     },
   }
 

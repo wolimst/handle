@@ -1,13 +1,16 @@
 <script lang="ts">
   import { getKeyboardErrorMessage } from '../message'
-  import { alert, keyboard } from '../store'
+  import { keyboard, notification } from '../store'
 
   $: value = $keyboard
   $: {
     const setError = keyboard.setValue(value)
     if (setError !== undefined) {
       value = $keyboard
-      $alert = getKeyboardErrorMessage(setError)
+      $notification = {
+        type: 'error',
+        message: getKeyboardErrorMessage(setError),
+      }
     }
   }
 </script>
