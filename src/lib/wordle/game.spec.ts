@@ -20,7 +20,9 @@ const ERR_WORD: GuessError = 'notInWordList'
 const ERR_UNDRAWABLE: GuessError = 'undrawableSyllable'
 
 describe('tests for game class', () => {
+  const gameId = 'dummyId'
   const answerLength = 2
+  const useSave = false // Tests that involve local storage are skipped in unit tests
 
   const ANSWER1 = '첫째'
   const ANSWER2 = '둘째'
@@ -40,7 +42,7 @@ describe('tests for game class', () => {
       .mockReturnValueOnce(toWord(ANSWER5))
       .mockReturnValueOnce(toWord(ANSWER6))
       .mockReturnValue(toWord(ANSWER7_OR_HIGHER))
-    return new Game(nWordles, nGuesses, answerLength)
+    return new Game(gameId, nWordles, answerLength, nGuesses, useSave)
   }
 
   describe('observer methods that return constants', () => {
@@ -73,6 +75,7 @@ describe('tests for game class', () => {
         expect(game.status).toStrictEqual(PLAYING)
         expect(game.answers).toBeUndefined()
         expect(game.data).toStrictEqual<GameData>({
+          id: gameId,
           nWordles: nWordles,
           nGuesses: nGuesses,
           answerLength: answerLength,

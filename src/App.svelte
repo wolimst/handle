@@ -16,9 +16,9 @@
       <Home />
     </Route>
 
-    {#each Object.entries(ROUTES.game) as [gameId, path]}
+    {#each Object.values(ROUTES.game) as path}
       <Route {path}>
-        <Wordle id={gameId} />
+        <Wordle {path} />
       </Route>
     {/each}
 

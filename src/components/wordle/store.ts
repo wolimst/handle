@@ -3,7 +3,11 @@ import type { DubeolsikJamo } from '@/lib/hangul'
 import * as Wordle from '@/lib/wordle'
 import { readable, writable, type Readable } from 'svelte/store'
 
-interface GameStore extends Readable<Wordle.GameData> {
+interface GameData extends Wordle.GameData {
+  gameType: Wordle.GameType
+}
+
+interface GameStore extends Readable<GameData> {
   submitGuess(): Wordle.GuessError | undefined
   getAnswers(): readonly string[] | undefined
 }
@@ -34,21 +38,27 @@ export let ui: UIStore
 export const notification = writable<Notification>({ message: '' })
 
 export function initializeWordleStores(
+  gameType: Wordle.GameType,
   nWordles: number,
-  nGuesses: number,
-  answerLength: number
+  answerLength: number,
+  nGuesses: number
 ) {
-  const gameImpl = new Wordle.Game(nWordles, nGuesses, answerLength)
+  const gameImpl = createGameInstance(
+    gameType,
+    nWordles,
+    answerLength,
+    nGuesses
+  )
   const keyboardImpl = gameImpl.keyboard
 
-  const gameStore = writable(gameImpl.data)
+  const gameStore = writable<GameData>({ gameType, ...gameImpl.data })
   const keyboardStore = writable(keyboardImpl.value)
 
   game = {
     subscribe: gameStore.subscribe,
     submitGuess: (): Wordle.GuessError | undefined => {
       const result = gameImpl.submitGuess()
-      gameStore.set(gameImpl.data)
+      gameStore.set({ gameType, ...gameImpl.data })
       keyboardStore.set(keyboardImpl.value)
       return result
     },
@@ -93,5 +103,39 @@ export function initializeWordleStores(
         return nWordlesRemaining
       }
     },
+  }
+}
+
+function createGameInstance(
+  gameType: Wordle.GameType,
+  nWordles: number,
+  answerLength: number,
+  nGuesses: number
+): Wordle.Game {
+  switch (gameType) {
+    case 'daily': {
+      const date = new Date()
+        .toLocaleDateString('ko', {
+          timeZone: 'Asia/Seoul',
+          year: '2-digit',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        .replace(/\s+/g, '')
+      const id = `d-${nWordles}-${answerLength}-${nGuesses}-${date}`
+      return new Wordle.Game(id, nWordles, answerLength, nGuesses, true)
+    }
+    case 'free': {
+      const n = Math.floor(Math.random() * 2 ** 32)
+      const id = `i-${nWordles}-${answerLength}-${nGuesses}-${n}`
+      return new Wordle.Game(id, nWordles, answerLength, nGuesses, false)
+    }
+    case 'custom':
+      // TODO
+      throw new Error('not implemented')
+    default:
+      // eslint-disable-next-line no-case-declarations
+      const _exhaustiveCheck: never = gameType
+      return _exhaustiveCheck
   }
 }

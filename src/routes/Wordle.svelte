@@ -2,15 +2,32 @@
   import Game from '@/components/wordle/Game.svelte'
   import { initializeWordleStores } from '@/components/wordle/store'
   import { N_GUESSES } from '@/constants'
+  import type * as Wordle from '@/lib/wordle'
 
-  export let id: string
+  export let path: string
+
+  const supportedGameTypes: readonly Wordle.GameType[] = [
+    'daily',
+    'free',
+    'custom',
+  ] as const
+
+  function isGameType(str: string): str is Wordle.GameType {
+    return supportedGameTypes.some((gameType) => gameType === str)
+  }
 
   function initialize() {
-    const nWordles = Number(id.charAt(1))
-    const answerLength = Number(id.charAt(3))
+    const parts = path.split('/').filter((elem) => elem !== '')
+
+    const gameType = parts[0]
+    if (!isGameType(gameType)) {
+      throw new Error('invalid game type')
+    }
+    const nWordles = Number(parts[1].split('x')[0])
+    const answerLength = Number(parts[1].split('x')[1])
     const nGuesses = N_GUESSES[nWordles][answerLength]
 
-    initializeWordleStores(nWordles, nGuesses, answerLength)
+    initializeWordleStores(gameType, nWordles, answerLength, nGuesses)
   }
 
   initialize()
