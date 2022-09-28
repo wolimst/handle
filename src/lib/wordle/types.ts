@@ -48,6 +48,7 @@ export interface WordleData {
 }
 
 export interface GameData {
+  readonly id: string
   readonly nWordles: number
   readonly nGuesses: number
   readonly answerLength: number

@@ -19,15 +19,15 @@ export class _Wordle {
   /**
    * Initialize a Hangul wordle game
    *
-   * @param nGuesses number of guesses that the player has. It should be a positive integer.
    * @param answerLength number of syllables in the answer
+   * @param nGuesses number of guesses that the player has. It should be a positive integer.
    * @param answerSeed a random seed to randomize answer
    * @throws an error if failed to find an answer with the given answerLength
    * @see {@link getRandomAnswer}
    */
-  constructor(nGuesses: number, answerLength: number, answerSeed: string) {
-    this.#nGuesses = nGuesses
+  constructor(answerLength: number, nGuesses: number, answerSeed: string) {
     this.#answer = getRandomAnswer(answerLength, answerSeed)
+    this.#nGuesses = nGuesses
     this.#status = 'playing'
     this.#guessResults = []
     this.#keyHints = {}

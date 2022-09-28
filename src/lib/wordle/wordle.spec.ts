@@ -27,7 +27,7 @@ describe('tests for wordle class', () => {
   function initWordle(nGuesses: number, answer: string): _Wordle {
     answerGetterMock.mockReturnValueOnce(toWord(answer))
     const dummyAnswerLength = 0
-    return new _Wordle(nGuesses, dummyAnswerLength, 'dummySeed')
+    return new _Wordle(dummyAnswerLength, nGuesses, 'dummySeed')
   }
 
   describe('submitGuess(Hangul.Word) -> GuessResult', () => {

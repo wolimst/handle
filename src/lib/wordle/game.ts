@@ -4,11 +4,15 @@ import { _Wordle } from './wordle'
 import { getWordList } from './words'
 import type * as Hangul from '@/lib/hangul'
 import * as Path from '@/lib/path'
+import { savedata } from '@/stores/wordle'
 
 export class Game {
+  readonly #id: string
+
   readonly #nWordles: number
-  readonly #nGuesses: number
   readonly #answerLength: number
+  readonly #nGuesses: number
+  readonly #useSave: boolean
 
   readonly #wordles: readonly _Wordle[]
   readonly #keyboard: Keyboard
@@ -23,27 +27,35 @@ export class Game {
    *
    * Each wordle will have a random answer for the day.
    *
+   * @param id a unique string for the game
    * @param nWordles number of wordles in the game. It should be a positive integer.
-   * @param nGuesses number of guesses that the player has. It should be a positive integer.
    * @param answerLength number of syllables in the answer
+   * @param nGuesses number of guesses that the player has. It should be a positive integer.
+   * @param useSave a flag whether to load data at initialization and save on state change
    */
-  constructor(nWordles: number, nGuesses: number, answerLength: number) {
+  constructor(
+    id: string,
+    nWordles: number,
+    answerLength: number,
+    nGuesses: number,
+    useSave: boolean
+  ) {
+    this.#id = id
     this.#nWordles = nWordles
-    this.#nGuesses = nGuesses
     this.#answerLength = answerLength
+    this.#nGuesses = nGuesses
+    this.#useSave = useSave
 
-    const date = new Date().toLocaleDateString('ko', {
-      timeZone: 'Asia/Seoul',
-    })
     this.#wordles = Array(nWordles)
       .fill(0)
-      .map((_, i) => {
-        const seed = `${date}-${i}`
-        return new _Wordle(nGuesses, answerLength, seed)
-      })
+      .map((_, i) => new _Wordle(answerLength, nGuesses, `${id}-${i}`))
     this.#keyboard = new Keyboard(answerLength)
-
     this.#guesses = []
+
+    if (useSave) {
+      const data = savedata.load(id)
+      data?.guesses.forEach((guess) => this.#doSubmit(guess))
+    }
   }
 
   get nWordles(): number {
@@ -90,6 +102,7 @@ export class Game {
 
   get data(): GameData {
     return {
+      id: this.#id,
       nWordles: this.#nWordles,
       nGuesses: this.#nGuesses,
       answerLength: this.#answerLength,
@@ -115,7 +128,7 @@ export class Game {
 
     const guess = this.#keyboard.guess
 
-    if (guess.length !== this.answerLength) {
+    if (guess.length !== this.#answerLength) {
       return 'wrongLength'
     }
 
@@ -127,13 +140,22 @@ export class Game {
       return 'undrawableSyllable'
     }
 
+    this.#doSubmit(guess)
+
+    this.#keyboard.setValue('')
+
+    if (this.#useSave) {
+      savedata.save(this.data)
+    }
+
+    return undefined
+  }
+
+  #doSubmit(guess: Hangul.Word) {
     this.#guesses.push(guess)
     this.#wordles
       .filter((wordle) => wordle.status === 'playing')
       .forEach((wordle) => wordle.submitGuess(guess))
-    this.#keyboard.setValue('')
-
-    return undefined
   }
 }
 
