@@ -66,6 +66,9 @@
     border-radius: 2rem;
 
     overflow: auto;
+
+    display: inline-flex;
+    flex-direction: column;
   }
 
   .modal-header {
@@ -84,5 +87,6 @@
 
   .modal-content {
     width: 100%;
+    flex-grow: 1;
   }
 </style>
