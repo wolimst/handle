@@ -1,0 +1,11 @@
+The terms of the license of this repository which is placed at the repository root directory
+do not apply to the following files in this directory.
+
+"answers.json" file is a derivative of '국립국어연구원 한국어 학습용 어휘 목록'
+(https://www.korean.go.kr/front/etcData/etcDataView.do?mn_id=208&etc_seq=71)
+used under 공공누리 제1유형 (KOGL Type 1) (https://www.kogl.or.kr/info/license.do#01-tab).
+This file is licensed under CC0 (https://creativecommons.org/publicdomain/zero/1.0/).
+
+"words.json" file is a derivative of '한글 형태소 사전 (NIADic)' (https://kbig.kr/portal/kbig/datacube/niadict.page)
+used under CC BY-SA 2.0 (https://creativecommons.org/licenses/by-sa/2.0/).
+This file is licensed under CC BY-SA 2.0 (https://creativecommons.org/licenses/by-sa/2.0/).
