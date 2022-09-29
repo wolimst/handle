@@ -43,6 +43,27 @@
       icon: Wordle3x2Icon,
       description: '워들 세 문제를 동시에 풀어보세요.',
     },
+    {
+      link: ROUTES.game.f1x2,
+      type: 'free',
+      answerLength: 2,
+      icon: Wordle1x2Icon,
+      description: '일반적인 워들 게임입니다.',
+    },
+    {
+      link: ROUTES.game.f2x2,
+      type: 'free',
+      answerLength: 2,
+      icon: Wordle2x2Icon,
+      description: '워들 두 문제를 동시에 풀어보세요.',
+    },
+    {
+      link: ROUTES.game.f3x2,
+      type: 'free',
+      answerLength: 2,
+      icon: Wordle3x2Icon,
+      description: '워들 세 문제를 동시에 풀어보세요.',
+    },
   ] as const
 </script>
 
@@ -60,7 +81,7 @@
           오늘의 문제
         </div>
       </ClickButton>
-      <ClickButton on:click={() => (gameType = 'free')} disabled>
+      <ClickButton on:click={() => (gameType = 'free')}>
         <div class="tab-button" class:selected={gameType === 'free'}>
           자유 도전
         </div>
@@ -74,17 +95,19 @@
   </div>
 
   <div class="tw-flex tw-flex-wrap tw-justify-center tw-items-stretch tw-gap-3">
-    {#each games.filter((game) => game.type === gameType) as game}
-      <LinkButton link={game.link} underline={false} disabled={game.disabled}>
-        <div class="card tw-shadow-md">
-          <div class="tw-inline-flex tw-items-end tw-gap-2 tw-mb-4">
-            <svelte:component this={game.icon} />
-            <Badge rounded="lg">{game.answerLength}글자</Badge>
+    {#if gameType !== 'custom'}
+      {#each games.filter((game) => game.type === gameType) as game}
+        <LinkButton link={game.link} underline={false} disabled={game.disabled}>
+          <div class="card tw-shadow-md">
+            <div class="tw-inline-flex tw-items-end tw-gap-2 tw-mb-4">
+              <svelte:component this={game.icon} />
+              <Badge rounded="lg">{game.answerLength}글자</Badge>
+            </div>
+            <span class="tw-text-sm">{game.description}</span>
           </div>
-          <span class="tw-text-sm">{game.description}</span>
-        </div>
-      </LinkButton>
-    {/each}
+        </LinkButton>
+      {/each}
+    {/if}
   </div>
 </div>
 
