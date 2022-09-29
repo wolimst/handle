@@ -9,6 +9,9 @@ export const ROUTES = {
     d1x2: '/daily/1x2',
     d2x2: '/daily/2x2',
     d3x2: '/daily/3x2',
+    f1x2: '/free/1x2',
+    f2x2: '/free/2x2',
+    f3x2: '/free/3x2',
   },
 } as const
 
