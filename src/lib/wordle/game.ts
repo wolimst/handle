@@ -1,7 +1,7 @@
 import { Keyboard } from './keyboard'
 import type { Status, GameData, GuessError } from './types'
 import { _Wordle } from './wordle'
-import { getWordList } from './words'
+import { isInWordList } from './words'
 import type * as Hangul from '@/lib/hangul'
 import * as Path from '@/lib/path'
 import { savedata } from '@/stores/wordle'
@@ -132,7 +132,7 @@ export class Game {
       return 'wrongLength'
     }
 
-    if (isGuessNotInWordList(guess)) {
+    if (!isInWordList(guess.value)) {
       return 'notInWordList'
     }
 
@@ -157,12 +157,4 @@ export class Game {
       .filter((wordle) => wordle.status === 'playing')
       .forEach((wordle) => wordle.submitGuess(guess))
   }
-}
-
-function isGuessNotInWordList(guess: Hangul.Word): boolean {
-  // TODO: improve word list check performance if it affects UX.
-  //       The performance can be improved using hash set or bisect.
-  //       If bisect is chosen, add word list test that checks whether
-  //       the word list is sorted.
-  return getWordList(guess.length).every((word) => word.value !== guess.value)
 }
