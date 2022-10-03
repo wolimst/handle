@@ -1,1 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="31.88" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 257"><defs><linearGradient id="IconifyId1813088fe1fbc01fb466" x1="-.828%" x2="57.636%" y1="7.652%" y2="78.411%"><stop offset="0%" stop-color="#41D1FF"></stop><stop offset="100%" stop-color="#BD34FE"></stop></linearGradient><linearGradient id="IconifyId1813088fe1fbc01fb467" x1="43.376%" x2="50.316%" y1="2.242%" y2="89.03%"><stop offset="0%" stop-color="#FFEA83"></stop><stop offset="8.333%" stop-color="#FFDD35"></stop><stop offset="100%" stop-color="#FFA800"></stop></linearGradient></defs><path fill="url(#IconifyId1813088fe1fbc01fb466)" d="M255.153 37.938L134.897 252.976c-2.483 4.44-8.862 4.466-11.382.048L.875 37.958c-2.746-4.814 1.371-10.646 6.827-9.67l120.385 21.517a6.537 6.537 0 0 0 2.322-.004l117.867-21.483c5.438-.991 9.574 4.796 6.877 9.62Z"></path><path fill="url(#IconifyId1813088fe1fbc01fb467)" d="M185.432.063L96.44 17.501a3.268 3.268 0 0 0-2.634 3.014l-5.474 92.456a3.268 3.268 0 0 0 3.997 3.378l24.777-5.718c2.318-.535 4.413 1.507 3.936 3.838l-7.361 36.047c-.495 2.426 1.782 4.5 4.151 3.78l15.304-4.649c2.372-.72 4.652 1.36 4.15 3.788l-11.698 56.621c-.732 3.542 3.979 5.473 5.943 2.437l1.313-2.028l72.516-144.72c1.215-2.423-.88-5.186-3.54-4.672l-25.505 4.922c-2.396.462-4.435-1.77-3.759-4.114l16.646-57.705c.677-2.35-1.37-4.583-3.769-4.113Z"></path></svg>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  aria-hidden="true"
+  role="img"
+  width="64"
+  height="64"
+  viewBox="-2.0 10 80 80"
+>
+  <style>
+    path {
+      --wordle-correct-color: #6aaa64;
+      --wordle-present-color: #c9b458;
+      --wordle-absent-color: #787c7e;
+    }
+  </style>
+
+  <rect x="-2.0" y="10" width="100%" height="100%" rx="25%" fill="#fff" />
+
+  <path
+    d="M15.41 46.08C15.41 40.39 19.37 36.79 25.63 36.79C31.90 36.79 35.86 40.39 35.86 46.08C35.86 51.77 31.90 55.37 25.63 55.37C19.37 55.37 15.41 51.77 15.41 46.08ZM9.14 46.08C9.14 54.65 15.70 60.55 25.63 60.55C35.57 60.55 42.12 54.65 42.12 46.08C42.12 37.51 35.57 31.61 25.63 31.61C15.70 31.61 9.14 37.51 9.14 46.08ZM43.63 28.15C45.07 28.15 45.86 27.14 45.86 25.56C45.86 23.98 45.07 22.97 43.63 22.97L28.73 22.97L28.73 16.49C28.73 15.05 27.50 14.11 25.63 14.11C23.76 14.11 22.54 15.05 22.54 16.49L22.54 22.97L7.20 22.97C5.76 22.97 4.97 23.98 4.97 25.56C4.97 27.14 5.76 28.15 7.20 28.15Z"
+    fill="var(--wordle-correct-color)"
+  />
+  <path
+    d="M68 43C70 43 71 42 71 40C71 39 70 38 68 38L59 38L59 19C59 18 58 17 56 17C54 17 53 18 53 19L53 63C53 65 54 66 56 66C58 66 59 65 59 63L59 43Z"
+    fill="var(--wordle-present-color)"
+  />
+  <path
+    d="M38 86C46 86 53 84 59 82C61 81 61 80 60 78C60 77 59 76 57 77C52 79 45 80 38 80C27 80 24 78 24 74C24 71 24 69 24 67C25 66 24 65 22 64C20 64 19 64 18 66C18 68 17 71 17 74C17 82 23 86 38 86Z"
+    fill="var(--wordle-absent-color)"
+  />
+</svg>
