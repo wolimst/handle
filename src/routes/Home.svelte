@@ -97,7 +97,12 @@
   <div class="tw-flex tw-flex-wrap tw-justify-center tw-items-stretch tw-gap-3">
     {#if gameType !== 'custom'}
       {#each games.filter((game) => game.type === gameType) as game}
-        <LinkButton link={game.link} underline={false} disabled={game.disabled}>
+        <LinkButton
+          url={game.link}
+          useRouter
+          underline={false}
+          disabled={game.disabled}
+        >
           <div class="card tw-shadow-md">
             <div class="tw-inline-flex tw-items-end tw-gap-2 tw-mb-4">
               <svelte:component this={game.icon} />

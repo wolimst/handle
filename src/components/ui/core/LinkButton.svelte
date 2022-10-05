@@ -1,12 +1,33 @@
 <script lang="ts">
-  export let link: string = ''
+  import { link } from 'svelte-spa-router'
+
+  export let url: string = ''
+  export let useRouter = false
   export let underline = true
   export let disabled = false
 
-  $: underlineClass = underline ? 'hover:tw-underline' : 'hover:tw-no-underline'
+  function router(node: HTMLElement) {
+    if (useRouter) {
+      link(node)
+    }
+
+    return {
+      update: () => {
+        if (useRouter) {
+          link(node)
+        }
+      },
+    }
+  }
 </script>
 
-<a class={`btn ${underlineClass}`} href={link} {disabled}>
+<a
+  class="btn"
+  class:no-hover-underline={!underline}
+  href={url}
+  {disabled}
+  use:router
+>
   <slot />
 </a>
 
@@ -20,5 +41,9 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .no-hover-underline:hover {
+    text-decoration: none;
   }
 </style>
