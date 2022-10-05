@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build --if-present
+        run: npm run build --if-present -- --base=${{ github.event.repository.name }}
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v1
