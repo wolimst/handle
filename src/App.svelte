@@ -1,35 +1,26 @@
 <script lang="ts">
-  import Wordle from './routes/Wordle.svelte'
   import Nav from '@/Nav.svelte'
   import PageNotFound from '@/NotFound.svelte'
   import { PRODUCTION, ROUTES } from '@/constants'
   import FontViewer from '@/routes/FontViewer.svelte'
   import Home from '@/routes/Home.svelte'
-  import { Router, Route } from 'svelte-routing'
+  import Wordle from '@/routes/Wordle.svelte'
+  import Router from 'svelte-spa-router'
+  import { wrap } from 'svelte-spa-router/wrap'
+
+  const routes = new Map<string, any>()
+  routes.set(ROUTES.home, Home)
+  if (!PRODUCTION) {
+    routes.set(ROUTES.fontViewer, FontViewer)
+  }
+  Object.values(ROUTES.game).forEach((path) =>
+    routes.set(path, wrap({ component: Wordle, props: { path: path } }))
+  )
+  routes.set('*', PageNotFound)
 </script>
 
-<Router>
-  <Nav />
+<Nav />
 
-  <main class="tw-container tw-mx-auto tw-pt-6 tw-pb-1">
-    <Route path={ROUTES.home}>
-      <Home />
-    </Route>
-
-    {#each Object.values(ROUTES.game) as path}
-      <Route {path}>
-        <Wordle {path} />
-      </Route>
-    {/each}
-
-    {#if !PRODUCTION}
-      <Route path={ROUTES.fontViewer}>
-        <FontViewer />
-      </Route>
-    {/if}
-
-    <Route>
-      <PageNotFound />
-    </Route>
-  </main>
-</Router>
+<main class="tw-container tw-mx-auto tw-pt-6 tw-pb-1">
+  <Router {routes} />
+</main>
