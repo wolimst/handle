@@ -1,5 +1,6 @@
 export const APP_NAME = '한들'
 
+export const BASE_URL: string = import.meta.env.BASE_URL.replace(/\/+$/g, '')
 export const PRODUCTION: boolean = import.meta.env.PROD
 
 export const ROUTES = {
