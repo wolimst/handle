@@ -1,4 +1,5 @@
 import type { DProperty, DrawableString, DrawableSyllable, Font } from './types'
+import { BASE_URL } from '@/constants'
 import type * as Hangul from '@/lib/hangul'
 import * as opentype from 'opentype.js'
 
@@ -8,7 +9,7 @@ export const FONT: Font = {
   name: 'Binggrae',
   urls: [
     // TODO: Add default CDN
-    '/resources/fonts/Binggrae.otf',
+    `${BASE_URL}/resources/fonts/Binggrae.otf`,
     'https://fonts.cdnfonts.com/s/18622/Binggrae.woff',
   ],
   fontSize: 72,
