@@ -30,7 +30,7 @@
   <div class="tw-text-app-text tw-align-middle">
     <slot />
   </div>
-  <label for={label} class="tw-cursor-pointer">
+  <label for={label} class="tw-cursor-pointer tw-p-1">
     <div class="tw-relative">
       <input id={label} type="checkbox" class="tw-sr-only" bind:checked />
       <div class="tw-w-8 tw-h-3 tw-rounded-full tw-bg-app-text-secondary" />
