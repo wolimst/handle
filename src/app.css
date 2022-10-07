@@ -67,6 +67,11 @@ body {
     'Segoe UI Symbol';
 }
 
+body.modal-open {
+  overflow: hidden;
+  position: fixed;
+}
+
 a {
   color: var(--anchor-text-color);
   text-decoration: none;
