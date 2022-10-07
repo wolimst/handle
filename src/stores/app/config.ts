@@ -3,6 +3,7 @@ import { persistentStore } from '@/stores/localStore'
 import { get } from 'svelte/store'
 
 const defaultConfig: Config = {
+  showHelpOnLaunch: true,
   darkTheme: window.matchMedia('(prefers-color-scheme: dark)').matches,
   showInputForm: false,
   switchEnterAndBackspacePosition: false,
