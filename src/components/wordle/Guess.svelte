@@ -18,6 +18,7 @@
    * Default is `undefined`.
    */
   export let guess: Wordle.GuessResult | string | undefined = undefined
+  export let answerLength: number
 
   type Guess = Wordle.GuessResult | string | undefined
 
@@ -51,12 +52,9 @@
         if (result.exact) {
           return {
             background: Color.exactBackgroundColor,
-            leadingConsonant: Color.invertedTextColor,
-            vowels: [Color.invertedTextColor, Color.invertedTextColor],
-            trailingConsonant: [
-              Color.invertedTextColor,
-              Color.invertedTextColor,
-            ],
+            leadingConsonant: Color.exactTextColor,
+            vowels: [Color.exactTextColor, Color.exactTextColor],
+            trailingConsonant: [Color.exactTextColor, Color.exactTextColor],
           }
         } else {
           return {
@@ -81,7 +79,7 @@
 </script>
 
 <div class="tw-inline-flex tw-gap-1 tw-min-w-0 tw-min-h-0">
-  {#each { length: $game.answerLength } as _, i}
+  {#each { length: answerLength } as _, i}
     <div
       class="tw-w-16 tw-aspect-square tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary tw-overflow-hidden"
     >
