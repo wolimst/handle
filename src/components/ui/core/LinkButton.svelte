@@ -24,6 +24,7 @@
 <a
   class="btn"
   class:no-hover-underline={!underline}
+  target={useRouter ? '_self' : '_blank'}
   href={url}
   {disabled}
   use:router
