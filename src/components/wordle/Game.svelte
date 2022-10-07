@@ -57,11 +57,14 @@
             {@const wordle = $game.wordleData[wordleIndex]}
 
             {#if guessIndex < wordle.guessResults.length}
-              <Guess guess={wordle.guessResults[guessIndex]} />
+              <Guess
+                guess={wordle.guessResults[guessIndex]}
+                answerLength={$game.answerLength}
+              />
             {:else if wordle.status === 'playing' && guessIndex === wordle.guessResults.length}
-              <Guess guess={$keyboard} />
+              <Guess guess={$keyboard} answerLength={$game.answerLength} />
             {:else}
-              <Guess />
+              <Guess answerLength={$game.answerLength} />
             {/if}
           {/each}
         </div>
