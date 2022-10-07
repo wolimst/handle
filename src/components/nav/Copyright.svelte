@@ -4,6 +4,7 @@
     단어 리스트는
     <a
       href="https://www.korean.go.kr/front/etcData/etcDataView.do?mn_id=208&etc_seq=71"
+      target="_blank"
       class="tw-underline tw-underline-offset-1 tw-text-app-text-secondary"
     >
       한국어 학습용 어휘 목록
@@ -11,6 +12,7 @@
     과
     <a
       href="https://kbig.kr/portal/kbig/datacube/niadict.page"
+      target="_blank"
       class="tw-underline tw-underline-offset-1 tw-text-app-text-secondary"
     >
       한글 형태소 사전
