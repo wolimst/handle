@@ -18,7 +18,7 @@
   <ConfigIcon />
 </ClickButton>
 
-<Modal bind:open title="설정" widthRem={25} heightRem={30}>
+<Modal bind:open title="설정" widthCss="25rem" heightCss="30rem">
   <div class="tw-w-full tw-h-full tw-inline-flex tw-flex-col tw-gap-4">
     <Toggle checked={$config.darkTheme} on:toggle={config.toggleTheme}>
       다크 모드
