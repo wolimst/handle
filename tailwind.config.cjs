@@ -17,6 +17,8 @@ module.exports = {
         'app-wordle-correct': 'var(--wordle-correct-color)',
         'app-wordle-present': 'var(--wordle-present-color)',
         'app-wordle-absent': 'var(--wordle-absent-color)',
+        'app-wordle-exact': 'var(--wordle-exact-color)',
+        'app-wordle-exact-bg': 'var(--wordle-exact-background-color)',
         'app-keyboard-bg': 'var(--keyboard-background-color)',
         'app-alert-bg': 'var(--alert-background-color)',
       },
