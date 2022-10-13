@@ -23,7 +23,17 @@ export function persistentStore<T>(
   }
 
   const raw = localStorage.getItem(key)
-  const data = raw ? (JSON.parse(encoder.decode(raw)) as T) : initial
+  let parsedData: T | undefined = undefined
+  if (raw) {
+    try {
+      parsedData = JSON.parse(encoder.decode(raw)) as T
+    } catch (_error) {
+      alert(
+        'The saved data is corrupt. The data will be reset.\n저장된 데이터가 올바르지 않습니다. 데이터를 초기화 합니다.'
+      )
+    }
+  }
+  const data = parsedData || initial
 
   const { subscribe, set } = writable(data)
 
