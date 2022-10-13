@@ -22,7 +22,7 @@ export const savedata = {
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000
-const RETENTION_PERIOD_DAY = 14
+const RETENTION_PERIOD_DAY = 3
 
 function save(data: Wordle.GameData) {
   store.update((storage: SaveStorage): SaveStorage => {
@@ -59,7 +59,6 @@ function removeOldData(storage: SaveStorage): SaveStorage {
     const dayDiff = Math.round(
       Math.abs(now.getTime() - lastUpdated.getTime()) / DAY_MS
     )
-    console.log(dayDiff)
     return Number.isSafeInteger(dayDiff) && dayDiff < RETENTION_PERIOD_DAY
   })
   return Object.fromEntries(entries)
