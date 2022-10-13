@@ -14,7 +14,7 @@
     open = !open
   }
 
-  function onOpen() {
+  function onClose() {
     $config.showHelpOnLaunch = false
   }
 
@@ -101,7 +101,7 @@
   <HelpIcon />
 </ClickButton>
 
-<Modal bind:open title="어떻게 하나요?" widthCss="30rem" on:open={onOpen}>
+<Modal bind:open title="어떻게 하나요?" widthCss="30rem" on:close={onClose}>
   <div class="tw-text-sm">
     <p class="tw-mb-1">한글 단어를 정해진 횟수 안에 맞춰보세요!</p>
     <p>단어를 입력하면 정답과 비교하여 자모 혹은 입력 칸의 색이 바뀌어요.</p>
