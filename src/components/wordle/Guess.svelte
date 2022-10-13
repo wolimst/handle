@@ -1,7 +1,6 @@
 <script lang="ts">
   import Syllable from './Syllable.svelte'
   import * as Color from './color'
-  import { game } from './store'
   import * as Path from '@/lib/path'
   import type * as Wordle from '@/lib/wordle'
 
