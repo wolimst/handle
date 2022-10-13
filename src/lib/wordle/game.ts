@@ -4,7 +4,7 @@ import { _Wordle } from './wordle'
 import { isInWordList } from './words'
 import type * as Hangul from '@/lib/hangul'
 import * as Path from '@/lib/path'
-import { savedata } from '@/stores/wordle'
+import { savedata, statistics } from '@/stores/wordle'
 
 export class Game {
   readonly #id: string
@@ -146,6 +146,10 @@ export class Game {
 
     if (this.#useSave) {
       savedata.save(this.data)
+    }
+
+    if (this.status !== 'playing') {
+      statistics.update(this.data)
     }
 
     return undefined
