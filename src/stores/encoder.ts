@@ -3,7 +3,11 @@ export interface Encoder {
   encode: (data: string) => string
 }
 
+const warningText =
+  '***** DO NOT MODIFY THIS DATA / 이 데이터를 수정하지 마세요 *****'
+
 export const base64: Encoder = {
-  decode: (data) => decodeURIComponent(window.atob(data)),
-  encode: (data) => window.btoa(encodeURIComponent(data)),
+  decode: (data) =>
+    decodeURIComponent(window.atob(data.slice(warningText.length))),
+  encode: (data) => warningText + window.btoa(encodeURIComponent(data)),
 }
