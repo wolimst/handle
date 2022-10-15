@@ -13,7 +13,7 @@
   if (!PRODUCTION) {
     routes.set(ROUTES.fontViewer, FontViewer)
   }
-  Object.values(ROUTES.game).forEach((path) =>
+  ROUTES.game.forEach((path) =>
     routes.set(path, wrap({ component: Wordle, props: { path: path } }))
   )
   routes.set('*', PageNotFound)

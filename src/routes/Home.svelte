@@ -2,68 +2,21 @@
   import Badge from '@/components/ui/core/Badge.svelte'
   import ClickButton from '@/components/ui/core/ClickButton.svelte'
   import LinkButton from '@/components/ui/core/LinkButton.svelte'
-  import Wordle1x2Icon from '@/components/ui/icons/Wordle1x2.svelte'
-  import Wordle2x2Icon from '@/components/ui/icons/Wordle2x2.svelte'
-  import Wordle3x2Icon from '@/components/ui/icons/Wordle3x2.svelte'
-  import { ROUTES } from '@/constants'
+  import Wordle1Icon from '@/components/ui/icons/Wordle1.svelte'
+  import Wordle2Icon from '@/components/ui/icons/Wordle2.svelte'
+  import Wordle3Icon from '@/components/ui/icons/Wordle3.svelte'
+  import { GAMES, GAME_MODES } from '@/constants'
   import type * as Wordle from '@/lib/wordle'
 
-  type IconComponent = any
+  let gameMode: Wordle.GameMode = 'daily'
 
-  interface Game {
-    readonly link: string
-    readonly type: Wordle.GameType
-    readonly answerLength: number
-    readonly icon: IconComponent
-    readonly description: string
-    readonly disabled?: boolean
-  }
+  const icons = [undefined, Wordle1Icon, Wordle2Icon, Wordle3Icon] as const
 
-  let gameType: Wordle.GameType = 'daily'
-
-  const games: readonly Game[] = [
-    {
-      link: ROUTES.game.d1x2,
-      type: 'daily',
-      answerLength: 2,
-      icon: Wordle1x2Icon,
-      description: '일반적인 워들 게임입니다.',
-    },
-    {
-      link: ROUTES.game.d2x2,
-      type: 'daily',
-      answerLength: 2,
-      icon: Wordle2x2Icon,
-      description: '워들 두 문제를 동시에 풀어보세요.',
-    },
-    {
-      link: ROUTES.game.d3x2,
-      type: 'daily',
-      answerLength: 2,
-      icon: Wordle3x2Icon,
-      description: '워들 세 문제를 동시에 풀어보세요.',
-    },
-    {
-      link: ROUTES.game.f1x2,
-      type: 'free',
-      answerLength: 2,
-      icon: Wordle1x2Icon,
-      description: '일반적인 워들 게임입니다.',
-    },
-    {
-      link: ROUTES.game.f2x2,
-      type: 'free',
-      answerLength: 2,
-      icon: Wordle2x2Icon,
-      description: '워들 두 문제를 동시에 풀어보세요.',
-    },
-    {
-      link: ROUTES.game.f3x2,
-      type: 'free',
-      answerLength: 2,
-      icon: Wordle3x2Icon,
-      description: '워들 세 문제를 동시에 풀어보세요.',
-    },
+  const descriptions = [
+    'invalid',
+    '일반적인 워들 게임입니다.',
+    '워들 2문제를 동시에 풀어보세요.',
+    '워들 3문제를 동시에 풀어보세요.',
   ] as const
 </script>
 
@@ -76,39 +29,29 @@
     <div
       class="tw-inline-flex tw-gap-8 tw-px-2 tw-border-b tw-border-app-text-secondary"
     >
-      <ClickButton on:click={() => (gameType = 'daily')}>
-        <div class="tab-button" class:selected={gameType === 'daily'}>
-          오늘의 문제
-        </div>
-      </ClickButton>
-      <ClickButton on:click={() => (gameType = 'free')}>
-        <div class="tab-button" class:selected={gameType === 'free'}>
-          자유 도전
-        </div>
-      </ClickButton>
-      <ClickButton on:click={() => (gameType = 'custom')} disabled>
-        <div class="tab-button" class:selected={gameType === 'custom'}>
-          커스텀 게임
-        </div>
-      </ClickButton>
+      {#each GAME_MODES as mode}
+        <ClickButton
+          on:click={() => (gameMode = mode.id)}
+          disabled={mode.disabled}
+        >
+          <div class="tab-button" class:selected={gameMode === mode.id}>
+            {mode.name}
+          </div>
+        </ClickButton>
+      {/each}
     </div>
   </div>
 
   <div class="tw-flex tw-flex-wrap tw-justify-center tw-items-stretch tw-gap-3">
-    {#if gameType !== 'custom'}
-      {#each games.filter((game) => game.type === gameType) as game}
-        <LinkButton
-          url={game.link}
-          useRouter
-          underline={false}
-          disabled={game.disabled}
-        >
+    {#if gameMode !== 'custom'}
+      {#each GAMES.filter((game) => game.mode === gameMode) as game}
+        <LinkButton url={game.link} useRouter underline={false}>
           <div class="card tw-shadow-md">
             <div class="tw-inline-flex tw-items-end tw-gap-2 tw-mb-4">
-              <svelte:component this={game.icon} />
+              <svelte:component this={icons[game.nWordles]} />
               <Badge rounded="lg">{game.answerLength}글자</Badge>
             </div>
-            <span class="tw-text-sm">{game.description}</span>
+            <span class="tw-text-sm">{descriptions[game.nWordles]}</span>
           </div>
         </LinkButton>
       {/each}

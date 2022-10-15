@@ -1,6 +1,6 @@
 import type * as Hangul from '@/lib/hangul'
 
-export type GameType = 'daily' | 'free' | 'custom'
+export type GameMode = 'daily' | 'free' | 'custom'
 
 export type Status = 'playing' | 'win' | 'lose'
 
@@ -49,6 +49,7 @@ export interface WordleData {
 
 export interface GameData {
   readonly id: string
+  readonly mode: GameMode
   readonly nWordles: number
   readonly nGuesses: number
   readonly answerLength: number
