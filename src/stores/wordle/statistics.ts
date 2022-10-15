@@ -1,9 +1,14 @@
 import * as Wordle from '@/lib/wordle'
 import { base64 } from '@/stores/encoder'
 import { persistentStore } from '@/stores/localStore'
-import { get } from 'svelte/store'
+import { get, type Readable } from 'svelte/store'
 
-export type StatisticsStorage = {
+interface StatisticsStore extends Readable<StatisticsStorage> {
+  getStats(gameType: string): Statistics
+  update(gameData: Wordle.GameData): void
+}
+
+type StatisticsStorage = {
   [key: string]: Statistics
 }
 
@@ -22,7 +27,7 @@ const defaultStorage: StatisticsStorage = {}
 
 const store = persistentStore('statistics', defaultStorage, base64)
 
-export const statistics = {
+export const statistics: StatisticsStore = {
   subscribe: store.subscribe,
   getStats: getStats,
   update: update,
@@ -36,13 +41,8 @@ const defaultStats: Statistics = {
   maxWinStreak: 0,
 } as const
 
-function getStatsId(gameId: string): string {
-  return gameId.split('-').slice(0, 3).join('-')
-}
-
-function getStats(gameId: string): Statistics {
-  const id = getStatsId(gameId)
-  const stats = get(store)[id] || defaultStats
+function getStats(gameType: string): Statistics {
+  const stats = get(store)[gameType] || defaultStats
   return structuredClone(stats)
 }
 
@@ -51,9 +51,13 @@ function update(gameData: Wordle.GameData) {
     return
   }
 
-  const id = getStatsId(gameData.id)
+  const gameType = Wordle.getGameTypeString(
+    gameData.mode,
+    gameData.nWordles,
+    gameData.answerLength
+  )
   store.update((storage: StatisticsStorage): StatisticsStorage => {
-    const stats = storage[id] || structuredClone(defaultStats)
+    const stats = storage[gameType] || structuredClone(defaultStats)
 
     stats.nGamesPlayed += 1
     if (gameData.status === 'win') {
@@ -67,7 +71,7 @@ function update(gameData: Wordle.GameData) {
     }
     stats.maxWinStreak = Math.max(stats.winStreak, stats.maxWinStreak)
 
-    storage[id] = stats
+    storage[gameType] = stats
     return storage
   })
 }

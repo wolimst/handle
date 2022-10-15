@@ -1,73 +1,90 @@
 import { Keyboard } from './keyboard'
-import type { Status, GameData, GuessError } from './types'
+import type { GameData, GameMode, GuessError, Status } from './types'
 import { _Wordle } from './wordle'
 import { isInWordList } from './words'
+import { GAME_MODES } from '@/constants'
 import type * as Hangul from '@/lib/hangul'
 import * as Path from '@/lib/path'
 import { savedata, statistics } from '@/stores/wordle'
 
-export class Game {
-  readonly #id: string
-
+export class GameConfig {
+  readonly #mode: GameMode
   readonly #nWordles: number
   readonly #answerLength: number
   readonly #nGuesses: number
   readonly #useSave: boolean
+  readonly #useStatistics: boolean
 
-  readonly #wordles: readonly _Wordle[]
-  readonly #keyboard: Keyboard
-
-  readonly #guesses: Hangul.Word[]
-
-  // TODO: persist data on status change and load data if it exist during object
-  //       initialization
-
-  /**
-   * Initialize a game that can contain multiple wordles.
-   *
-   * Each wordle will have a random answer for the day.
-   *
-   * @param id a unique string for the game
-   * @param nWordles number of wordles in the game. It should be a positive integer.
-   * @param answerLength number of syllables in the answer
-   * @param nGuesses number of guesses that the player has. It should be a positive integer.
-   * @param useSave a flag whether to load data at initialization and save on state change
-   */
   constructor(
-    id: string,
+    mode: GameMode,
     nWordles: number,
     answerLength: number,
-    nGuesses: number,
-    useSave: boolean
+    nGuesses: number
   ) {
-    this.#id = id
+    this.#mode = mode
     this.#nWordles = nWordles
     this.#answerLength = answerLength
     this.#nGuesses = nGuesses
-    this.#useSave = useSave
+    this.#useSave =
+      GAME_MODES.find((gameMode) => gameMode.id === mode)?.useSave || false
+    this.#useStatistics =
+      GAME_MODES.find((gameMode) => gameMode.id === mode)?.useStatistics ||
+      false
+  }
 
-    this.#wordles = Array(nWordles)
-      .fill(0)
-      .map((_, i) => new _Wordle(answerLength, nGuesses, `${id}-${i}`))
-    this.#keyboard = new Keyboard(answerLength)
-    this.#guesses = []
-
-    if (useSave) {
-      const data = savedata.load(id)
-      data?.guesses.forEach((guess) => this.#doSubmit(guess))
-    }
+  get mode(): GameMode {
+    return this.#mode
   }
 
   get nWordles(): number {
     return this.#nWordles
   }
 
+  get answerLength(): number {
+    return this.#answerLength
+  }
+
   get nGuesses(): number {
     return this.#nGuesses
   }
 
-  get answerLength(): number {
-    return this.#answerLength
+  get useSave(): boolean {
+    return this.#useSave
+  }
+
+  get useStatistics(): boolean {
+    return this.#useStatistics
+  }
+}
+
+export class Game {
+  readonly #id: string
+  readonly #config: GameConfig
+  readonly #wordles: readonly _Wordle[]
+  readonly #keyboard: Keyboard
+
+  readonly #guesses: Hangul.Word[]
+
+  /**
+   * Initialize a game that can contain multiple wordles
+   */
+  constructor(config: GameConfig) {
+    this.#id = generateGameId(config)
+    this.#config = config
+
+    this.#wordles = Array(config.nWordles)
+      .fill(0)
+      .map(
+        (_, i) =>
+          new _Wordle(config.answerLength, config.nGuesses, `${this.#id}-${i}`)
+      )
+    this.#keyboard = new Keyboard(config.answerLength)
+    this.#guesses = []
+
+    if (config.useSave) {
+      const data = savedata.load(this.#id)
+      data?.guesses.forEach((guess) => this.#doSubmit(guess))
+    }
   }
 
   get keyboard(): Keyboard {
@@ -96,16 +113,13 @@ export class Game {
     return this.#wordles.map((wordle) => wordle.answer!)
   }
 
-  get remainingGuesses(): number {
-    return this.#nGuesses - this.#guesses.length
-  }
-
   get data(): GameData {
     return {
       id: this.#id,
-      nWordles: this.#nWordles,
-      nGuesses: this.#nGuesses,
-      answerLength: this.#answerLength,
+      mode: this.#config.mode,
+      nWordles: this.#config.nWordles,
+      nGuesses: this.#config.nGuesses,
+      answerLength: this.#config.answerLength,
       status: this.status,
       guesses: structuredClone(this.#guesses),
       wordleData: this.#wordles.map((wordle) => wordle.data),
@@ -128,7 +142,7 @@ export class Game {
 
     const guess = this.#keyboard.guess
 
-    if (guess.length !== this.#answerLength) {
+    if (guess.length !== this.#config.answerLength) {
       return 'wrongLength'
     }
 
@@ -144,11 +158,11 @@ export class Game {
 
     this.#keyboard.setValue('')
 
-    if (this.#useSave) {
+    if (this.#config.useSave) {
       savedata.save(this.data)
     }
 
-    if (this.status !== 'playing') {
+    if (this.status !== 'playing' && this.#config.useStatistics) {
       statistics.update(this.data)
     }
 
@@ -160,5 +174,46 @@ export class Game {
     this.#wordles
       .filter((wordle) => wordle.status === 'playing')
       .forEach((wordle) => wordle.submitGuess(guess))
+  }
+}
+
+export function getGameTypeString(
+  mode: GameMode,
+  nWordles: number,
+  answerLength: number
+): string {
+  return `${mode.charAt(0)}-${nWordles}-${answerLength}`
+}
+
+function generateGameId(config: GameConfig): string {
+  const gameType = getGameTypeString(
+    config.mode,
+    config.nWordles,
+    config.answerLength
+  )
+
+  switch (config.mode) {
+    case 'daily': {
+      const date = new Date()
+        .toLocaleDateString('ko', {
+          timeZone: 'Asia/Seoul',
+          year: '2-digit',
+          month: '2-digit',
+          day: '2-digit',
+        })
+        .replace(/\s+/g, '')
+      return `${gameType}-${date}`
+    }
+    case 'free': {
+      const n = Math.floor(Math.random() * 2 ** 32)
+      return `${gameType}-${n}`
+    }
+    case 'custom':
+      // TODO
+      throw new Error('not implemented')
+    default: {
+      const _exhaustiveCheck: never = config.mode
+      return _exhaustiveCheck
+    }
   }
 }
