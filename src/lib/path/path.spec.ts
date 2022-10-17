@@ -1,5 +1,6 @@
 import { FONT, getUndrawableSyllablesInWord, getDrawableSyllable } from '.'
 import * as Hangul from '@/lib/hangul'
+import * as opentype from 'opentype.js'
 
 describe('getUndrawableSyllablesInWord()', () => {
   const drawableSyllable = '가'
@@ -43,6 +44,11 @@ describe('getUndrawableSyllablesInWord()', () => {
 describe.skip('getDrawableString()')
 
 describe('getDrawableSyllable()', () => {
+  const LOCAL_FONT_PATH = `${process.cwd()}/public/resources/fonts/Binggrae.otf`
+  vi.spyOn(opentype, 'load').mockReturnValue(
+    Promise.resolve(opentype.loadSync(LOCAL_FONT_PATH))
+  )
+
   describe('should create valid Jamo paths except for known undrawable syllables', () => {
     const hangulCodePoints = Array(
       Hangul.LAST_SYLLABLE_CODEPOINT - Hangul.FIRST_SYLLABLE_CODEPOINT
