@@ -105,3 +105,4 @@ export const N_GUESSES: readonly (readonly number[])[] = [
 export const N_WORDLES_PER_ROW = [NaN, 4, 4, 3] as const
 
 export const ALERT_DURATION_MS = 3000
+export const WAIT_DURATION_TO_SHOW_STATS_MS = 1500

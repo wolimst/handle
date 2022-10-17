@@ -1,6 +1,7 @@
 <script lang="ts">
   import Guess from './Guess.svelte'
   import Alert from './Notification.svelte'
+  import { openStatsModal } from './Statistics.svelte'
   import Keyboard from './keyboard/Keyboard.svelte'
   import {
     getGuessErrorMessage,
@@ -8,6 +9,7 @@
     getWinMessage,
   } from './message'
   import { game, keyboard, notification, ui } from './store'
+  import { GAME_MODES, WAIT_DURATION_TO_SHOW_STATS_MS } from '@/constants'
 
   function assert() {
     if (game === undefined || keyboard === undefined || ui === undefined) {
@@ -34,6 +36,15 @@
           type: 'error',
           message: getGuessErrorMessage(guessError),
         }
+      }
+    }
+
+    if ($game.status !== 'playing') {
+      const showStats =
+        GAME_MODES.find((mode) => mode.id === $game.mode)?.useStatistics ||
+        false
+      if (showStats) {
+        setTimeout(openStatsModal, WAIT_DURATION_TO_SHOW_STATS_MS)
       }
     }
   }

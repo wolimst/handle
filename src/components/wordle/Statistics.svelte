@@ -1,0 +1,155 @@
+<script context="module" lang="ts">
+  import { writable } from 'svelte/store'
+
+  const open = writable(false)
+
+  export function openStatsModal() {
+    open.set(true)
+  }
+</script>
+
+<script lang="ts">
+  import { game } from './store'
+  import ClickButton from '@/components/ui/core/ClickButton.svelte'
+  import Modal from '@/components/ui/core/Modal.svelte'
+  import Select, { type Option } from '@/components/ui/core/Select.svelte'
+  import StatisticsIcon from '@/components/ui/icons/Statistics.svelte'
+  import { GAMES, GAME_MODES, N_GUESSES, WORDLE_NAMES } from '@/constants'
+  import * as Wordle from '@/lib/wordle'
+  import { isInGamePage } from '@/routes/page'
+  import { defaultStats, statistics } from '@/stores/wordle'
+  import { get } from 'svelte/store'
+
+  function toggleModal() {
+    $open = !$open
+  }
+
+  interface GameModeOption extends Option {}
+  interface GameTypeOption extends Option {
+    nWordles: number
+    answerLength: number
+  }
+
+  const gameModeOptions: GameModeOption[] = GAME_MODES.filter(
+    (mode) => mode.useStatistics
+  ).map((mode) => {
+    return {
+      id: mode.id,
+      text: mode.name,
+    }
+  })
+
+  // Assume game modes that use statistics have same game types (nWordles & answerLength)
+  const gameTypeOptions: GameTypeOption[] = GAMES.filter(
+    (game) => game.mode === gameModeOptions[0].id
+  ).map((game) => {
+    return {
+      id: game.link,
+      text: `${WORDLE_NAMES[game.nWordles]} (${game.answerLength}글자)`,
+      nWordles: game.nWordles,
+      answerLength: game.answerLength,
+    }
+  })
+
+  let gameMode = gameModeOptions[0]
+  let gameType = gameTypeOptions[0]
+
+  let stats = defaultStats
+  let maxGuess = 0
+
+  function updateStatistics() {
+    stats = statistics.getStats(
+      Wordle.getGameTypeString(
+        gameMode.id as Wordle.GameMode,
+        gameType.nWordles,
+        gameType.answerLength
+      )
+    )
+
+    maxGuess = 0
+    for (const [key, value] of Object.entries(stats.guesses)) {
+      if (key === 'fail') {
+        continue
+      }
+      maxGuess = Math.max(maxGuess, value)
+    }
+  }
+
+  function onOpen() {
+    if (isInGamePage()) {
+      const data = get(game)
+      gameMode =
+        gameModeOptions.find((option) => option.id === data.mode) || gameMode
+      gameType =
+        gameTypeOptions.find(
+          (option) =>
+            option.nWordles === data.nWordles &&
+            option.answerLength === data.answerLength
+        ) || gameType
+    }
+  }
+</script>
+
+<ClickButton on:click={toggleModal}>
+  <StatisticsIcon />
+</ClickButton>
+
+<Modal bind:open={$open} title="통계" widthCss="25rem" on:open={onOpen}>
+  <div class="tw-w-full tw-inline-flex tw-justify-evenly">
+    <Select
+      title="게임 모드"
+      options={gameModeOptions}
+      bind:selected={gameMode}
+      on:select={updateStatistics}
+    />
+
+    <Select
+      title="워들 타입"
+      options={gameTypeOptions}
+      bind:selected={gameType}
+      on:select={updateStatistics}
+    />
+  </div>
+
+  <div class="tw-w-full tw-mt-6 tw-inline-flex tw-justify-evenly">
+    <div class="tw-w-1/4 tw-text-center">
+      <div class="tw-text-sm">플레이 횟수</div>
+      <div class="tw-text-2xl tw-font-bold">{stats.nGamesPlayed}</div>
+    </div>
+    <div class="tw-w-1/4 tw-text-center">
+      <div class="tw-text-sm">정답률</div>
+      <div class="tw-text-2xl tw-font-bold">
+        {Math.round((stats.nGamesWon / stats.nGamesPlayed) * 100) || 0}%
+      </div>
+    </div>
+    <div class="tw-w-1/4 tw-text-center">
+      <div class="tw-text-sm">연속 정답</div>
+      <div class="tw-text-2xl tw-font-bold">{stats.winStreak}</div>
+    </div>
+    <div class="tw-w-1/4 tw-text-center">
+      <div class="tw-text-sm">최다 연속 정답</div>
+      <div class="tw-text-2xl tw-font-bold">{stats.maxWinStreak}</div>
+    </div>
+  </div>
+
+  <div
+    class="tw-w-full tw-mt-4 tw-px-2 tw-inline-flex tw-flex-col tw-items-center"
+  >
+    <div class="tw-font-medium">추측 횟수 분포</div>
+    {#each { length: N_GUESSES[gameType.nWordles][gameType.answerLength] } as _, i}
+      {@const guess = stats.guesses[i + 1] || 0}
+      {@const percentage = (guess / maxGuess) * 100 || 0}
+      <div class="tw-text-sm tw-w-full tw-mt-1 tw-inline-flex tw-items-center">
+        <div class="tw-w-6 tw-text-center tw-mr-1">{i + 1}</div>
+        <div class="tw-w-full">
+          <div
+            class="tw-px-1 tw-text-right tw-text-gray-100 tw-rounded tw-bg-app-primary"
+            style={`width: ${percentage}%; min-width: 1rem;`}
+          >
+            {guess}
+          </div>
+        </div>
+      </div>
+    {/each}
+  </div>
+</Modal>

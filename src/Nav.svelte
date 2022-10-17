@@ -6,6 +6,7 @@
   import AppIcon from '@/components/ui/icons/App.svelte'
   import FontIcon from '@/components/ui/icons/Font.svelte'
   import GitHubIcon from '@/components/ui/icons/GitHub.svelte'
+  import Statistics from '@/components/wordle/Statistics.svelte'
   import { APP_NAME, PRODUCTION, ROUTES } from '@/constants'
 </script>
 
@@ -27,6 +28,7 @@
 
     <ToggleTheme />
     <Help />
+    <Statistics />
     <Config />
 
     <LinkButton url="https://github.com/wolimst/handle">
