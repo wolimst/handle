@@ -5,6 +5,7 @@ import { isInWordList } from './words'
 import { GAME_MODES } from '@/constants'
 import type * as Hangul from '@/lib/hangul'
 import * as Path from '@/lib/path'
+import { time } from '@/lib/utils'
 import { savedata, statistics } from '@/stores/wordle'
 
 export class GameConfig {
@@ -69,7 +70,7 @@ export class Game {
    * Initialize a game that can contain multiple wordles
    */
   constructor(config: GameConfig) {
-    this.#id = generateGameId(config)
+    this.#id = generateGameId(config.mode, config.nWordles, config.answerLength)
     this.#config = config
 
     this.#wordles = Array(config.nWordles)
@@ -185,23 +186,16 @@ export function getGameTypeString(
   return `${mode.charAt(0)}-${nWordles}-${answerLength}`
 }
 
-function generateGameId(config: GameConfig): string {
-  const gameType = getGameTypeString(
-    config.mode,
-    config.nWordles,
-    config.answerLength
-  )
+export function generateGameId(
+  mode: GameMode,
+  nWordles: number,
+  answerLength: number
+): string {
+  const gameType = getGameTypeString(mode, nWordles, answerLength)
 
-  switch (config.mode) {
+  switch (mode) {
     case 'daily': {
-      const date = new Date()
-        .toLocaleDateString('ko', {
-          timeZone: 'Asia/Seoul',
-          year: '2-digit',
-          month: '2-digit',
-          day: '2-digit',
-        })
-        .replace(/\s+/g, '')
+      const date = time.getShortDateStringInKST()
       return `${gameType}-${date}`
     }
     case 'free': {
@@ -212,7 +206,7 @@ function generateGameId(config: GameConfig): string {
       // TODO
       throw new Error('not implemented')
     default: {
-      const _exhaustiveCheck: never = config.mode
+      const _exhaustiveCheck: never = mode
       return _exhaustiveCheck
     }
   }
