@@ -6,18 +6,27 @@
   export function openStatsModal() {
     open.set(true)
   }
+
+  export function closeStatsModal() {
+    open.set(false)
+  }
 </script>
 
 <script lang="ts">
   import { game } from './store'
   import ClickButton from '@/components/ui/core/ClickButton.svelte'
+  import LinkButton from '@/components/ui/core/LinkButton.svelte'
   import Modal from '@/components/ui/core/Modal.svelte'
   import Select, { type Option } from '@/components/ui/core/Select.svelte'
+  import ClockIcon from '@/components/ui/icons/Clock.svelte'
+  import RefreshIcon from '@/components/ui/icons/Refresh.svelte'
   import StatisticsIcon from '@/components/ui/icons/Statistics.svelte'
   import { GAMES, GAME_MODES, N_GUESSES, WORDLE_NAMES } from '@/constants'
+  import { time } from '@/lib/utils'
   import * as Wordle from '@/lib/wordle'
-  import { isInGamePage } from '@/routes/page'
-  import { defaultStats, statistics } from '@/stores/wordle'
+  import { isInGamePage, refreshIfAlreadyInPage } from '@/routes/page'
+  import { defaultStats, savedata, statistics } from '@/stores/wordle'
+  import { onDestroy } from 'svelte'
   import { get } from 'svelte/store'
 
   function toggleModal() {
@@ -57,6 +66,16 @@
   let stats = defaultStats
   let maxGuess = 0
 
+  let nextGameCountdownMillis = 0
+  let countdownIntervalId: NodeJS.Timer
+
+  function countdownByOneSecond() {
+    nextGameCountdownMillis -= 1000
+    if (nextGameCountdownMillis <= 0) {
+      clearInterval(countdownIntervalId)
+    }
+  }
+
   function updateStatistics() {
     stats = statistics.getStats(
       Wordle.getGameTypeString(
@@ -73,6 +92,21 @@
       }
       maxGuess = Math.max(maxGuess, value)
     }
+
+    clearInterval(countdownIntervalId)
+    nextGameCountdownMillis = 0
+    if (gameMode.id === 'daily') {
+      const gameId = Wordle.generateGameId(
+        gameMode.id,
+        gameType.nWordles,
+        gameType.answerLength
+      )
+      const data = savedata.load(gameId)
+      if (data !== undefined && data.status !== 'playing') {
+        nextGameCountdownMillis = time.getMillisecondsToMidnightInKST()
+        countdownIntervalId = setInterval(countdownByOneSecond, 1000)
+      }
+    }
   }
 
   function onOpen() {
@@ -88,6 +122,10 @@
         ) || gameType
     }
   }
+
+  onDestroy(() => {
+    clearInterval(countdownIntervalId)
+  })
 </script>
 
 <ClickButton on:click={toggleModal}>
@@ -152,4 +190,38 @@
       </div>
     {/each}
   </div>
+
+  {#if gameMode.id === 'daily' || gameMode.id === 'free'}
+    <div
+      class="tw-mt-4 tw-w-full tw-inline-flex tw-justify-center tw-items-center"
+    >
+      {#if nextGameCountdownMillis > 0}
+        <ClockIcon width={22} />
+        <span class="tw-ml-1.5 tw-text-sm tw-font-medium">다음 문제까지</span>
+        <span class="tw-ml-1 tw-font-medium tw-tabular-nums">
+          {time.millisecondsToHHMMSS(nextGameCountdownMillis)}
+        </span>
+      {:else}
+        {@const path = GAMES.find(
+          (game) =>
+            game.mode === gameMode.id &&
+            game.nWordles === gameType.nWordles &&
+            game.answerLength === gameType.answerLength
+        )?.link}
+        <LinkButton
+          url={path}
+          useRouter
+          on:click={() => {
+            closeStatsModal()
+            path && refreshIfAlreadyInPage(path)
+          }}
+        >
+          <RefreshIcon width={22} />
+          <span class="tw-ml-1 tw-font-medium">
+            {gameMode.id === 'daily' ? '오늘의' : '새로운'} 문제 풀기
+          </span>
+        </LinkButton>
+      {/if}
+    </div>
+  {/if}
 </Modal>
