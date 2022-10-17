@@ -1,4 +1,4 @@
-import { Game, GameConfig, getGameTypeString } from './game'
+import { Game, GameConfig, generateGameId, getGameTypeString } from './game'
 import type { GameData, GameMode, GuessError, Status } from './types'
 import * as WordsModule from './words'
 import { GAME_MODES } from '@/constants'
@@ -358,4 +358,40 @@ describe('tests for getGameTypeString()', () => {
     )
     expect(gameTypes).toHaveLength(new Set(gameTypes).size)
   })
+})
+
+describe('tests for generateGameId()', () => {
+  const nWordles = 1
+  const answerLength = 2
+
+  describe('game mode: daily', () => {
+    afterAll(() => {
+      vi.useRealTimers()
+    })
+
+    it('should return same ids when the date is not changed', () => {
+      vi.useFakeTimers().setSystemTime(new Date().setUTCHours(0))
+      const id1 = generateGameId('daily', nWordles, answerLength)
+      const id2 = generateGameId('daily', nWordles, answerLength)
+      expect(id1).toStrictEqual(id2)
+    })
+
+    it('should return different ids if the date is changed', () => {
+      vi.useFakeTimers().setSystemTime(new Date().setUTCHours(0))
+      const id1 = generateGameId('daily', nWordles, answerLength)
+      vi.useFakeTimers().setSystemTime(new Date().setUTCHours(24))
+      const id2 = generateGameId('daily', nWordles, answerLength)
+      expect(id1).not.toStrictEqual(id2)
+    })
+  })
+
+  describe('game mode: free', () => {
+    it('should return different ids for each calls', () => {
+      const id1 = generateGameId('free', nWordles, answerLength)
+      const id2 = generateGameId('free', nWordles, answerLength)
+      expect(id1).not.toStrictEqual(id2)
+    })
+  })
+
+  describe.todo('game mode: custom')
 })

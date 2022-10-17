@@ -28,6 +28,7 @@
   href={url}
   {disabled}
   use:router
+  on:click
 >
   <slot />
 </a>

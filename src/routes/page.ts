@@ -6,3 +6,9 @@ export function isInGamePage(): boolean {
   const path = get(location)
   return ROUTES.game.some((route) => route === path)
 }
+
+export function refreshIfAlreadyInPage(path: string) {
+  if (path === get(location)) {
+    window.location.reload()
+  }
+}
