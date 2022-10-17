@@ -33,7 +33,7 @@ export const statistics: StatisticsStore = {
   update: update,
 }
 
-const defaultStats: Statistics = {
+export const defaultStats: Statistics = {
   nGamesPlayed: 0,
   nGamesWon: 0,
   guesses: {},
