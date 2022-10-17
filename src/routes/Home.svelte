@@ -1,3 +1,10 @@
+<script context="module" lang="ts">
+  import type * as Wordle from '@/lib/wordle'
+  import { writable } from 'svelte/store'
+
+  const gameMode = writable<Wordle.GameMode>('daily')
+</script>
+
 <script lang="ts">
   import Badge from '@/components/ui/core/Badge.svelte'
   import ClickButton from '@/components/ui/core/ClickButton.svelte'
@@ -6,9 +13,6 @@
   import Wordle2Icon from '@/components/ui/icons/Wordle2.svelte'
   import Wordle3Icon from '@/components/ui/icons/Wordle3.svelte'
   import { GAMES, GAME_MODES } from '@/constants'
-  import type * as Wordle from '@/lib/wordle'
-
-  let gameMode: Wordle.GameMode = 'daily'
 
   const icons = [undefined, Wordle1Icon, Wordle2Icon, Wordle3Icon] as const
 
@@ -31,10 +35,10 @@
     >
       {#each GAME_MODES as mode}
         <ClickButton
-          on:click={() => (gameMode = mode.id)}
+          on:click={() => ($gameMode = mode.id)}
           disabled={mode.disabled}
         >
-          <div class="tab-button" class:selected={gameMode === mode.id}>
+          <div class="tab-button" class:selected={$gameMode === mode.id}>
             {mode.name}
           </div>
         </ClickButton>
@@ -43,8 +47,8 @@
   </div>
 
   <div class="tw-flex tw-flex-wrap tw-justify-center tw-items-stretch tw-gap-3">
-    {#if gameMode !== 'custom'}
-      {#each GAMES.filter((game) => game.mode === gameMode) as game}
+    {#if $gameMode !== 'custom'}
+      {#each GAMES.filter((game) => game.mode === $gameMode) as game}
         <LinkButton url={game.link} useRouter underline={false}>
           <div class="card tw-shadow-md">
             <div class="tw-inline-flex tw-items-end tw-gap-2 tw-mb-4">
