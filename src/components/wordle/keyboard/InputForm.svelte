@@ -24,7 +24,7 @@
     bind:value
     on:focus
     on:blur
-    class="tw-px-2 tw-py-1 tw-rounded-lg tw-text-app-text tw-bg-transparent tw-border tw-border-app-text-secondary tw-shadow"
+    class="tw-w-full tw-px-2 tw-py-1 tw-rounded-lg tw-text-app-text tw-bg-transparent tw-border tw-border-app-text-secondary tw-shadow"
     disabled={$game.status !== 'playing'}
   />
 </form>

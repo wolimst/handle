@@ -107,7 +107,7 @@
     <p>단어를 입력하면 정답과 비교하여 자모 혹은 입력 칸의 색이 바뀌어요.</p>
   </div>
 
-  <div class="tw-mt-7 tw-text-center ">
+  <div class="tw-mt-5 tw-text-center">
     <Guess guess={word1} answerLength={word1.guess.length} />
   </div>
 
@@ -130,7 +130,7 @@
     </li>
   </ul>
 
-  <div class="tw-mt-7 tw-text-center">
+  <div class="tw-mt-5 tw-text-center">
     <Guess guess={word2} answerLength={word2.guess.length} />
   </div>
 
@@ -144,7 +144,7 @@
     </li>
   </ul>
 
-  <div class="tw-mt-7 tw-w-full tw-inline-flex tw-justify-evenly tw-gap-4">
+  <div class="tw-mt-5 tw-w-full tw-inline-flex tw-justify-evenly tw-gap-4">
     <Guess guess={word3} answerLength={word3.guess.length} />
     <Guess guess={word4} answerLength={word4.guess.length} />
     <Guess guess={word5} answerLength={word5.guess.length} />
@@ -185,7 +185,7 @@
     </li>
   </ul>
 
-  <div class="tw-mt-7 tw-text-sm tw-text-app-text-secondary">
+  <div class="tw-mt-5 tw-text-sm tw-text-app-text-secondary">
     오리지널 워들(영문)은
     <a
       href="https://www.nytimes.com/games/wordle/index.html"

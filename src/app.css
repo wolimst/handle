@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 :root {
+  --nav-height: 48px;
+}
+
+:root {
   --background-color: #fff;
   --text-color: #333;
   --text-color-secondary: #a8a8a8;
