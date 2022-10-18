@@ -25,7 +25,7 @@
 </script>
 
 <div
-  class="tw-container tw-flex tw-flex-col tw-flex-nowrap tw-items-center tw-gap-8"
+  class="tw-w-full tw-flex tw-flex-col tw-flex-nowrap tw-items-center tw-gap-8"
 >
   <div
     class="tw-flex tw-flex-nowrap tw-justify-center tw-text-lg tw-font-medium"
