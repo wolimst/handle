@@ -65,9 +65,9 @@
   })
 </script>
 
-<div class="tw-container">
+<div class="tw-w-full">
   {#if $config.showInputForm}
-    <div class="tw-flex tw-flex-nowrap tw-justify-center tw-mb-6">
+    <div class="tw-flex tw-flex-nowrap tw-justify-center tw-my-1.5 md:tw-my-3">
       <InputForm
         on:submit
         on:focus={() => (isFormFocused = true)}
@@ -77,7 +77,7 @@
   {/if}
 
   <div
-    class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5"
+    class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5 md:tw-mt-3"
   >
     {#each row1Left as key}
       <Key {key} on:click={() => onClick(key)} />
