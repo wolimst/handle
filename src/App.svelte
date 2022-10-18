@@ -21,6 +21,6 @@
 
 <Nav />
 
-<main class="tw-container tw-mx-auto tw-pt-6 tw-pb-1">
+<main class="tw-w-full tw-mx-auto tw-py-1 tw-h-[calc(100%-var(--nav-height))]">
   <Router {routes} />
 </main>

@@ -13,11 +13,11 @@
 
   function getWidth(): string {
     if (size === 'compact') {
-      return 'tw-w-6'
+      return 'tw-w-5 md:tw-w-5 lg:tw-w-6'
     } else if (size === 'wide') {
-      return 'tw-w-16'
+      return 'tw-w-12 md:tw-w-14 lg:tw-w-16'
     } else {
-      return 'tw-w-12'
+      return 'tw-w-10 md:tw-w-10 lg:tw-w-12'
     }
   }
 
@@ -42,12 +42,12 @@
 </script>
 
 <button
-  class="{width} tw-h-14 tw-rounded tw-bg-app-keyboard-bg tw-relative tw-overflow-hidden"
+  class="{width} tw-h-11 md:tw-h-12 lg:tw-h-14 tw-rounded tw-bg-app-keyboard-bg tw-relative tw-overflow-hidden"
   on:click
   {disabled}
 >
   <div
-    class="tw-w-full tw-h-full tw-absolute tw-top-0 tw-text-lg tw-font-bold {textColor} tw-bg-transparent tw-flex tw-flex-nowrap tw-justify-center tw-items-center"
+    class="tw-w-full tw-h-full tw-absolute tw-top-0 md:tw-text-lg tw-font-bold {textColor} tw-bg-transparent tw-flex tw-flex-nowrap tw-justify-center tw-items-center"
   >
     <slot>{key}</slot>
   </div>
