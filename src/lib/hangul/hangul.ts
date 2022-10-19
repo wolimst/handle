@@ -11,6 +11,7 @@ import {
 } from './constants'
 import type {
   DubeolsikSyllable,
+  Jamo,
   LeadingConsonant,
   TrailingConsonant,
   Vowel,
