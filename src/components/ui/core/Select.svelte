@@ -2,7 +2,7 @@
   let moduleCount = 0
 
   export interface Option {
-    id: string
+    id: string | number
     text: string
     disabled?: boolean
   }
