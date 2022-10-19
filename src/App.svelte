@@ -4,6 +4,7 @@
   import { PRODUCTION, ROUTES } from '@/constants'
   import FontViewer from '@/routes/FontViewer.svelte'
   import Home from '@/routes/Home.svelte'
+  import WordViewer from '@/routes/WordViewer.svelte'
   import Wordle from '@/routes/Wordle.svelte'
   import Router from 'svelte-spa-router'
   import { wrap } from 'svelte-spa-router/wrap'
@@ -12,6 +13,7 @@
   routes.set(ROUTES.home, Home)
   if (!PRODUCTION) {
     routes.set(ROUTES.fontViewer, FontViewer)
+    routes.set(ROUTES.wordViewer, WordViewer)
   }
   ROUTES.game.forEach((path) =>
     routes.set(path, wrap({ component: Wordle, props: { path: path } }))

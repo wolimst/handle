@@ -3,7 +3,7 @@
 // V: vowel
 // T: trailing consonant
 // Example: '환경' -> LVVT/LVT
-import { DubeolsikIME } from './ime'
+import { DubeolsikIME, toJamo } from './ime'
 
 describe('tests for DubeolsikIME class', () => {
   test('initial state', () => {
@@ -490,5 +490,34 @@ describe('tests for DubeolsikIME class', () => {
       ime.type('ㅏ')
       expect(ime.value).toStrictEqual('가')
     })
+  })
+})
+
+describe('tests for toJamo()', () => {
+  test('non-composite jamo', () => {
+    expect(toJamo(['ㄱ'])).toStrictEqual('ㄱ')
+    expect(toJamo(['ㄲ'])).toStrictEqual('ㄲ')
+    expect(toJamo(['ㅏ'])).toStrictEqual('ㅏ')
+  })
+
+  test('composite jamo', () => {
+    expect(toJamo(['ㅗ', 'ㅏ'])).toStrictEqual('ㅘ')
+    expect(toJamo(['ㅗ', 'ㅐ'])).toStrictEqual('ㅙ')
+    expect(toJamo(['ㅗ', 'ㅣ'])).toStrictEqual('ㅚ')
+    expect(toJamo(['ㅜ', 'ㅓ'])).toStrictEqual('ㅝ')
+    expect(toJamo(['ㅜ', 'ㅔ'])).toStrictEqual('ㅞ')
+    expect(toJamo(['ㅜ', 'ㅣ'])).toStrictEqual('ㅟ')
+    expect(toJamo(['ㅡ', 'ㅣ'])).toStrictEqual('ㅢ')
+    expect(toJamo(['ㄱ', 'ㅅ'])).toStrictEqual('ㄳ')
+    expect(toJamo(['ㄴ', 'ㅈ'])).toStrictEqual('ㄵ')
+    expect(toJamo(['ㄴ', 'ㅎ'])).toStrictEqual('ㄶ')
+    expect(toJamo(['ㄹ', 'ㄱ'])).toStrictEqual('ㄺ')
+    expect(toJamo(['ㄹ', 'ㅁ'])).toStrictEqual('ㄻ')
+    expect(toJamo(['ㄹ', 'ㅂ'])).toStrictEqual('ㄼ')
+    expect(toJamo(['ㄹ', 'ㅅ'])).toStrictEqual('ㄽ')
+    expect(toJamo(['ㄹ', 'ㅌ'])).toStrictEqual('ㄾ')
+    expect(toJamo(['ㄹ', 'ㅍ'])).toStrictEqual('ㄿ')
+    expect(toJamo(['ㄹ', 'ㅎ'])).toStrictEqual('ㅀ')
+    expect(toJamo(['ㅂ', 'ㅅ'])).toStrictEqual('ㅄ')
   })
 })

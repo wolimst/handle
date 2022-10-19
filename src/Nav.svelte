@@ -6,6 +6,7 @@
   import AppIcon from '@/components/ui/icons/App.svelte'
   import FontIcon from '@/components/ui/icons/Font.svelte'
   import GitHubIcon from '@/components/ui/icons/GitHub.svelte'
+  import ListIcon from '@/components/ui/icons/List.svelte'
   import Statistics from '@/components/wordle/Statistics.svelte'
   import { APP_NAME, PRODUCTION, ROUTES } from '@/constants'
 </script>
@@ -23,6 +24,9 @@
     {#if !PRODUCTION}
       <LinkButton url={ROUTES.fontViewer} useRouter>
         <FontIcon />
+      </LinkButton>
+      <LinkButton url={ROUTES.wordViewer} useRouter>
+        <ListIcon />
       </LinkButton>
     {/if}
 

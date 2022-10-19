@@ -361,7 +361,7 @@ const dubeolsikJamoToJamoMap: {
   ㅂㅅ: 'ㅄ',
 } as const
 
-function toJamo(jamo: readonly DubeolsikJamo[]): Jamo | undefined {
+export function toJamo(jamo: readonly DubeolsikJamo[]): Jamo | undefined {
   if (jamo.length === 0) {
     return undefined
   } else if (jamo.length === 1) {
