@@ -1,0 +1,65 @@
+name: Bug Report / 버그 리포트
+description: Create a report to help us improve / 버그 리포트를 작성하여 문제점 개선에 공헌하기
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug / 문제점을 설명해주세요
+      description: |
+        Thank you for your bug report.
+        버그 리포트를 작성해주셔서 감사드려요.
+    validations:
+      required: true
+  - type: textarea
+    id: how-to-reproduce
+    attributes:
+      label: How to reproduce / 문제점을 재현하는 방법
+      description: |
+        Steps to reproduce the behavior.
+        문제점을 재현하기 위한 과정을 설명해주세요.
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: false
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior / 기대되는 정상적인 동작 방식
+      description: |
+        A clear and concise description of what you expected to happen.
+        문제점 해결을 통해 기대되는 정상적인 동작 방식에 대해 간결하게 설명해주세요.
+    validations:
+      required: false
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots or videos / 스크린샷 혹은 동영상
+      description: |
+        Please add any relevant screenshots or videos here, if any.
+        문제점에 관한 스크린샷이나 동영상 등이 있다면 추가해주세요.
+    validations:
+      required: false
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environments such as device, OS and browser / 사용중인 기기, 운영체제, 브라우저 등의 환경
+      description: |
+        What devices, browsers and operating systems are you seeing the problem on?
+        어떤 기기와 운영체제, 브라우저에서 문제점이 발생하였나요?
+      placeholder: |
+        (e.g. 예시)
+        - Desktop, Windows 11, Chrome v106.0.5249.119
+        - iPhone 14 Plus, iOS 16.1, Safari
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context / 기타
+      description: |
+        Add any other context about the problem here.
+        문제점에 관련해 더 추가하고 싶은 내용이 있으신가요?
+    validations:
+      required: false
