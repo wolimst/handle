@@ -39,7 +39,7 @@
 
 {#if message}
   <div
-    class="tw-absolute tw-w-full tw-max-w-xs tw-px-3 tw-py-1.5 tw-rounded-lg tw-bg-app-alert-bg tw-shadow-md tw-inline-flex tw-items-center"
+    class="tw-max-w-md tw-px-3 tw-py-1.5 tw-rounded-lg tw-bg-app-alert-bg tw-shadow-md tw-inline-flex tw-items-center"
     role="alert"
   >
     {#if type === 'win'}
