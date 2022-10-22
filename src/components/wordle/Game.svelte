@@ -1,6 +1,6 @@
 <script lang="ts">
   import Guess from './Guess.svelte'
-  import Alert from './Notification.svelte'
+  import Notification from './Notification.svelte'
   import { openStatsModal } from './Statistics.svelte'
   import Keyboard from './keyboard/Keyboard.svelte'
   import {
@@ -52,19 +52,15 @@
   assert()
 </script>
 
-<div class="tw-flex tw-flex-nowrap tw-justify-center">
-  <Alert />
-</div>
-
 <div
-  class="tw-w-full tw-h-full tw-inline-flex tw-flex-col tw-overflow-y-hidden"
+  class="tw-container tw-min-h-full tw-mx-auto tw-flex tw-flex-nowrap tw-flex-col"
 >
-  <div class="tw-my-auto tw-py-1.5 md:tw-py-3 tw-overflow-y-auto">
+  <div class="tw-my-auto tw-py-1.5 md:tw-py-3 tw-mx-2">
     {#each { length: $ui.nRows } as _, rowIndex}
       <div class={$ui.nRows > 1 ? 'tw-mb-4 md:tw-mb-6' : ''}>
         {#each { length: $game.nGuesses } as _, guessIndex}
           <div
-            class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-4 tw-mx-2 tw-my-1"
+            class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-4 tw-my-1"
           >
             {#each { length: ui.nWordlesAtRow(rowIndex) } as _, colIndex}
               {@const wordleIndex = $ui.nWordlesPerRow * rowIndex + colIndex}
@@ -87,5 +83,13 @@
     {/each}
   </div>
 
-  <Keyboard on:submit={submitGuess} />
+  <div class="tw-sticky tw-bottom-0 tw-mx-2 tw-bg-app-bg">
+    <Keyboard on:submit={submitGuess} />
+  </div>
+</div>
+
+<div
+  class="tw-w-full tw-fixed tw-top-7 tw-flex tw-flex-nowrap tw-justify-center"
+>
+  <Notification />
 </div>
