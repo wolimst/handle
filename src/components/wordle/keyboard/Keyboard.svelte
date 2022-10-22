@@ -65,90 +65,82 @@
   })
 </script>
 
-<div class="tw-w-full">
-  {#if $config.showInputForm}
-    <div class="tw-flex tw-flex-nowrap tw-justify-center tw-my-1.5 md:tw-my-3">
-      <InputForm
-        on:submit
-        on:focus={() => (isFormFocused = true)}
-        on:blur={() => (isFormFocused = false)}
-      />
-    </div>
+{#if $config.showInputForm}
+  <div class="tw-flex tw-flex-nowrap tw-justify-center tw-my-1.5 md:tw-my-3">
+    <InputForm
+      on:submit
+      on:focus={() => (isFormFocused = true)}
+      on:blur={() => (isFormFocused = false)}
+    />
+  </div>
+{/if}
+
+<div
+  class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-my-1.5 md:tw-mt-3"
+>
+  {#each row1Left as key}
+    <Key {key} on:click={() => onClick(key)} />
+  {/each}
+  {#each { length: row2.length - row1Left.length - row1Right.length } as _}
+    <Key key="dummy" disabled />
+  {/each}
+  {#each row1Right as key}
+    <Key {key} on:click={() => onClick(key)} />
+  {/each}
+</div>
+
+<div class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-my-1.5">
+  {#each row2 as key}
+    <Key {key} on:click={() => onClick(key)} />
+  {/each}
+</div>
+
+<div class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-my-1.5">
+  <Key key="dummy" size="compact" disabled />
+  {#each row3 as key}
+    <Key {key} on:click={() => onClick(key)} />
+  {/each}
+  <Key key="dummy" size="compact" disabled />
+</div>
+
+<div class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-my-1.5">
+  {#if !$config.switchEnterAndBackspacePosition}
+    <Key
+      key={ENTER_KEY}
+      size="wide"
+      on:click={() => onClick(ENTER_KEY)}
+      on:submit
+    >
+      입력
+    </Key>
+    {#each row4 as key}
+      <Key {key} on:click={() => onClick(key)} />
+    {/each}
+    <Key
+      key={BACKSPACE_KEY}
+      size="wide"
+      on:click={() => onClick(BACKSPACE_KEY)}
+    >
+      <BackspaceIcon />
+    </Key>
+  {:else}
+    <Key
+      key={BACKSPACE_KEY}
+      size="wide"
+      on:click={() => onClick(BACKSPACE_KEY)}
+    >
+      <BackspaceIcon />
+    </Key>
+    {#each row4 as key}
+      <Key {key} on:click={() => onClick(key)} />
+    {/each}
+    <Key
+      key={ENTER_KEY}
+      size="wide"
+      on:click={() => onClick(ENTER_KEY)}
+      on:submit
+    >
+      입력
+    </Key>
   {/if}
-
-  <div
-    class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5 md:tw-mt-3"
-  >
-    {#each row1Left as key}
-      <Key {key} on:click={() => onClick(key)} />
-    {/each}
-    {#each { length: row2.length - row1Left.length - row1Right.length } as _}
-      <Key key="dummy" disabled />
-    {/each}
-    {#each row1Right as key}
-      <Key {key} on:click={() => onClick(key)} />
-    {/each}
-  </div>
-
-  <div
-    class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5"
-  >
-    {#each row2 as key}
-      <Key {key} on:click={() => onClick(key)} />
-    {/each}
-  </div>
-
-  <div
-    class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5"
-  >
-    <Key key="dummy" size="compact" disabled />
-    {#each row3 as key}
-      <Key {key} on:click={() => onClick(key)} />
-    {/each}
-    <Key key="dummy" size="compact" disabled />
-  </div>
-
-  <div
-    class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5"
-  >
-    {#if !$config.switchEnterAndBackspacePosition}
-      <Key
-        key={ENTER_KEY}
-        size="wide"
-        on:click={() => onClick(ENTER_KEY)}
-        on:submit
-      >
-        입력
-      </Key>
-      {#each row4 as key}
-        <Key {key} on:click={() => onClick(key)} />
-      {/each}
-      <Key
-        key={BACKSPACE_KEY}
-        size="wide"
-        on:click={() => onClick(BACKSPACE_KEY)}
-      >
-        <BackspaceIcon />
-      </Key>
-    {:else}
-      <Key
-        key={BACKSPACE_KEY}
-        size="wide"
-        on:click={() => onClick(BACKSPACE_KEY)}
-      >
-        <BackspaceIcon />
-      </Key>
-      {#each row4 as key}
-        <Key {key} on:click={() => onClick(key)} />
-      {/each}
-      <Key
-        key={ENTER_KEY}
-        size="wide"
-        on:click={() => onClick(ENTER_KEY)}
-        on:submit
-      >
-        입력
-      </Key>
-    {/if}
-  </div>
 </div>

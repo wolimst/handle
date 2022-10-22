@@ -23,6 +23,8 @@
 
 <Nav />
 
-<main class="tw-w-full tw-mx-auto tw-py-1 tw-h-[calc(100%-var(--nav-height))]">
+<main
+  class="tw-w-full tw-h-[calc(100%-var(--nav-height))] tw-overflow-y-auto tw-overscroll-y-none"
+>
   <Router {routes} />
 </main>
