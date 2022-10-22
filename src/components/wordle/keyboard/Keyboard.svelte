@@ -76,7 +76,7 @@
 {/if}
 
 <div
-  class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5 md:tw-mt-3"
+  class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-my-1.5 md:tw-mt-3"
 >
   {#each row1Left as key}
     <Key {key} on:click={() => onClick(key)} />
@@ -89,17 +89,13 @@
   {/each}
 </div>
 
-<div
-  class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5"
->
+<div class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-my-1.5">
   {#each row2 as key}
     <Key {key} on:click={() => onClick(key)} />
   {/each}
 </div>
 
-<div
-  class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5"
->
+<div class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-my-1.5">
   <Key key="dummy" size="compact" disabled />
   {#each row3 as key}
     <Key {key} on:click={() => onClick(key)} />
@@ -107,9 +103,7 @@
   <Key key="dummy" size="compact" disabled />
 </div>
 
-<div
-  class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-mx-2 tw-my-1.5"
->
+<div class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-my-1.5">
   {#if !$config.switchEnterAndBackspacePosition}
     <Key
       key={ENTER_KEY}
