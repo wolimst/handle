@@ -24,9 +24,7 @@
   ] as const
 </script>
 
-<div
-  class="tw-w-full tw-flex tw-flex-col tw-flex-nowrap tw-items-center tw-gap-8"
->
+<div class="tw-container tw-mx-auto tw-py-3">
   <div
     class="tw-flex tw-flex-nowrap tw-justify-center tw-text-lg tw-font-medium"
   >
@@ -46,7 +44,9 @@
     </div>
   </div>
 
-  <div class="tw-flex tw-flex-wrap tw-justify-center tw-items-stretch tw-gap-3">
+  <div
+    class="tw-mt-6 tw-flex tw-flex-wrap tw-justify-center tw-items-stretch tw-gap-3"
+  >
     {#if $gameMode !== 'custom'}
       {#each GAMES.filter((game) => game.mode === $gameMode) as game}
         <LinkButton url={game.link} useRouter underline={false}>

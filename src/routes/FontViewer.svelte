@@ -47,27 +47,25 @@
   loadSyllables()
 </script>
 
-<div class="tw-w-full tw-inline-flex tw-justify-center">
-  <div class="tw-container tw-flex tw-flex-col tw-gap-4">
-    <div class="tw-flex tw-flex-wrap tw-gap-1">
-      {#each jamoList as jamo}
-        <div
-          class="tw-w-16 tw-h-16 tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary"
-        >
-          <Syllable drawable={jamo} />
-        </div>
-      {/each}
-    </div>
-    <div class="tw-flex tw-flex-wrap tw-gap-1">
-      {#each syllableList as syllable}
-        <div
-          class="tw-w-16 tw-h-16 tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary"
-        >
-          <Syllable drawable={syllable} {syllableColors} />
-        </div>
-      {/each}
+<div class="tw-container tw-mx-auto tw-py-3">
+  <div class="tw-flex tw-flex-wrap tw-gap-1">
+    {#each jamoList as jamo}
+      <div
+        class="tw-w-16 tw-h-16 tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary"
+      >
+        <Syllable drawable={jamo} />
+      </div>
+    {/each}
+  </div>
+  <div class="tw-mt-3 tw-flex tw-flex-wrap tw-gap-1">
+    {#each syllableList as syllable}
+      <div
+        class="tw-w-16 tw-h-16 tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary"
+      >
+        <Syllable drawable={syllable} {syllableColors} />
+      </div>
+    {/each}
 
-      <div use:inView on:enter={() => loadSyllables()} />
-    </div>
+    <div use:inView on:enter={() => loadSyllables()} />
   </div>
 </div>
