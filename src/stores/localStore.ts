@@ -31,6 +31,11 @@ export function persistentStore<T>(
       alert(
         'The saved data is corrupt. The data will be reset.\n저장된 데이터가 올바르지 않습니다. 데이터를 초기화 합니다.'
       )
+      parsedData = undefined
+      localStorage.setItem(
+        key,
+        encoder.encode(JSON.stringify(initial, null, 2))
+      )
     }
   }
   const data = parsedData || initial
