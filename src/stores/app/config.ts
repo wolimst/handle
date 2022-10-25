@@ -21,6 +21,7 @@ export const config = {
 function toggleTheme(config: Config): Config {
   config.darkTheme = !config.darkTheme
   document.documentElement.classList.toggle('dark-theme')
+  updateThemeColorMetaTag()
   return config
 }
 
@@ -28,4 +29,19 @@ export function applyConfig() {
   if (get(config).darkTheme) {
     document.documentElement.classList.add('dark-theme')
   }
+  updateThemeColorMetaTag()
+}
+
+function updateThemeColorMetaTag() {
+  const themeColor = getComputedStyle(document.body)
+    .getPropertyValue('--background-color')
+    .trim()
+
+  let metaTag = document.head.querySelector('meta[name="theme-color"]')
+  if (!metaTag) {
+    metaTag = document.createElement('meta')
+    metaTag.setAttribute('name', 'theme-color')
+    document.head.appendChild(metaTag)
+  }
+  metaTag.setAttribute('content', themeColor)
 }
