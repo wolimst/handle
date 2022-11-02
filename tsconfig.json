@@ -6,10 +6,11 @@
     "module": "ESNext",
     "resolveJsonModule": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "virtual:pwa-register": ["node_modules/vite-plugin-pwa"]
     },
     "baseUrl": ".",
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "vite-plugin-pwa/client"],
     /**
      * Typecheck JS in `.svelte` and `.js` files by default.
      * Disable checkJs if you'd like to use dynamic types in JS.
