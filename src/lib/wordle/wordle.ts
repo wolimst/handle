@@ -6,8 +6,8 @@ import type {
   SyllableResult,
   WordleData,
 } from './types'
-import { getRandomAnswer } from './words'
-import type * as Hangul from '@/lib/hangul'
+import { getAnswerList } from './words'
+import * as Hangul from '@/lib/hangul'
 
 export class _Wordle {
   readonly #nGuesses: number
@@ -19,14 +19,16 @@ export class _Wordle {
   /**
    * Initialize a Hangul wordle game
    *
-   * @param answerLength number of syllables in the answer
    * @param nGuesses number of guesses that the player has. It should be a positive integer.
-   * @param answerSeed a random seed to randomize answer
-   * @throws an error if failed to find an answer with the given answerLength
-   * @see {@link getRandomAnswer}
+   * @param answer answer of the wordle
+   * @throws an error if the answer is not in the answer list
    */
-  constructor(answerLength: number, nGuesses: number, answerSeed: string) {
-    this.#answer = getRandomAnswer(answerLength, answerSeed)
+  constructor(nGuesses: number, answer: Hangul.Word) {
+    if (!getAnswerList(answer.length).includes(answer.value)) {
+      throw new Error('answer is not in the answer list')
+    }
+
+    this.#answer = answer
     this.#nGuesses = nGuesses
     this.#status = 'playing'
     this.#guessResults = []
