@@ -6,7 +6,6 @@
 // Example: '환경' -> LVVT/LVT
 import type { JamoResult, Status } from './types'
 import { _Wordle } from './wordle'
-import * as WordsModule from './words'
 import { toWord } from '@/lib/hangul'
 
 // Mock structuredClone() because it is not implemented in jsdom
@@ -23,19 +22,12 @@ const WIN: Status = 'win'
 const LOSS: Status = 'lose'
 
 describe('tests for wordle class', () => {
-  const answerGetterMock = vi.spyOn(WordsModule, 'getRandomAnswer')
-  function initWordle(nGuesses: number, answer: string): _Wordle {
-    answerGetterMock.mockReturnValueOnce(toWord(answer))
-    const dummyAnswerLength = 0
-    return new _Wordle(dummyAnswerLength, nGuesses, 'dummySeed')
-  }
-
   describe('submitGuess(Hangul.Word) -> GuessResult', () => {
     const nGuesses = 1_000_000_000
 
     test('GuessResult.guess should be equal to the guess', () => {
       const answer = '정답'
-      const wordle = initWordle(nGuesses, answer)
+      const wordle = new _Wordle(nGuesses, toWord(answer))
 
       const guess1 = toWord('하늘')
       expect(wordle.submitGuess(guess1).guess).toStrictEqual(guess1)
@@ -46,7 +38,7 @@ describe('tests for wordle class', () => {
 
     describe('GuessResult.result should have same number of Jamo as in the guess', () => {
       const answer = '정답'
-      const wordle = initWordle(nGuesses, answer)
+      const wordle = new _Wordle(nGuesses, toWord(answer))
 
       test('guess: "쇄신" (LVV/LVT)', () => {
         const res1 = wordle.submitGuess(toWord('쇄신'))
@@ -103,7 +95,7 @@ describe('tests for wordle class', () => {
 
       test('number of the Jamo in the answer should have no effect', () => {
         const answer = '찰흙'
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('시계'))
         expect(res1.result).toHaveLength(2)
@@ -120,7 +112,7 @@ describe('tests for wordle class', () => {
 
     describe('check JamoResult for leading consonant', () => {
       const answer = '가치'
-      const wordle = initWordle(nGuesses, answer)
+      const wordle = new _Wordle(nGuesses, toWord(answer))
 
       test('correct position', () => {
         const res1 = wordle.submitGuess(toWord('곤충'))
@@ -176,11 +168,11 @@ describe('tests for wordle class', () => {
     })
 
     describe('check JamoResult for vowels', () => {
-      const answer = '진화'
-      const wordle = initWordle(nGuesses, answer)
+      const answer = '문화'
+      const wordle = new _Wordle(nGuesses, toWord(answer))
 
       test('correct position', () => {
-        const res1 = wordle.submitGuess(toWord('미화'))
+        const res1 = wordle.submitGuess(toWord('수화'))
         expect(res1.result).toHaveLength(2)
         expect(res1.result[0].exact).toBeFalsy()
         expect(res1.result[0].leadingConsonant).toStrictEqual(ABSENT)
@@ -193,7 +185,7 @@ describe('tests for wordle class', () => {
       })
 
       test('wrong position', () => {
-        const res1 = wordle.submitGuess(toWord('화기'))
+        const res1 = wordle.submitGuess(toWord('화분'))
         expect(res1.result).toHaveLength(2)
         expect(res1.result[0].exact).toBeFalsy()
         expect(res1.result[0].leadingConsonant).toStrictEqual(PRESENT)
@@ -202,29 +194,29 @@ describe('tests for wordle class', () => {
         expect(res1.result[1].exact).toBeFalsy()
         expect(res1.result[1].leadingConsonant).toStrictEqual(ABSENT)
         expect(res1.result[1].vowels).toStrictEqual([PRESENT])
-        expect(res1.result[1].trailingConsonants).toStrictEqual([])
+        expect(res1.result[1].trailingConsonants).toStrictEqual([PRESENT])
       })
 
       test('not in word', () => {
-        const res1 = wordle.submitGuess(toWord('원래'))
+        const res1 = wordle.submitGuess(toWord('의식'))
         expect(res1.result).toHaveLength(2)
         expect(res1.result[0].exact).toBeFalsy()
         expect(res1.result[0].leadingConsonant).toStrictEqual(ABSENT)
         expect(res1.result[0].vowels).toStrictEqual([ABSENT, ABSENT])
-        expect(res1.result[0].trailingConsonants).toStrictEqual([CORRECT])
+        expect(res1.result[0].trailingConsonants).toStrictEqual([])
         expect(res1.result[1].exact).toBeFalsy()
         expect(res1.result[1].leadingConsonant).toStrictEqual(ABSENT)
         expect(res1.result[1].vowels).toStrictEqual([ABSENT])
-        expect(res1.result[1].trailingConsonants).toStrictEqual([])
+        expect(res1.result[1].trailingConsonants).toStrictEqual([ABSENT])
       })
     })
 
     describe('check JamoResult for trailing consonants', () => {
-      const answer = '진흙'
-      const wordle = initWordle(nGuesses, answer)
+      const answer = '찰흙'
+      const wordle = new _Wordle(nGuesses, toWord(answer))
 
       test('correct position', () => {
-        const res1 = wordle.submitGuess(toWord('찰흙'))
+        const res1 = wordle.submitGuess(toWord('진흙'))
         expect(res1.result).toHaveLength(2)
         expect(res1.result[0].exact).toBeFalsy()
         expect(res1.result[0].leadingConsonant).toStrictEqual(ABSENT)
@@ -240,16 +232,16 @@ describe('tests for wordle class', () => {
       })
 
       test('wrong position', () => {
-        const res1 = wordle.submitGuess(toWord('출전'))
+        const res1 = wordle.submitGuess(toWord('푹신'))
         expect(res1.result).toHaveLength(2)
         expect(res1.result[0].exact).toBeFalsy()
         expect(res1.result[0].leadingConsonant).toStrictEqual(ABSENT)
         expect(res1.result[0].vowels).toStrictEqual([ABSENT])
         expect(res1.result[0].trailingConsonants).toStrictEqual([PRESENT])
         expect(res1.result[1].exact).toBeFalsy()
-        expect(res1.result[1].leadingConsonant).toStrictEqual(PRESENT)
+        expect(res1.result[1].leadingConsonant).toStrictEqual(ABSENT)
         expect(res1.result[1].vowels).toStrictEqual([ABSENT])
-        expect(res1.result[1].trailingConsonants).toStrictEqual([PRESENT])
+        expect(res1.result[1].trailingConsonants).toStrictEqual([ABSENT])
       })
 
       test('wrong position from leading consonant', () => {
@@ -257,7 +249,7 @@ describe('tests for wordle class', () => {
         expect(res1.result).toHaveLength(2)
         expect(res1.result[0].exact).toBeFalsy()
         expect(res1.result[0].leadingConsonant).toStrictEqual(PRESENT)
-        expect(res1.result[0].vowels).toStrictEqual([ABSENT])
+        expect(res1.result[0].vowels).toStrictEqual([CORRECT])
         expect(res1.result[0].trailingConsonants).toStrictEqual([])
         expect(res1.result[1].exact).toBeFalsy()
         expect(res1.result[1].leadingConsonant).toStrictEqual(PRESENT)
@@ -282,7 +274,7 @@ describe('tests for wordle class', () => {
     describe('check JamoResult when there are multiple vowels or trailing consonants', () => {
       test('correct vowel regardless of the order (answer: LV/*, guess: LVV/*)', () => {
         const answer = '나비'
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         // 'ㅏ' in the guess should be correct even if it is the second vowel in '화'
         const res1 = wordle.submitGuess(toWord('화분'))
@@ -300,7 +292,7 @@ describe('tests for wordle class', () => {
       test('correct vowel regardless of the order (answer: LVV/*, guess: LV/*)', () => {
         // reverse of above test
         const answer = '화분'
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         // 'ㅏ' in the guess should be correct even if it is the first and only vowel in '나'
         const res1 = wordle.submitGuess(toWord('나비'))
@@ -317,7 +309,7 @@ describe('tests for wordle class', () => {
 
       test('correct trailing consonant regardless of the order (answer: LVT/*, guess: LVTT/*)', () => {
         const answer = '생각'
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         // trailing consonant 'ㄱ' in the guess should be correct
         // even if it is the second trialing consonant in '흙'
@@ -339,7 +331,7 @@ describe('tests for wordle class', () => {
       test('correct trailing consonant regardless of the order (answer: LVTT/*, guess: LVT/*)', () => {
         // reverse of above test
         const answer = '찰흙'
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         // trailing consonant 'ㄱ' in the guess should be correct
         // even if it is the first and only trialing consonant in '각'
@@ -359,7 +351,7 @@ describe('tests for wordle class', () => {
     describe('check JamoResult when a Jamo appears twice in the answer', () => {
       // Consonant 'ㄱ' appears twice in the answer
       const answer = '공간'
-      const wordle = initWordle(nGuesses, answer)
+      const wordle = new _Wordle(nGuesses, toWord(answer))
 
       test('the duplicated Jamo appears once in guess, in correct position', () => {
         const res1 = wordle.submitGuess(toWord('기차'))
@@ -446,8 +438,8 @@ describe('tests for wordle class', () => {
 
     describe('check SyllableResult.exact', () => {
       test('equal syllable', () => {
-        const answer = '봉화'
-        const wordle = initWordle(nGuesses, answer)
+        const answer = '평화'
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('수화'))
         expect(res1.result).toHaveLength(2)
@@ -462,8 +454,8 @@ describe('tests for wordle class', () => {
       })
 
       test('non-equal syllable, while all JamoResult of the syllable are correct (answer: LVVT/*, guess: LVT/*)', () => {
-        const answer = '완두'
-        const wordle = initWordle(nGuesses, answer)
+        const answer = '완성'
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('온수'))
         expect(res1.result).toHaveLength(2)
@@ -472,8 +464,8 @@ describe('tests for wordle class', () => {
         expect(res1.result[0].vowels).toStrictEqual([CORRECT])
         expect(res1.result[0].trailingConsonants).toStrictEqual([CORRECT])
         expect(res1.result[1].exact).toBeFalsy()
-        expect(res1.result[1].leadingConsonant).toStrictEqual(ABSENT)
-        expect(res1.result[1].vowels).toStrictEqual([CORRECT])
+        expect(res1.result[1].leadingConsonant).toStrictEqual(CORRECT)
+        expect(res1.result[1].vowels).toStrictEqual([ABSENT])
         expect(res1.result[1].trailingConsonants).toStrictEqual([])
 
         const res2 = wordle.submitGuess(toWord('안녕'))
@@ -485,29 +477,29 @@ describe('tests for wordle class', () => {
         expect(res2.result[1].exact).toBeFalsy()
         expect(res2.result[1].leadingConsonant).toStrictEqual(ABSENT)
         expect(res2.result[1].vowels).toStrictEqual([ABSENT])
-        expect(res2.result[1].trailingConsonants).toStrictEqual([ABSENT])
+        expect(res2.result[1].trailingConsonants).toStrictEqual([CORRECT])
       })
 
       test('non-equal syllable, while all JamoResult of the syllable are correct (answer: */LVTT, guess: */LVT)', () => {
-        const answer = '암탉'
-        const wordle = initWordle(nGuesses, answer)
+        const answer = '까닭'
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
-        const res1 = wordle.submitGuess(toWord('이탈'))
+        const res1 = wordle.submitGuess(toWord('전달'))
         expect(res1.result).toHaveLength(2)
         expect(res1.result[0].exact).toBeFalsy()
-        expect(res1.result[0].leadingConsonant).toStrictEqual(CORRECT)
+        expect(res1.result[0].leadingConsonant).toStrictEqual(ABSENT)
         expect(res1.result[0].vowels).toStrictEqual([ABSENT])
-        expect(res1.result[0].trailingConsonants).toStrictEqual([])
+        expect(res1.result[0].trailingConsonants).toStrictEqual([ABSENT])
         expect(res1.result[1].exact).toBeFalsy()
         expect(res1.result[1].leadingConsonant).toStrictEqual(CORRECT)
         expect(res1.result[1].vowels).toStrictEqual([CORRECT])
         expect(res1.result[1].trailingConsonants).toStrictEqual([CORRECT])
 
-        const res2 = wordle.submitGuess(toWord('부탁'))
+        const res2 = wordle.submitGuess(toWord('바닥'))
         expect(res2.result).toHaveLength(2)
         expect(res2.result[0].exact).toBeFalsy()
         expect(res2.result[0].leadingConsonant).toStrictEqual(ABSENT)
-        expect(res2.result[0].vowels).toStrictEqual([ABSENT])
+        expect(res2.result[0].vowels).toStrictEqual([CORRECT])
         expect(res2.result[0].trailingConsonants).toStrictEqual([])
         expect(res2.result[1].exact).toBeFalsy()
         expect(res2.result[1].leadingConsonant).toStrictEqual(CORRECT)
@@ -518,7 +510,7 @@ describe('tests for wordle class', () => {
 
     describe('should throw if the guess is invalid', () => {
       const answer = '정답'
-      const wordle = initWordle(nGuesses, answer)
+      const wordle = new _Wordle(nGuesses, toWord(answer))
 
       test('guess is shorter than the answer', () => {
         const shortGuess = toWord('강')
@@ -538,7 +530,7 @@ describe('tests for wordle class', () => {
       const answer = '정답'
 
       test('win at first guess', () => {
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('정답'))
         expect(res1.result).toHaveLength(2)
@@ -569,7 +561,7 @@ describe('tests for wordle class', () => {
       })
 
       test('win at second guess', () => {
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('정확'))
         expect(res1.result).toHaveLength(2)
@@ -631,7 +623,7 @@ describe('tests for wordle class', () => {
       })
 
       test('win at last guess', () => {
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('하늘'))
         expect(res1.result).toHaveLength(2)
@@ -750,7 +742,7 @@ describe('tests for wordle class', () => {
       })
 
       test('loss after last guess', () => {
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('하늘'))
         const res2 = wordle.submitGuess(toWord('바람'))
@@ -779,7 +771,7 @@ describe('tests for wordle class', () => {
       })
 
       test('submitting guess after a win should throw and cause no status change', () => {
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord(answer))
         expect(wordle.guessResults).toStrictEqual([res1])
@@ -837,7 +829,7 @@ describe('tests for wordle class', () => {
       })
 
       test('submitting guess after a loss should throw and cause no status change', () => {
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('하늘'))
         const res2 = wordle.submitGuess(toWord('바람'))
@@ -917,7 +909,7 @@ describe('tests for wordle class', () => {
 
     describe('getters should return cloned data instead of references', () => {
       test('guessResults', () => {
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('하늘'))
         const guessResults = wordle.guessResults
@@ -932,7 +924,7 @@ describe('tests for wordle class', () => {
       })
 
       test('keyHints', () => {
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         wordle.submitGuess(toWord('하늘'))
         const keyHints = wordle.keyHints
@@ -950,7 +942,7 @@ describe('tests for wordle class', () => {
       })
 
       test('data', () => {
-        const wordle = initWordle(nGuesses, answer)
+        const wordle = new _Wordle(nGuesses, toWord(answer))
 
         const res1 = wordle.submitGuess(toWord('하늘'))
         const data = wordle.data

@@ -1,6 +1,5 @@
 import { Game, GameConfig, generateGameId, getGameTypeString } from './game'
 import type { GameData, GameMode, GuessError, Status } from './types'
-import * as WordsModule from './words'
 import { GAME_MODES } from '@/constants'
 import { toWord } from '@/lib/hangul'
 
@@ -18,7 +17,7 @@ const ERR_LENGTH: GuessError = 'wrongLength'
 const ERR_WORD: GuessError = 'notInWordList'
 // TODO: check this error in tests if 'skip word list check' option is implemented
 //       or a word that contain Path.FONT.undrawableSyllables is found
-const ERR_UNDRAWABLE: GuessError = 'undrawableSyllable'
+// const ERR_UNDRAWABLE: GuessError = 'undrawableSyllable'
 
 describe('tests for GameConfig class', () => {
   const nWordles = 1
@@ -72,21 +71,16 @@ describe('tests for Game class', () => {
   const ANSWER7_OR_HIGHER = '정답'
 
   function initGame(nWordles: number, nGuesses: number): Game {
-    const answerGetterMock = vi.spyOn(WordsModule, 'getRandomAnswer')
-    answerGetterMock
-      .mockReturnValueOnce(toWord(ANSWER1))
-      .mockReturnValueOnce(toWord(ANSWER2))
-      .mockReturnValueOnce(toWord(ANSWER3))
-      .mockReturnValueOnce(toWord(ANSWER4))
-      .mockReturnValueOnce(toWord(ANSWER5))
-      .mockReturnValueOnce(toWord(ANSWER6))
-      .mockReturnValue(toWord(ANSWER7_OR_HIGHER))
-
     const config = new GameConfig(gameMode, nWordles, answerLength, nGuesses)
     // Mock some getters in config to disable local storage usage
     vi.spyOn(config, 'useSave', 'get').mockReturnValue(false)
     vi.spyOn(config, 'useStatistics', 'get').mockReturnValue(false)
-    return new Game(config)
+
+    const answers = [ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6]
+      .concat(Array(config.nWordles).fill(ANSWER7_OR_HIGHER))
+      .slice(0, config.nWordles)
+      .map(toWord)
+    return new Game(config, answers)
   }
 
   describe('game play and status checks', () => {
@@ -136,6 +130,16 @@ describe('tests for Game class', () => {
         const guessError1 = game.submitGuess()
         expect(guessError1).toStrictEqual(ERR_LENGTH)
         expect(game.keyboard.value).toStrictEqual('짧')
+      })
+
+      test('constructor should throw an error if the answers are not valid', () => {
+        const conf = new GameConfig(gameMode, nWordles, answerLength, nGuesses)
+        expect(() => {
+          new Game(conf, [ANSWER1, ANSWER2].map(toWord))
+        }).toThrowError()
+        expect(() => {
+          new Game(conf, ['짧'].map(toWord))
+        }).toThrowError()
       })
     })
 
