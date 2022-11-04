@@ -1,7 +1,7 @@
 import { Keyboard } from './keyboard'
 import type { GameData, GameMode, GuessError, Status } from './types'
 import { _Wordle } from './wordle'
-import { isInWordList } from './words'
+import { getRandomAnswer, isInWordList } from './words'
 import { GAME_MODES } from '@/constants'
 import type * as Hangul from '@/lib/hangul'
 import * as Path from '@/lib/path'
@@ -68,17 +68,35 @@ export class Game {
 
   /**
    * Initialize a game that can contain multiple wordles
+   *
+   * @param config game configuration
+   * @param answers answers of the wordles, if not provided, answers will be randomly selected from the answer list
+   * @throws an error if some answers are not valid
    */
-  constructor(config: GameConfig) {
+  constructor(config: GameConfig, answers?: readonly Hangul.Word[]) {
     this.#id = generateGameId(config.mode, config.nWordles, config.answerLength)
     this.#config = config
 
+    if (answers) {
+      if (answers.length !== config.nWordles) {
+        throw new Error(
+          'the number of answers are not equal to the number of wordles'
+        )
+      }
+
+      if (answers.some((answer) => answer.length !== config.answerLength)) {
+        throw new Error('answer lengths are not consistent')
+      }
+    }
+
     this.#wordles = Array(config.nWordles)
       .fill(0)
-      .map(
-        (_, i) =>
-          new _Wordle(config.answerLength, config.nGuesses, `${this.#id}-${i}`)
-      )
+      .map((_, i) => {
+        const answer =
+          answers?.[i] ||
+          getRandomAnswer(config.answerLength, `${this.#id}-${i}`)
+        return new _Wordle(config.nGuesses, answer)
+      })
     this.#keyboard = new Keyboard(config.answerLength)
     this.#guesses = []
 
