@@ -51,8 +51,8 @@ export interface GameData {
   readonly id: string
   readonly mode: GameMode
   readonly nWordles: number
-  readonly nGuesses: number
   readonly answerLength: number
+  readonly nGuesses: number
   readonly guesses: readonly Hangul.Word[]
   readonly status: Status
   readonly wordleData: readonly WordleData[]

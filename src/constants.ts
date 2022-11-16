@@ -29,7 +29,7 @@ export const GAME_MODES: readonly GameMode[] = [
   {
     id: 'custom',
     name: '커스텀 게임',
-    useSave: false,
+    useSave: true,
     useStatistics: false,
     disabled: true,
   },
@@ -79,6 +79,7 @@ export const ROUTES = {
   fontViewer: '/font',
   wordViewer: '/words',
   game: GAMES.map((game) => game.link),
+  custom: '/custom/:code?',
 } as const
 
 export const WORDLE_NAMES = ['invalid', '한들', '두들', '세들']
