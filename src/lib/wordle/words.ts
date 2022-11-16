@@ -10,6 +10,10 @@ type Words = {
 const words: Words = _words
 const answers: Words = _answers
 
+export function getSupportedLengths(): readonly number[] {
+  return Object.keys(words).map(Number).filter(Number.isInteger)
+}
+
 /**
  * Retrieve list of words that can be used as guesses in the wordle game
  *
