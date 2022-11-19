@@ -26,7 +26,14 @@ describe('tests for GameConfig class', () => {
 
   test('game mode: daily', () => {
     const mode: GameMode = 'daily'
-    const gameConfig = new GameConfig(mode, nWordles, answerLength, nGuesses)
+    const gameConfig = GameConfig.getGameConfig(
+      mode,
+      nWordles,
+      answerLength,
+      nGuesses
+    )
+    expect(gameConfig.id).toBeTruthy()
+    expect(gameConfig.author).toBeTruthy()
     expect(gameConfig.mode).toStrictEqual(mode)
     expect(gameConfig.nWordles).toStrictEqual(nWordles)
     expect(gameConfig.answerLength).toStrictEqual(answerLength)
@@ -37,7 +44,14 @@ describe('tests for GameConfig class', () => {
 
   test('game mode: free', () => {
     const mode: GameMode = 'free'
-    const gameConfig = new GameConfig(mode, nWordles, answerLength, nGuesses)
+    const gameConfig = GameConfig.getGameConfig(
+      mode,
+      nWordles,
+      answerLength,
+      nGuesses
+    )
+    expect(gameConfig.id).toBeTruthy()
+    expect(gameConfig.author).toBeTruthy()
     expect(gameConfig.mode).toStrictEqual(mode)
     expect(gameConfig.nWordles).toStrictEqual(nWordles)
     expect(gameConfig.answerLength).toStrictEqual(answerLength)
@@ -46,14 +60,24 @@ describe('tests for GameConfig class', () => {
     expect(gameConfig.useStatistics).toBeTruthy()
   })
 
-  test.todo('game mode: custom', () => {
+  test('game mode: custom', () => {
+    const id = 'id'
+    const author = 'author'
     const mode: GameMode = 'custom'
-    const gameConfig = new GameConfig(mode, nWordles, answerLength, nGuesses)
+    const gameConfig = GameConfig.getCustomGameConfig(
+      id,
+      author,
+      nWordles,
+      answerLength,
+      nGuesses
+    )
+    expect(gameConfig.id).toStrictEqual(id)
+    expect(gameConfig.author).toStrictEqual(author)
     expect(gameConfig.mode).toStrictEqual(mode)
     expect(gameConfig.nWordles).toStrictEqual(nWordles)
     expect(gameConfig.answerLength).toStrictEqual(answerLength)
     expect(gameConfig.nGuesses).toStrictEqual(nGuesses)
-    expect(gameConfig.useSave).toBeFalsy()
+    expect(gameConfig.useSave).toBeTruthy()
     expect(gameConfig.useStatistics).toBeFalsy()
   })
 })
@@ -71,7 +95,12 @@ describe('tests for Game class', () => {
   const ANSWER7_OR_HIGHER = '정답'
 
   function initGame(nWordles: number, nGuesses: number): Game {
-    const config = new GameConfig(gameMode, nWordles, answerLength, nGuesses)
+    const config = GameConfig.getGameConfig(
+      gameMode,
+      nWordles,
+      answerLength,
+      nGuesses
+    )
     // Mock some getters in config to disable local storage usage
     vi.spyOn(config, 'useSave', 'get').mockReturnValue(false)
     vi.spyOn(config, 'useStatistics', 'get').mockReturnValue(false)
@@ -95,10 +124,7 @@ describe('tests for Game class', () => {
         expect(game.answers).toBeUndefined()
         expect(game.data).toStrictEqual<GameData>({
           id: game.data.id,
-          mode: gameMode,
-          nWordles: nWordles,
-          nGuesses: nGuesses,
-          answerLength: answerLength,
+          config: game.data.config,
           status: PLAYING,
           guesses: [],
           wordleData: [
@@ -133,12 +159,17 @@ describe('tests for Game class', () => {
       })
 
       test('constructor should throw an error if the answers are not valid', () => {
-        const conf = new GameConfig(gameMode, nWordles, answerLength, nGuesses)
+        const config = GameConfig.getGameConfig(
+          gameMode,
+          nWordles,
+          answerLength,
+          nGuesses
+        )
         expect(() => {
-          new Game(conf, [ANSWER1, ANSWER2].map(toWord))
+          new Game(config, [ANSWER1, ANSWER2].map(toWord))
         }).toThrowError()
         expect(() => {
-          new Game(conf, ['짧'].map(toWord))
+          new Game(config, ['짧'].map(toWord))
         }).toThrowError()
       })
     })

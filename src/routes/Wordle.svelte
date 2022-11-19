@@ -2,6 +2,7 @@
   import Game from '@/components/wordle/Game.svelte'
   import { initializeWordleStores } from '@/components/wordle/store'
   import { GAMES, N_GUESSES } from '@/constants'
+  import * as Wordle from '@/lib/wordle'
 
   export let path: string
 
@@ -11,12 +12,14 @@
       throw new Error('invalid game page')
     }
 
-    initializeWordleStores(
+    const config = Wordle.GameConfig.getGameConfig(
       game.mode,
       game.nWordles,
       game.answerLength,
       N_GUESSES[game.nWordles][game.answerLength]
     )
+    const gameInstance = new Wordle.Game(config)
+    initializeWordleStores(gameInstance)
   }
 
   initialize()
