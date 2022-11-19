@@ -9,7 +9,7 @@
     getWinMessage,
   } from './message'
   import { game, keyboard, notification, ui } from './store'
-  import { GAME_MODES, WAIT_DURATION_TO_SHOW_STATS_MS } from '@/constants'
+  import { WAIT_DURATION_TO_SHOW_STATS_MS } from '@/constants'
 
   function assert() {
     if (game === undefined || keyboard === undefined || ui === undefined) {
@@ -40,10 +40,7 @@
     }
 
     if ($game.status !== 'playing') {
-      const showStats =
-        GAME_MODES.find((mode) => mode.id === $game.mode)?.useStatistics ||
-        false
-      if (showStats) {
+      if ($game.config.useStatistics) {
         setTimeout(openStatsModal, WAIT_DURATION_TO_SHOW_STATS_MS)
       }
     }
@@ -58,7 +55,7 @@
   <div class="tw-my-auto tw-py-1.5 md:tw-py-3 tw-mx-2">
     {#each { length: $ui.nRows } as _, rowIndex}
       <div class={$ui.nRows > 1 ? 'tw-mb-4 md:tw-mb-6' : ''}>
-        {#each { length: $game.nGuesses } as _, guessIndex}
+        {#each { length: $game.config.nGuesses } as _, guessIndex}
           <div
             class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-4 tw-my-1"
           >
@@ -69,12 +66,15 @@
               {#if guessIndex < wordle.guessResults.length}
                 <Guess
                   guess={wordle.guessResults[guessIndex]}
-                  answerLength={$game.answerLength}
+                  answerLength={$game.config.answerLength}
                 />
               {:else if wordle.status === 'playing' && guessIndex === wordle.guessResults.length}
-                <Guess guess={$keyboard} answerLength={$game.answerLength} />
+                <Guess
+                  guess={$keyboard}
+                  answerLength={$game.config.answerLength}
+                />
               {:else}
-                <Guess answerLength={$game.answerLength} />
+                <Guess answerLength={$game.config.answerLength} />
               {/if}
             {/each}
           </div>

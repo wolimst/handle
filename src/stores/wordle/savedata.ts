@@ -42,10 +42,7 @@ function load(gameId: string): Wordle.GameData | undefined {
   } else {
     return {
       id: data.id,
-      mode: data.mode,
-      nWordles: data.nWordles,
-      nGuesses: data.nGuesses,
-      answerLength: data.answerLength,
+      config: data.config,
       guesses: data.guesses,
       status: data.status,
       wordleData: data.wordleData,

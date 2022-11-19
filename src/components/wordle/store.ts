@@ -34,73 +34,64 @@ export let keyboard: KeyboardStore
 export let ui: UIStore
 export const notification = writable<Notification>({ message: '' })
 
-export function initializeWordleStores(
-  gameMode: Wordle.GameMode,
-  nWordles: number,
-  answerLength: number,
-  nGuesses: number
-) {
-  const gameImpl = createGameInstance(
-    gameMode,
-    nWordles,
-    answerLength,
-    nGuesses
-  )
-  const keyboardImpl = gameImpl.keyboard
+export function initializeWordleStores(gameInstance: Wordle.Game) {
+  const keyboardInstance = gameInstance.keyboard
 
-  const gameStore = writable<Wordle.GameData>(gameImpl.data)
-  const keyboardStore = writable(keyboardImpl.value)
+  const gameStore = writable<Wordle.GameData>(gameInstance.data)
+  const keyboardStore = writable(keyboardInstance.value)
 
   game = {
     subscribe: gameStore.subscribe,
     getGameType: (): string => {
       return Wordle.getGameTypeString(
-        gameImpl.data.mode,
-        gameImpl.data.nWordles,
-        gameImpl.data.answerLength
+        gameInstance.data.config.mode,
+        gameInstance.data.config.nWordles,
+        gameInstance.data.config.answerLength
       )
     },
     submitGuess: (): Wordle.GuessError | undefined => {
-      const result = gameImpl.submitGuess()
-      gameStore.set(gameImpl.data)
-      keyboardStore.set(keyboardImpl.value)
+      const result = gameInstance.submitGuess()
+      gameStore.set(gameInstance.data)
+      keyboardStore.set(keyboardInstance.value)
       return result
     },
     getAnswers: (): readonly string[] | undefined => {
-      return gameImpl.answers
+      return gameInstance.answers
     },
   }
 
   keyboard = {
     subscribe: keyboardStore.subscribe,
     setValue: (value: string): Wordle.KeyboardError | undefined => {
-      const setError = keyboardImpl.setValue(value)
+      const setError = keyboardInstance.setValue(value)
       if (setError === undefined) {
         keyboardStore.set(value)
       }
       return setError
     },
     type: (jamo: DubeolsikJamo): Wordle.KeyboardError | undefined => {
-      const setError = keyboardImpl.type(jamo)
+      const setError = keyboardInstance.type(jamo)
       if (setError === undefined) {
-        keyboardStore.set(keyboardImpl.value)
+        keyboardStore.set(keyboardInstance.value)
       }
       return setError
     },
     delete() {
-      keyboardImpl.delete()
-      keyboardStore.set(keyboardImpl.value)
+      keyboardInstance.delete()
+      keyboardStore.set(keyboardInstance.value)
     },
   }
 
-  const nWordlesPerRow = N_WORDLES_PER_ROW[answerLength]
+  const nWordlesPerRow =
+    N_WORDLES_PER_ROW[gameInstance.data.config.answerLength]
   ui = {
     ...readable({
       nWordlesPerRow,
-      nRows: Math.ceil(nWordles / nWordlesPerRow),
+      nRows: Math.ceil(gameInstance.data.config.nWordles / nWordlesPerRow),
     }),
     nWordlesAtRow: (rowIndex: number): number => {
-      const nWordlesRemaining = nWordles - rowIndex * nWordlesPerRow
+      const nWordlesRemaining =
+        gameInstance.data.config.nWordles - rowIndex * nWordlesPerRow
       if (nWordlesRemaining > nWordlesPerRow) {
         return nWordlesPerRow
       } else {
@@ -108,19 +99,4 @@ export function initializeWordleStores(
       }
     },
   }
-}
-
-function createGameInstance(
-  gameMode: Wordle.GameMode,
-  nWordles: number,
-  answerLength: number,
-  nGuesses: number
-): Wordle.Game {
-  const gameConfig = new Wordle.GameConfig(
-    gameMode,
-    nWordles,
-    answerLength,
-    nGuesses
-  )
-  return new Wordle.Game(gameConfig)
 }

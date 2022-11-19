@@ -9,6 +9,8 @@ import { time } from '@/lib/utils'
 import { savedata, statistics } from '@/stores/wordle'
 
 export class GameConfig {
+  readonly #id: string
+  readonly #author: string
   readonly #mode: GameMode
   readonly #nWordles: number
   readonly #answerLength: number
@@ -16,12 +18,16 @@ export class GameConfig {
   readonly #useSave: boolean
   readonly #useStatistics: boolean
 
-  constructor(
+  private constructor(
+    id: string,
+    author: string,
     mode: GameMode,
     nWordles: number,
     answerLength: number,
     nGuesses: number
   ) {
+    this.#id = id
+    this.#author = author
     this.#mode = mode
     this.#nWordles = nWordles
     this.#answerLength = answerLength
@@ -31,6 +37,36 @@ export class GameConfig {
     this.#useStatistics =
       GAME_MODES.find((gameMode) => gameMode.id === mode)?.useStatistics ||
       false
+  }
+
+  static getGameConfig(
+    mode: GameMode,
+    nWordles: number,
+    answerLength: number,
+    nGuesses: number
+  ): GameConfig {
+    const id = generateGameId(mode, nWordles, answerLength)
+    const author = '한들'
+    return new GameConfig(id, author, mode, nWordles, answerLength, nGuesses)
+  }
+
+  static getCustomGameConfig(
+    id: string,
+    author: string,
+    nWordles: number,
+    answerLength: number,
+    nGuesses: number
+  ): GameConfig {
+    const mode: GameMode = 'custom'
+    return new GameConfig(id, author, mode, nWordles, answerLength, nGuesses)
+  }
+
+  get id(): string {
+    return this.#id
+  }
+
+  get author(): string {
+    return this.#author
   }
 
   get mode(): GameMode {
@@ -59,7 +95,6 @@ export class GameConfig {
 }
 
 export class Game {
-  readonly #id: string
   readonly #config: GameConfig
   readonly #wordles: readonly _Wordle[]
   readonly #keyboard: Keyboard
@@ -74,7 +109,6 @@ export class Game {
    * @throws an error if some answers are not valid
    */
   constructor(config: GameConfig, answers?: readonly Hangul.Word[]) {
-    this.#id = generateGameId(config.mode, config.nWordles, config.answerLength)
     this.#config = config
 
     if (answers) {
@@ -94,14 +128,14 @@ export class Game {
       .map((_, i) => {
         const answer =
           answers?.[i] ||
-          getRandomAnswer(config.answerLength, `${this.#id}-${i}`)
+          getRandomAnswer(config.answerLength, `${this.#config.id}-${i}`)
         return new _Wordle(config.nGuesses, answer)
       })
     this.#keyboard = new Keyboard(config.answerLength)
     this.#guesses = []
 
     if (config.useSave) {
-      const data = savedata.load(this.#id)
+      const data = savedata.load(this.#config.id)
       data?.guesses.forEach((guess) => this.#doSubmit(guess))
     }
   }
@@ -134,11 +168,8 @@ export class Game {
 
   get data(): GameData {
     return {
-      id: this.#id,
-      mode: this.#config.mode,
-      nWordles: this.#config.nWordles,
-      nGuesses: this.#config.nGuesses,
-      answerLength: this.#config.answerLength,
+      id: this.#config.id,
+      config: this.#config,
       status: this.status,
       guesses: structuredClone(this.#guesses),
       wordleData: this.#wordles.map((wordle) => wordle.data),
@@ -221,8 +252,7 @@ export function generateGameId(
       return `${gameType}-${n}`
     }
     case 'custom':
-      // TODO
-      throw new Error('not implemented')
+      throw new Error('should not be reached')
     default: {
       const _exhaustiveCheck: never = mode
       return _exhaustiveCheck

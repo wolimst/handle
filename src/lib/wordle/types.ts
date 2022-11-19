@@ -1,3 +1,4 @@
+import { GameConfig } from './game'
 import type * as Hangul from '@/lib/hangul'
 
 export type GameMode = 'daily' | 'free' | 'custom'
@@ -49,10 +50,7 @@ export interface WordleData {
 
 export interface GameData {
   readonly id: string
-  readonly mode: GameMode
-  readonly nWordles: number
-  readonly answerLength: number
-  readonly nGuesses: number
+  readonly config: GameConfig
   readonly guesses: readonly Hangul.Word[]
   readonly status: Status
   readonly wordleData: readonly WordleData[]
