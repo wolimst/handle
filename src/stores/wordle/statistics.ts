@@ -52,9 +52,9 @@ function update(gameData: Wordle.GameData) {
   }
 
   const gameType = Wordle.getGameTypeString(
-    gameData.mode,
-    gameData.nWordles,
-    gameData.answerLength
+    gameData.config.mode,
+    gameData.config.nWordles,
+    gameData.config.answerLength
   )
   store.update((storage: StatisticsStorage): StatisticsStorage => {
     const stats = storage[gameType] || structuredClone(defaultStats)

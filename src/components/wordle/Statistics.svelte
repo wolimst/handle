@@ -113,12 +113,13 @@
     if (isInGamePage()) {
       const data = get(game)
       gameMode =
-        gameModeOptions.find((option) => option.id === data.mode) || gameMode
+        gameModeOptions.find((option) => option.id === data.config.mode) ||
+        gameMode
       gameType =
         gameTypeOptions.find(
           (option) =>
-            option.nWordles === data.nWordles &&
-            option.answerLength === data.answerLength
+            option.nWordles === data.config.nWordles &&
+            option.answerLength === data.config.answerLength
         ) || gameType
     }
   }
