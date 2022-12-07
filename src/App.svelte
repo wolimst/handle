@@ -7,6 +7,7 @@
   import Home from '@/routes/Home.svelte'
   import WordViewer from '@/routes/WordViewer.svelte'
   import Wordle from '@/routes/Wordle.svelte'
+  import WordleCustom from '@/routes/WordleCustom.svelte'
   import Router from 'svelte-spa-router'
   import { wrap } from 'svelte-spa-router/wrap'
 
@@ -19,6 +20,7 @@
   ROUTES.game.forEach((path) =>
     routes.set(path, wrap({ component: Wordle, props: { path: path } }))
   )
+  routes.set(ROUTES.custom, WordleCustom)
   routes.set('*', PageNotFound)
 </script>
 

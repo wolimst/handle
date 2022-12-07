@@ -1,4 +1,5 @@
 <script lang="ts">
+  import PageNotFound from '@/NotFound.svelte'
   import Game from '@/components/wordle/Game.svelte'
   import { initializeWordleStores } from '@/components/wordle/store'
   import { GAMES, N_GUESSES } from '@/constants'
@@ -6,10 +7,16 @@
 
   export let path: string
 
-  function initialize() {
+  type PageStatus = 'loading' | 'success' | 'fail'
+  let pageStatus: PageStatus = 'loading'
+
+  function initialize(path: string) {
+    pageStatus = 'loading'
+
     const game = GAMES.find((game) => game.link === path)
     if (game === undefined) {
-      throw new Error('invalid game page')
+      pageStatus = 'fail'
+      return
     }
 
     const config = Wordle.GameConfig.getGameConfig(
@@ -20,9 +27,16 @@
     )
     const gameInstance = new Wordle.Game(config)
     initializeWordleStores(gameInstance)
+    pageStatus = 'success'
   }
 
-  initialize()
+  $: initialize(path)
 </script>
 
-<Game />
+{#if pageStatus === 'loading'}
+  Loading
+{:else if pageStatus === 'success'}
+  <Game />
+{:else}
+  <PageNotFound />
+{/if}
