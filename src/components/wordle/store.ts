@@ -24,15 +24,9 @@ interface UIStore extends Readable<UIConstants> {
   nWordlesAtRow: (rowIndex: number) => number
 }
 
-interface Notification {
-  type?: 'win' | 'loss' | 'error'
-  message: string
-}
-
 export let game: GameStore
 export let keyboard: KeyboardStore
 export let ui: UIStore
-export const notification = writable<Notification>({ message: '' })
 
 export function initializeWordleStores(gameInstance: Wordle.Game) {
   const keyboardInstance = gameInstance.keyboard
