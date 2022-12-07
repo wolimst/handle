@@ -8,3 +8,8 @@ export interface Config {
   showInputForm: boolean
   switchEnterAndBackspacePosition: boolean
 }
+
+export interface Notification {
+  type?: 'error' | 'success' | 'wordle-win' | 'wordle-loss'
+  message: string
+}

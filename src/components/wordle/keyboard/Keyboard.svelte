@@ -1,10 +1,11 @@
 <script lang="ts">
   import { getKeyboardErrorMessage } from '../message'
-  import { game, keyboard, notification } from '../store'
+  import { game, keyboard } from '../store'
   import InputForm from './InputForm.svelte'
   import Key from './Key.svelte'
   import BackspaceIcon from '@/components/ui/icons/Backspace.svelte'
   import * as Hangul from '@/lib/hangul'
+  import { notification } from '@/stores/app'
   import { config } from '@/stores/app'
   import { createEventDispatcher, onDestroy, onMount } from 'svelte'
 

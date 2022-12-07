@@ -1,6 +1,7 @@
 <script lang="ts">
   import Nav from '@/Nav.svelte'
   import PageNotFound from '@/NotFound.svelte'
+  import Notification from '@/Notification.svelte'
   import { PRODUCTION, ROUTES } from '@/constants'
   import FontViewer from '@/routes/FontViewer.svelte'
   import Home from '@/routes/Home.svelte'
@@ -27,4 +28,10 @@
   class="tw-w-full tw-h-[calc(100%-var(--nav-height))] tw-overflow-y-auto tw-overscroll-y-none"
 >
   <Router {routes} />
+
+  <div
+    class="tw-w-full tw-fixed tw-top-7 tw-flex tw-flex-nowrap tw-justify-center"
+  >
+    <Notification />
+  </div>
 </main>
