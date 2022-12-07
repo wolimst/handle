@@ -1,6 +1,5 @@
 <script lang="ts">
   import Guess from './Guess.svelte'
-  import Notification from './Notification.svelte'
   import { openStatsModal } from './Statistics.svelte'
   import Keyboard from './keyboard/Keyboard.svelte'
   import {
@@ -8,8 +7,9 @@
     getLossMessage,
     getWinMessage,
   } from './message'
-  import { game, keyboard, notification, ui } from './store'
+  import { game, keyboard, ui } from './store'
   import { WAIT_DURATION_TO_SHOW_STATS_MS } from '@/constants'
+  import { notification } from '@/stores/app'
 
   function assert() {
     if (game === undefined || keyboard === undefined || ui === undefined) {
@@ -22,12 +22,12 @@
 
     if ($game.status === 'win') {
       $notification = {
-        type: 'win',
+        type: 'wordle-win',
         message: getWinMessage(),
       }
     } else if ($game.status === 'lose') {
       $notification = {
-        type: 'loss',
+        type: 'wordle-loss',
         message: getLossMessage(game.getAnswers()!),
       }
     } else {
@@ -86,10 +86,4 @@
   <div class="tw-sticky tw-bottom-0 tw-mx-2 tw-bg-app-bg">
     <Keyboard on:submit={submitGuess} />
   </div>
-</div>
-
-<div
-  class="tw-w-full tw-fixed tw-top-7 tw-flex tw-flex-nowrap tw-justify-center"
->
-  <Notification />
 </div>

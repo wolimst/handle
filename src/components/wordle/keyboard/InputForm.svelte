@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getKeyboardErrorMessage } from '../message'
-  import { game, keyboard, notification } from '../store'
+  import { game, keyboard } from '../store'
+  import { notification } from '@/stores/app'
 
   $: value = $keyboard
   $: {
