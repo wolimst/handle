@@ -6,7 +6,7 @@ import type {
   SyllableResult,
   WordleData,
 } from './types'
-import { getAnswerList } from './words'
+import { isInWordList } from './words'
 import * as Hangul from '@/lib/hangul'
 
 export class _Wordle {
@@ -21,11 +21,11 @@ export class _Wordle {
    *
    * @param nGuesses number of guesses that the player has. It should be a positive integer.
    * @param answer answer of the wordle
-   * @throws an error if the answer is not in the answer list
+   * @throws an error if the answer is not in the word list
    */
   constructor(nGuesses: number, answer: Hangul.Word) {
-    if (!getAnswerList(answer.length).includes(answer.value)) {
-      throw new Error('answer is not in the answer list')
+    if (!isInWordList(answer.value)) {
+      throw new Error('answer is not in the word list')
     }
 
     this.#answer = answer

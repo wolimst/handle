@@ -31,7 +31,6 @@ export const GAME_MODES: readonly GameMode[] = [
     name: '커스텀 게임',
     useSave: true,
     useStatistics: false,
-    disabled: true,
   },
 ] as const
 
@@ -81,6 +80,11 @@ export const ROUTES = {
   game: GAMES.map((game) => game.link),
   custom: '/custom/:code?',
 } as const
+
+export const CUSTOM_PAGE_RELATIVE_URL = ROUTES.custom
+  .split('/')
+  .slice(0, 2)
+  .join('/')
 
 export const WORDLE_NAMES = ['invalid', '한들', '두들', '세들']
 
