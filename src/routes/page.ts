@@ -6,7 +6,7 @@ export function getAbsoluteUrl(relative_url: string): URL {
   if (!relative_url.startsWith('/#')) {
     relative_url = '/#' + relative_url
   }
-  return new URL(relative_url, window.location.origin + '/' + BASE_URL)
+  return new URL(BASE_URL + relative_url, window.location.origin)
 }
 
 export function isInGamePage(): boolean {
