@@ -6,6 +6,7 @@
 </script>
 
 <script lang="ts">
+  import CustomTab from './custom-game/CustomTab.svelte'
   import Badge from '@/components/ui/core/Badge.svelte'
   import ClickButton from '@/components/ui/core/ClickButton.svelte'
   import LinkButton from '@/components/ui/core/LinkButton.svelte'
@@ -44,10 +45,12 @@
     </div>
   </div>
 
-  <div
-    class="tw-mt-6 tw-flex tw-flex-wrap tw-justify-center tw-items-stretch tw-gap-3"
-  >
-    {#if $gameMode !== 'custom'}
+  {#if $gameMode === 'custom'}
+    <CustomTab />
+  {:else}
+    <div
+      class="tw-mt-6 tw-flex tw-flex-wrap tw-justify-center tw-items-stretch tw-gap-3"
+    >
       {#each GAMES.filter((game) => game.mode === $gameMode) as game}
         <LinkButton url={game.link} useRouter underline={false}>
           <div class="card tw-shadow-md">
@@ -59,8 +62,8 @@
           </div>
         </LinkButton>
       {/each}
-    {/if}
-  </div>
+    </div>
+  {/if}
 </div>
 
 <style>
