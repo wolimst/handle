@@ -11,7 +11,9 @@
   export let heightCss = 'auto'
   export let minHeightCss = '0'
   export let closeOnOuterclick = true
-  // TODO: export let closeOnEsc = true
+  export let closeOnEsc = true
+
+  let modalOuterElement: HTMLDivElement
 
   const dispatch = createEventDispatcher()
 
@@ -27,13 +29,32 @@
   }
 
   $: open && onOpen()
+  $: modalOuterElement && modalOuterElement.focus()
+
+  function handleKeyboardEvent(event: KeyboardEvent) {
+    console.log(event)
+    if (closeOnEsc && event.key === 'Escape') {
+      close()
+    }
+  }
 </script>
 
 {#if open}
-  <div class="modal-outer" on:click={() => closeOnOuterclick && close()}>
+  <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+  <div
+    bind:this={modalOuterElement}
+    class="modal-outer"
+    role="dialog"
+    tabindex="-1"
+    on:click={() => closeOnOuterclick && close()}
+    on:keydown={handleKeyboardEvent}
+  >
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
     <div
       class="modal"
       style="--width: {widthCss}; --minWidth: {minWidthCss}; --height: {heightCss}; --minHeight: {minHeightCss};"
+      role="dialog"
+      aria-modal="true"
       on:click|stopPropagation={() => {}}
       transition:fly={{ y: 150, duration: 200 }}
     >
