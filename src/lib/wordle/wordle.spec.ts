@@ -79,9 +79,8 @@ describe('tests for wordle class', () => {
         expect(res1.result[1].trailingConsonants).toHaveLength(2)
       })
 
-      test.todo('guess: "?" (LVVTT/LVVTT)', () => {
-        // TODO: find a valid word containing LVVTT syllable
-        const res1 = wordle.submitGuess(toWord('?'))
+      test('guess: "웑숽" (LVVTT/LVVTT) (not in the word list)', () => {
+        const res1 = wordle.submitGuess(toWord('웑숽'))
         expect(res1.result).toHaveLength(2)
         expect(res1.result[0].exact).toBeFalsy()
         expect(res1.result[0].leadingConsonant).toBeDefined()

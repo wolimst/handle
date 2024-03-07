@@ -1,10 +1,11 @@
 import { GameConfig } from './game'
 import { getSupportedLengths } from './words'
 import * as Hangul from '@/lib/hangul'
+import * as Wordle from '@/lib/wordle'
 
 export const [MIN_AUTHOR_LEN, MAX_AUTHOR_LEN] = [0, 10]
 export const [MIN_N_WORDLES, MAX_N_WORDLES] = [1, 10]
-export const [MIN_ANS_LEN, MAX_ANS_LEN] = [
+export const [MIN_WORD_LIST_ANSWER_LEN, MAX_WORD_LIST_ANSWER_LEN] = [
   Math.min(...getSupportedLengths()),
   Math.max(...getSupportedLengths()),
 ]
@@ -15,21 +16,44 @@ function validate(
   nWordles: number,
   answerLength: number,
   nGuesses: number,
+  useWordList: boolean,
   answers: readonly Hangul.Word[]
 ): boolean {
   const assertInteger = (n: number, min: number, max: number) => {
     return Number.isInteger(n) && min <= n && n <= max
   }
 
+  const assertAnswerLength = (answerLength: number, useWordList: boolean) => {
+    if (useWordList) {
+      return assertInteger(
+        answerLength,
+        MIN_WORD_LIST_ANSWER_LEN,
+        MAX_WORD_LIST_ANSWER_LEN
+      )
+    }
+    return true
+  }
+
+  const assertAnswersInWordList = (
+    answers: readonly Hangul.Word[],
+    useWordList: boolean
+  ) => {
+    if (useWordList) {
+      return answers.every((answer) => Wordle.isInWordList(answer.value))
+    }
+    return true
+  }
+
   return (
     MIN_AUTHOR_LEN <= author.length &&
     author.length <= MAX_AUTHOR_LEN &&
     assertInteger(nWordles, MIN_N_WORDLES, MAX_N_WORDLES) &&
-    assertInteger(answerLength, MIN_ANS_LEN, MAX_ANS_LEN) &&
+    assertAnswerLength(answerLength, useWordList) &&
     assertInteger(nGuesses, MIN_N_GUESSES, MAX_N_GUESSES) &&
     nWordles <= nGuesses &&
     answers.length === nWordles &&
-    answers.every((ans) => ans.length === answerLength)
+    answers.every((ans) => ans.length === answerLength) &&
+    assertAnswersInWordList(answers, useWordList)
   )
 }
 
@@ -43,9 +67,12 @@ export function generateCode(
   nWordles: number,
   answerLength: number,
   nGuesses: number,
+  useWordList: boolean,
   answers: readonly Hangul.Word[]
 ): string | undefined {
-  if (!validate(author, nWordles, answerLength, nGuesses, answers)) {
+  if (
+    !validate(author, nWordles, answerLength, nGuesses, useWordList, answers)
+  ) {
     return undefined
   }
 
@@ -61,13 +88,23 @@ export function generateCode(
     value: nGuesses,
     encoder: nonNegativeIntegerEncoder,
   }
+  const useWordListToken: Token<boolean> = {
+    value: useWordList,
+    encoder: booleanEncoder,
+  }
   const answerSyllableTokens: Token<Hangul.DubeolsikSyllable[]> = {
     value: answers.flatMap((answer) => answer.syllables),
     encoder: syllablesEncoder,
   }
 
   try {
-    return [authorToken, nWordlesToken, nGuessesToken, answerSyllableTokens]
+    return [
+      authorToken,
+      nWordlesToken,
+      nGuessesToken,
+      useWordListToken,
+      answerSyllableTokens,
+    ]
       .map((token: Token<unknown>) => token.encoder.encode(token.value))
       .join('')
   } catch {
@@ -95,11 +132,15 @@ export function parseCode(code: string): CodeParseResult | undefined {
     value: NaN,
     encoder: nonNegativeIntegerEncoder,
   }
+  const useWordList: Token<boolean> = {
+    value: true,
+    encoder: booleanEncoder,
+  }
   const answerSyllables: Token<Hangul.DubeolsikSyllable[]> = {
     value: [],
     encoder: syllablesEncoder,
   }
-  const tokens = [author, nWordles, nGuesses, answerSyllables]
+  const tokens = [author, nWordles, nGuesses, useWordList, answerSyllables]
 
   try {
     tokens.forEach((token) => {
@@ -126,7 +167,8 @@ export function parseCode(code: string): CodeParseResult | undefined {
     author.value,
     nWordles.value,
     answerLength,
-    nGuesses.value
+    nGuesses.value,
+    useWordList.value
   )
 
   return validate(
@@ -134,6 +176,7 @@ export function parseCode(code: string): CodeParseResult | undefined {
     config.nWordles,
     config.answerLength,
     config.nGuesses,
+    config.useWordList,
     answers
   )
     ? { config, answers }
@@ -181,6 +224,19 @@ const nonNegativeIntegerEncoder: Encoder<number> = {
       .map((ch) => URL_LETTERS.indexOf(ch))
       .reduce((prev, curr) => prev * URL_LETTERS.length + curr)
     return { value, unconsumedCode: code.slice(length) }
+  },
+}
+
+const booleanEncoder: Encoder<boolean> = {
+  encode(value: boolean): string {
+    return nonNegativeIntegerEncoder.encode(Number(value))
+  },
+  decode(str: string): DecodeResult<boolean> {
+    const result = nonNegativeIntegerEncoder.decode(str)
+    return {
+      value: Boolean(result.value),
+      unconsumedCode: result.unconsumedCode,
+    }
   },
 }
 

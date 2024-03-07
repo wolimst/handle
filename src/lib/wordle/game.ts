@@ -15,6 +15,7 @@ export class GameConfig {
   readonly #nWordles: number
   readonly #answerLength: number
   readonly #nGuesses: number
+  readonly #useWordList: boolean
   readonly #useSave: boolean
   readonly #useStatistics: boolean
 
@@ -24,7 +25,8 @@ export class GameConfig {
     mode: GameMode,
     nWordles: number,
     answerLength: number,
-    nGuesses: number
+    nGuesses: number,
+    useWordList: boolean
   ) {
     this.#id = id
     this.#author = author
@@ -32,6 +34,7 @@ export class GameConfig {
     this.#nWordles = nWordles
     this.#answerLength = answerLength
     this.#nGuesses = nGuesses
+    this.#useWordList = useWordList
     this.#useSave =
       GAME_MODES.find((gameMode) => gameMode.id === mode)?.useSave || false
     this.#useStatistics =
@@ -43,11 +46,20 @@ export class GameConfig {
     mode: GameMode,
     nWordles: number,
     answerLength: number,
-    nGuesses: number
+    nGuesses: number,
+    useWordList = true
   ): GameConfig {
     const id = generateGameId(mode, nWordles, answerLength)
     const author = '한들'
-    return new GameConfig(id, author, mode, nWordles, answerLength, nGuesses)
+    return new GameConfig(
+      id,
+      author,
+      mode,
+      nWordles,
+      answerLength,
+      nGuesses,
+      useWordList
+    )
   }
 
   static getCustomGameConfig(
@@ -55,10 +67,19 @@ export class GameConfig {
     author: string,
     nWordles: number,
     answerLength: number,
-    nGuesses: number
+    nGuesses: number,
+    useWordList: boolean
   ): GameConfig {
     const mode: GameMode = 'custom'
-    return new GameConfig(id, author, mode, nWordles, answerLength, nGuesses)
+    return new GameConfig(
+      id,
+      author,
+      mode,
+      nWordles,
+      answerLength,
+      nGuesses,
+      useWordList
+    )
   }
 
   get id(): string {
@@ -83,6 +104,10 @@ export class GameConfig {
 
   get nGuesses(): number {
     return this.#nGuesses
+  }
+
+  get useWordList(): boolean {
+    return this.#useWordList
   }
 
   get useSave(): boolean {
@@ -196,7 +221,7 @@ export class Game {
       return 'wrongLength'
     }
 
-    if (!isInWordList(guess.value)) {
+    if (this.#config.useWordList && !isInWordList(guess.value)) {
       return 'notInWordList'
     }
 

@@ -108,7 +108,7 @@ export const N_GUESSES: readonly (readonly number[])[] = [
  * Array index corresponds to the answer length of the wordle,
  * i.e. `N_WORDLES_PER_ROW[2]` is #wordles/row when the answer length is 2.
  */
-export const N_WORDLES_PER_ROW = [NaN, 4, 4, 3] as const
+export const N_WORDLES_PER_ROW = [NaN, 4, 4, 3, 2, 2] as const
 
 export const ALERT_DURATION_MS = 3000
 export const WAIT_DURATION_TO_SHOW_STATS_MS = 1500

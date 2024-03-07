@@ -15,9 +15,7 @@ const LOSS: Status = 'lose'
 const ERR_STATUS: GuessError = 'invalidStatus'
 const ERR_LENGTH: GuessError = 'wrongLength'
 const ERR_WORD: GuessError = 'notInWordList'
-// TODO: check this error in tests if 'skip word list check' option is implemented
-//       or a word that contain Path.FONT.undrawableSyllables is found
-// const ERR_UNDRAWABLE: GuessError = 'undrawableSyllable'
+const ERR_UNDRAWABLE: GuessError = 'undrawableSyllable'
 
 describe('tests for GameConfig class', () => {
   const nWordles = 1
@@ -64,21 +62,25 @@ describe('tests for GameConfig class', () => {
     const id = 'id'
     const author = 'author'
     const mode: GameMode = 'custom'
-    const gameConfig = GameConfig.getCustomGameConfig(
-      id,
-      author,
-      nWordles,
-      answerLength,
-      nGuesses
-    )
-    expect(gameConfig.id).toStrictEqual(id)
-    expect(gameConfig.author).toStrictEqual(author)
-    expect(gameConfig.mode).toStrictEqual(mode)
-    expect(gameConfig.nWordles).toStrictEqual(nWordles)
-    expect(gameConfig.answerLength).toStrictEqual(answerLength)
-    expect(gameConfig.nGuesses).toStrictEqual(nGuesses)
-    expect(gameConfig.useSave).toBeTruthy()
-    expect(gameConfig.useStatistics).toBeFalsy()
+    for (const useWordList of [true, false]) {
+      const gameConfig = GameConfig.getCustomGameConfig(
+        id,
+        author,
+        nWordles,
+        answerLength,
+        nGuesses,
+        useWordList
+      )
+      expect(gameConfig.id).toStrictEqual(id)
+      expect(gameConfig.author).toStrictEqual(author)
+      expect(gameConfig.mode).toStrictEqual(mode)
+      expect(gameConfig.nWordles).toStrictEqual(nWordles)
+      expect(gameConfig.answerLength).toStrictEqual(answerLength)
+      expect(gameConfig.nGuesses).toStrictEqual(nGuesses)
+      expect(gameConfig.useWordList).toStrictEqual(useWordList)
+      expect(gameConfig.useSave).toBeTruthy()
+      expect(gameConfig.useStatistics).toBeFalsy()
+    }
   })
 })
 
@@ -94,12 +96,17 @@ describe('tests for Game class', () => {
   const ANSWER6 = '여섯'
   const ANSWER7_OR_HIGHER = '정답'
 
-  function initGame(nWordles: number, nGuesses: number): Game {
+  function initGame(
+    nWordles: number,
+    nGuesses: number,
+    useWordList = true
+  ): Game {
     const config = GameConfig.getGameConfig(
       gameMode,
       nWordles,
       answerLength,
-      nGuesses
+      nGuesses,
+      useWordList
     )
     // Mock some getters in config to disable local storage usage
     vi.spyOn(config, 'useSave', 'get').mockReturnValue(false)
@@ -112,7 +119,7 @@ describe('tests for Game class', () => {
     return new Game(config, answers)
   }
 
-  describe('game play and status checks', () => {
+  describe('game play and status checks using word list', () => {
     describe('common status checks', () => {
       const nWordles = 1
       const nGuesses = 3
@@ -321,7 +328,7 @@ describe('tests for Game class', () => {
         expect(game.data).toStrictEqual(data)
       })
 
-      test('submitting invalid guess should return error cause no status change', () => {
+      test('submitting invalid guess should return error and cause no status change', () => {
         const game = initGame(nWordles, nGuesses)
         const validGuesses = ['추측', '추측', '추측']
         const invalidGuesses = ['', '짧', '없닭', '없닭']
@@ -381,6 +388,56 @@ describe('tests for Game class', () => {
     })
 
     describe.todo('nWordles >= 2')
+  })
+
+  describe('game play and status checks without using word list', () => {
+    describe('nWordles = 1', () => {
+      const nWordles = 1
+      const nGuesses = 3
+      const useWordList = false
+
+      test('submitting guess that is not in the word list should be accepted', () => {
+        const game = initGame(nWordles, nGuesses, useWordList)
+        const guesses = ['없닭']
+
+        game.keyboard.setValue(guesses[0])
+        const guessError1 = game.submitGuess()
+        expect(guessError1).toBeUndefined()
+        expect(game.status).toStrictEqual(PLAYING)
+        expect(game.answers).toBeUndefined()
+        expect(game.data.status).toStrictEqual(PLAYING)
+        expect(game.data.guesses).toStrictEqual(guesses.slice(0, 1).map(toWord))
+        expect(game.data.wordleData[0].status).toStrictEqual(PLAYING)
+      })
+
+      test('submitting guess that contains undrawable syllable should return error and cause no status change', () => {
+        const game = initGame(nWordles, nGuesses, useWordList)
+        const validGuesses = ['없닭']
+        const invalidGuesses = [
+          '가쓚',
+          '졀가',
+          '졁졂',
+          '졃졄',
+          '졅졆',
+          '졇졏',
+          '졑졓',
+        ]
+
+        game.keyboard.setValue(validGuesses[0])
+        const guessError1 = game.submitGuess()
+        expect(guessError1).toBeUndefined()
+        const dataAfterGuess1 = game.data
+
+        for (const invalidGuess of invalidGuesses) {
+          game.keyboard.setValue(invalidGuess)
+          const guessError = game.submitGuess()
+          expect(guessError).toStrictEqual(ERR_UNDRAWABLE)
+          expect(game.status).toStrictEqual(PLAYING)
+          expect(game.answers).toBeUndefined()
+          expect(game.data).toStrictEqual(dataAfterGuess1)
+        }
+      })
+    })
   })
 })
 

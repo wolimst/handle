@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   generateCode,
-  MAX_ANS_LEN,
+  MAX_WORD_LIST_ANSWER_LEN,
   MAX_AUTHOR_LEN,
   MAX_N_GUESSES,
   MAX_N_WORDLES,
-  MIN_ANS_LEN,
+  MIN_WORD_LIST_ANSWER_LEN,
   MIN_N_GUESSES,
   MIN_N_WORDLES,
   parseCode,
@@ -20,8 +20,9 @@ describe('generate code and parse code for valid config', () => {
     const config = {
       author: '',
       nWordles: MIN_N_WORDLES,
-      answerLength: MIN_ANS_LEN,
+      answerLength: MIN_WORD_LIST_ANSWER_LEN,
       nGuesses: MIN_N_GUESSES,
+      useWordList: true,
     } as const
     const answers = Array(config.nWordles).fill(
       getRandomAnswer(config.answerLength, 'seed')
@@ -31,6 +32,7 @@ describe('generate code and parse code for valid config', () => {
       config.nWordles,
       config.answerLength,
       config.nGuesses,
+      config.useWordList,
       answers
     )
     expect(code).not.toBeUndefined()
@@ -49,6 +51,7 @@ describe('generate code and parse code for valid config', () => {
       nWordles: 2,
       answerLength: 2,
       nGuesses: 8,
+      useWordList: true,
     } as const
     const answers = Array(config.nWordles).fill(
       getRandomAnswer(config.answerLength, 'seed')
@@ -58,6 +61,7 @@ describe('generate code and parse code for valid config', () => {
       config.nWordles,
       config.answerLength,
       config.nGuesses,
+      config.useWordList,
       answers
     )
     expect(code).not.toBeUndefined()
@@ -74,8 +78,9 @@ describe('generate code and parse code for valid config', () => {
     const config = {
       author: 'A한あ漢😊',
       nWordles: MAX_N_WORDLES,
-      answerLength: MAX_ANS_LEN,
+      answerLength: MAX_WORD_LIST_ANSWER_LEN,
       nGuesses: MAX_N_GUESSES,
+      useWordList: true,
     } as const
     const answers = Array(config.nWordles).fill(
       getRandomAnswer(config.answerLength, 'seed')
@@ -85,6 +90,7 @@ describe('generate code and parse code for valid config', () => {
       config.nWordles,
       config.answerLength,
       config.nGuesses,
+      config.useWordList,
       answers
     )
     expect(code).not.toBeUndefined()
@@ -96,6 +102,38 @@ describe('generate code and parse code for valid config', () => {
     expect(parsed!.config.mode).toStrictEqual('custom')
     expect(parsed!.answers).toStrictEqual(answers)
   })
+
+  test('answerLength check should be lifted when not using word list', () => {
+    const values = [MIN_WORD_LIST_ANSWER_LEN - 1, MAX_WORD_LIST_ANSWER_LEN + 1]
+    values.forEach((answerLength) => {
+      const config = {
+        author: 'author',
+        nWordles: MIN_N_WORDLES,
+        answerLength: answerLength,
+        nGuesses: MIN_N_GUESSES,
+        useWordList: false,
+      }
+      const answers = Array(config.nWordles)
+        .fill(Array(answerLength).fill('가').join(''))
+        .map(toWord)
+      const code = generateCode(
+        config.author,
+        config.nWordles,
+        config.answerLength,
+        config.nGuesses,
+        config.useWordList,
+        answers
+      )
+      expect(code).not.toBeUndefined()
+      expect(code!.length).toBeLessThanOrEqual(MAX_CODE_LENGTH)
+      const parsed = parseCode(code!)
+      expect(parsed).not.toBeUndefined()
+      expect(parsed!.config).toMatchObject(config)
+      expect(parsed!.config.id).toStrictEqual(code)
+      expect(parsed!.config.mode).toStrictEqual('custom')
+      expect(parsed!.answers).toStrictEqual(answers)
+    })
+  })
 })
 
 describe('generate code for invalid config', () => {
@@ -105,8 +143,9 @@ describe('generate code for invalid config', () => {
         .fill('0')
         .join(''),
       nWordles: MIN_N_WORDLES,
-      answerLength: MIN_ANS_LEN,
+      answerLength: MIN_WORD_LIST_ANSWER_LEN,
       nGuesses: MIN_N_GUESSES,
+      useWordList: true,
     }
     const answers = Array(config.nWordles).fill(
       getRandomAnswer(config.answerLength, 'seed')
@@ -116,6 +155,7 @@ describe('generate code for invalid config', () => {
       config.nWordles,
       config.answerLength,
       config.nGuesses,
+      config.useWordList,
       answers
     )
     expect(code).toBeUndefined()
@@ -127,8 +167,9 @@ describe('generate code for invalid config', () => {
       const config = {
         author: 'author',
         nWordles: nWordles,
-        answerLength: MIN_ANS_LEN,
+        answerLength: MIN_WORD_LIST_ANSWER_LEN,
         nGuesses: MIN_N_GUESSES,
+        useWordList: true,
       }
       const answers = Array(config.nWordles).fill(
         getRandomAnswer(config.answerLength, 'seed')
@@ -138,6 +179,7 @@ describe('generate code for invalid config', () => {
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useWordList,
         answers
       )
       expect(code).toBeUndefined()
@@ -145,13 +187,14 @@ describe('generate code for invalid config', () => {
   })
 
   test('answerLength out of range', () => {
-    const values = [MIN_ANS_LEN - 1, MAX_ANS_LEN + 1]
+    const values = [MIN_WORD_LIST_ANSWER_LEN - 1, MAX_WORD_LIST_ANSWER_LEN + 1]
     values.forEach((answerLength) => {
       const config = {
         author: 'author',
         nWordles: MIN_N_WORDLES,
         answerLength: answerLength,
         nGuesses: MIN_N_GUESSES,
+        useWordList: true,
         answers: Array(MIN_N_WORDLES)
           .fill(Array(answerLength).fill('가').join(''))
           .map(toWord),
@@ -164,6 +207,7 @@ describe('generate code for invalid config', () => {
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useWordList,
         answers
       )
       expect(code).toBeUndefined()
@@ -176,8 +220,9 @@ describe('generate code for invalid config', () => {
       const config = {
         author: 'author',
         nWordles: MIN_N_WORDLES,
-        answerLength: MIN_ANS_LEN,
+        answerLength: MIN_WORD_LIST_ANSWER_LEN,
         nGuesses: nGuesses,
+        useWordList: true,
       }
       const answers = Array(config.nWordles).fill(
         getRandomAnswer(config.answerLength, 'seed')
@@ -187,6 +232,7 @@ describe('generate code for invalid config', () => {
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useWordList,
         answers
       )
       expect(code).toBeUndefined()
@@ -199,8 +245,9 @@ describe('generate code for invalid config', () => {
       const config = {
         author: 'author',
         nWordles: MIN_N_WORDLES,
-        answerLength: MIN_ANS_LEN,
+        answerLength: MIN_WORD_LIST_ANSWER_LEN,
         nGuesses: MIN_N_GUESSES,
+        useWordList: true,
       }
       const answers = Array(nAnswers).fill(
         getRandomAnswer(config.answerLength, 'seed')
@@ -210,6 +257,7 @@ describe('generate code for invalid config', () => {
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useWordList,
         answers
       )
       expect(code).toBeUndefined()
@@ -217,13 +265,14 @@ describe('generate code for invalid config', () => {
   })
 
   test('answer length out of range', () => {
-    const values = [MIN_ANS_LEN - 1, MIN_ANS_LEN + 1]
+    const values = [MIN_WORD_LIST_ANSWER_LEN - 1, MIN_WORD_LIST_ANSWER_LEN + 1]
     values.forEach((answerLength) => {
       const config = {
         author: 'author',
         nWordles: MIN_N_WORDLES,
-        answerLength: MIN_ANS_LEN,
+        answerLength: MIN_WORD_LIST_ANSWER_LEN,
         nGuesses: MIN_N_GUESSES,
+        useWordList: true,
         answers: Array(MIN_N_WORDLES)
           .fill(Array(answerLength).fill('가').join(''))
           .map(toWord),
@@ -236,6 +285,7 @@ describe('generate code for invalid config', () => {
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useWordList,
         answers
       )
       expect(code).toBeUndefined()

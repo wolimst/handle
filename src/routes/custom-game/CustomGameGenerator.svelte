@@ -1,24 +1,76 @@
 <script lang="ts">
+  import Toggle from '@/components/ui/core/Toggle.svelte'
   import { CUSTOM_PAGE_RELATIVE_URL } from '@/constants'
   import * as Hangul from '@/lib/hangul'
   import * as Wordle from '@/lib/wordle'
   import { getAbsoluteUrl } from '@/routes/page'
   import { notification } from '@/stores/app'
 
+  const ANSWER_LENGTHS = [
+    {
+      title: '2글자',
+      value: 2,
+      wordListDisabled: false,
+    },
+    {
+      title: '3글자 (단어 리스트 미사용)',
+      value: 3,
+      wordListDisabled: true,
+    },
+    {
+      title: '4글자 (단어 리스트 미사용)',
+      value: 4,
+      wordListDisabled: true,
+    },
+  ] as const
+
   let author = ''
   let nWordles: number
   let nGuesses: number
-  let answerLength = Wordle.MIN_ANS_LEN
+  let answerLength = Wordle.MIN_WORD_LIST_ANSWER_LEN
   let answers = new Array<string>(Wordle.MAX_N_WORDLES)
+  let useWordList = true
 
-  function validateAnswer(event: Event) {
-    const inputElement = event.target as HTMLInputElement
+  let useWordListToggleDisabled = false
+  let formElement: HTMLFormElement
+
+  $: onAnswerLengthUpdate(answerLength)
+  $: validateAnswers(answerLength, useWordList)
+
+  function onAnswerLengthUpdate(answerLength: number) {
+    const answerLengthElem = ANSWER_LENGTHS.find(
+      (elem) => elem.value === answerLength
+    )
+    if (!answerLengthElem) {
+      return
+    }
+    useWordListToggleDisabled = answerLengthElem.wordListDisabled
+    useWordList = !answerLengthElem.wordListDisabled
+  }
+
+  function validateAnswers(..._args: any) {
+    if (!formElement) {
+      return
+    }
+
+    for (const inputElement of formElement.querySelectorAll('input')) {
+      if (/^answer\d+$/.test(inputElement.id)) {
+        validateAnswer(inputElement)
+      }
+    }
+  }
+
+  function validateAnswer(inputElement: EventTarget | HTMLInputElement | null) {
+    if (!inputElement || !(inputElement instanceof HTMLInputElement)) {
+      return
+    }
+
     const word = Hangul.toWord(inputElement.value)
     if (word.length !== answerLength) {
       inputElement.setCustomValidity(
         `한글 ${answerLength}글자 단어를 입력해주세요.`
       )
-    } else if (!Wordle.isInWordList(word.value)) {
+    } else if (useWordList && !Wordle.isInWordList(word.value)) {
       inputElement.setCustomValidity(
         `앗, '${word.value}'는 단어 리스트에 포함되어 있지 않아요.`
       )
@@ -28,12 +80,19 @@
   }
 
   function submit() {
+    validateAnswers()
+    if (!formElement.checkValidity()) {
+      formElement.reportValidity()
+      return
+    }
+
     const ans = answers.slice(0, nWordles).map(Hangul.toWord)
     const code = Wordle.generateCode(
       author,
       nWordles,
       answerLength,
       nGuesses,
+      useWordList,
       ans
     )
 
@@ -69,6 +128,7 @@
   </div>
 
   <form
+    bind:this={formElement}
     on:submit|preventDefault={submit}
     class="tw-flex tw-flex-col tw-gap-3 tw-mt-5"
   >
@@ -134,11 +194,12 @@
         name="answerLength"
         bind:value={answerLength}
         class="tw-w-full tw-px-2 tw-py-1 tw-rounded-lg tw-text-app-text tw-bg-transparent tw-border tw-border-app-text-secondary tw-shadow"
+        on:input={validateAnswers}
         required
       >
-        {#each Array.from({ length: Wordle.MAX_ANS_LEN - Wordle.MIN_ANS_LEN + 1 }, (_, i) => Wordle.MIN_ANS_LEN + i) as answerLength}
-          <option value={answerLength}>
-            {answerLength}글자
+        {#each ANSWER_LENGTHS as answerLength}
+          <option value={answerLength.value}>
+            {answerLength.title}
           </option>
         {/each}
       </select>
@@ -157,11 +218,21 @@
           class="tw-w-full tw-px-2 tw-py-1 tw-rounded-lg tw-text-app-text tw-bg-transparent tw-border tw-border-app-text-secondary tw-shadow"
           minlength={answerLength}
           maxlength={answerLength}
-          on:input={validateAnswer}
+          on:input={(e) => {
+            validateAnswer(e.target)
+          }}
           required
         />
       </div>
     {/each}
+
+    <Toggle
+      bind:checked={useWordList}
+      on:toggle={validateAnswers}
+      disabled={useWordListToggleDisabled}
+    >
+      <span class="tw-font-medium"> 단어 리스트에 있는 단어만 허용 </span>
+    </Toggle>
 
     <div>
       <button
