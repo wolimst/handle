@@ -59,7 +59,11 @@ export default defineConfig({
   test: {
     globals: true,
     deps: {
-      inline: ['opentype.js'],
+      optimizer: {
+        web: {
+          include: ['opentype.js'],
+        },
+      },
     },
     environment: 'jsdom',
     testTimeout: 20000,
