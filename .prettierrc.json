@@ -3,6 +3,10 @@
   "tabWidth": 2,
   "semi": false,
   "singleQuote": true,
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-svelte"
+  ],
   "importOrderSeparation": true,
   "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
   "svelteSortOrder": "options-scripts-markup-styles"
