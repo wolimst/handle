@@ -7,6 +7,7 @@ export interface Config {
   darkTheme: boolean
   showInputForm: boolean
   switchEnterAndBackspacePosition: boolean
+  isBeingUpdated: boolean
 }
 
 export interface Notification {

@@ -1,3 +1,4 @@
+import { notification } from './notification'
 import type { Config } from './types'
 import { persistentStore } from '@/stores/localStore'
 import { get } from 'svelte/store'
@@ -7,6 +8,7 @@ const defaultConfig: Config = {
   darkTheme: window.matchMedia('(prefers-color-scheme: dark)').matches,
   showInputForm: false,
   switchEnterAndBackspacePosition: false,
+  isBeingUpdated: false,
 }
 
 const store = persistentStore('config', defaultConfig)
@@ -30,6 +32,14 @@ export function applyConfig() {
     document.documentElement.classList.add('dark-theme')
   }
   updateThemeColorMetaTag()
+
+  if (get(config).isBeingUpdated) {
+    config.update((config) => {
+      config.isBeingUpdated = false
+      return config
+    })
+    notification.set({ type: 'success', message: '업데이트를 완료했어요!' })
+  }
 }
 
 function updateThemeColorMetaTag() {
