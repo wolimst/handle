@@ -32,7 +32,6 @@
   $: modalOuterElement && modalOuterElement.focus()
 
   function handleKeyboardEvent(event: KeyboardEvent) {
-    console.log(event)
     if (closeOnEsc && event.key === 'Escape') {
       close()
     }
