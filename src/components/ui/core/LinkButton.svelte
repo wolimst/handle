@@ -24,9 +24,9 @@
 <a
   class="btn"
   class:no-hover-underline={!underline}
+  class:disabled
   target={useRouter ? '_self' : '_blank'}
   href={url}
-  {disabled}
   use:router
   on:click
 >
@@ -47,5 +47,10 @@
 
   .no-hover-underline:hover {
     text-decoration: none;
+  }
+
+  .disabled {
+    pointer-events: none;
+    cursor: default;
   }
 </style>

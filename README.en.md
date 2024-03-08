@@ -10,11 +10,11 @@
 
 <p align='center'>
   <a href='https://github.com/wolimst/handle/actions/workflows/ci.yml'>
-    <img src='https://github.com/wolimst/handle/actions/workflows/ci.yml/badge.svg'/>
-  </a>
+    <img src='https://github.com/wolimst/handle/actions/workflows/ci.yml/badge.svg'/></a
+  >
   <a href='https://github.com/wolimst/handle/actions/workflows/deploy.yml'>
-    <img src='https://github.com/wolimst/handle/actions/workflows/deploy.yml/badge.svg'/>
-  </a>
+    <img src='https://github.com/wolimst/handle/actions/workflows/deploy.yml/badge.svg'/></a
+  >
 </p>
 
 ## Handle (한들)

@@ -33,14 +33,14 @@
   ): obj is Path.DrawableSyllable {
     return (
       obj !== undefined &&
-      obj.hasOwnProperty('value') &&
-      obj.hasOwnProperty('leadingConsonant') &&
-      obj.hasOwnProperty('vowels') &&
-      obj.hasOwnProperty('trailingConsonants') &&
-      obj.hasOwnProperty('leadingConsonantPath') &&
-      obj.hasOwnProperty('vowelPaths') &&
-      obj.hasOwnProperty('trailingConsonantPaths') &&
-      obj.hasOwnProperty('boundingBox')
+      Object.prototype.hasOwnProperty.call(obj, 'value') &&
+      Object.prototype.hasOwnProperty.call(obj, 'leadingConsonant') &&
+      Object.prototype.hasOwnProperty.call(obj, 'vowels') &&
+      Object.prototype.hasOwnProperty.call(obj, 'trailingConsonants') &&
+      Object.prototype.hasOwnProperty.call(obj, 'leadingConsonantPath') &&
+      Object.prototype.hasOwnProperty.call(obj, 'vowelPaths') &&
+      Object.prototype.hasOwnProperty.call(obj, 'trailingConsonantPaths') &&
+      Object.prototype.hasOwnProperty.call(obj, 'boundingBox')
     )
   }
 
@@ -49,9 +49,9 @@
   ): obj is Path.DrawableString {
     return (
       obj !== undefined &&
-      obj.hasOwnProperty('value') &&
-      obj.hasOwnProperty('path') &&
-      obj.hasOwnProperty('boundingBox')
+      Object.prototype.hasOwnProperty.call(obj, 'value') &&
+      Object.prototype.hasOwnProperty.call(obj, 'path') &&
+      Object.prototype.hasOwnProperty.call(obj, 'boundingBox')
     )
   }
 
@@ -74,7 +74,7 @@
   let viewBox = '0 0 1 1'
   let paths: readonly PathAttributes[] = []
 
-  async function draw() {
+  function draw() {
     if (drawable) {
       const bBox = drawable.boundingBox
       const minX = bBox.x1 - (Path.FONT.vboxSize - (bBox.x2 - bBox.x1)) / 2
@@ -102,7 +102,7 @@
     loaded = true
   }
 
-  function onChange(..._args: any) {
+  function onChange(..._args: unknown[]) {
     assert()
     onMount(() => {
       draw()

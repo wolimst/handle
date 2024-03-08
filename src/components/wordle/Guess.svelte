@@ -24,8 +24,8 @@
   function isSubmittedGuess(guess: Guess): guess is Wordle.GuessResult {
     return (
       guess !== undefined &&
-      guess.hasOwnProperty('guess') &&
-      guess.hasOwnProperty('result')
+      Object.prototype.hasOwnProperty.call(guess, 'guess') &&
+      Object.prototype.hasOwnProperty.call(guess, 'result')
     )
   }
 

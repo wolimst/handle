@@ -67,12 +67,12 @@
   let maxGuess = 0
 
   let nextGameCountdownMillis = 0
-  let countdownIntervalId: NodeJS.Timer
+  let countdownIntervalId: number
 
   function countdownByOneSecond() {
     nextGameCountdownMillis -= 1000
     if (nextGameCountdownMillis <= 0) {
-      clearInterval(countdownIntervalId)
+      window.clearInterval(countdownIntervalId)
     }
   }
 
@@ -93,18 +93,18 @@
       maxGuess = Math.max(maxGuess, value)
     }
 
-    clearInterval(countdownIntervalId)
+    window.clearInterval(countdownIntervalId)
     nextGameCountdownMillis = 0
     if (gameMode.id === 'daily') {
       const gameId = Wordle.generateGameId(
-        gameMode.id,
+        gameMode.id as Wordle.GameMode,
         gameType.nWordles,
         gameType.answerLength
       )
       const data = savedata.load(gameId)
       if (data !== undefined && data.status !== 'playing') {
         nextGameCountdownMillis = time.getMillisecondsToMidnightInKST()
-        countdownIntervalId = setInterval(countdownByOneSecond, 1000)
+        countdownIntervalId = window.setInterval(countdownByOneSecond, 1000)
       }
     }
   }
@@ -125,7 +125,7 @@
   }
 
   onDestroy(() => {
-    clearInterval(countdownIntervalId)
+    window.clearInterval(countdownIntervalId)
   })
 </script>
 

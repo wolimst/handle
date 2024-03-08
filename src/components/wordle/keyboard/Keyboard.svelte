@@ -5,8 +5,7 @@
   import Key from './Key.svelte'
   import BackspaceIcon from '@/components/ui/icons/Backspace.svelte'
   import * as Hangul from '@/lib/hangul'
-  import { notification } from '@/stores/app'
-  import { config } from '@/stores/app'
+  import { config, notification } from '@/stores/app'
   import { createEventDispatcher, onDestroy, onMount } from 'svelte'
 
   const dispatch = createEventDispatcher()

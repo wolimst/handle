@@ -41,7 +41,8 @@
 
     if ($game.status !== 'playing') {
       if ($game.config.useStatistics) {
-        setTimeout(openStatsModal, WAIT_DURATION_TO_SHOW_STATS_MS)
+        // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-argument
+        window.setTimeout(openStatsModal, WAIT_DURATION_TO_SHOW_STATS_MS)
       }
     }
   }

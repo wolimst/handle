@@ -5,6 +5,8 @@
     "**/*.min.*",
     "**/*.svg",
     ".git",
+    "coverage",
+    "dist",
     "node_modules",
     "public/resources"
   ],

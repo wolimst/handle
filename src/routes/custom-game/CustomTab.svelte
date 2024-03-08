@@ -4,6 +4,7 @@
   import RightArrow from '@/components/ui/icons/RightArrow.svelte'
   import { CUSTOM_PAGE_RELATIVE_URL } from '@/constants'
   import * as Wordle from '@/lib/wordle'
+  import { notification } from '@/stores/app'
   import { push } from 'svelte-spa-router'
 
   let code: string
@@ -18,7 +19,13 @@
   }
 
   function submit() {
-    push(`${CUSTOM_PAGE_RELATIVE_URL}/${code}`)
+    push(`${CUSTOM_PAGE_RELATIVE_URL}/${code}`).catch((e) => {
+      $notification = {
+        type: 'error',
+        message: '앗, 문제 표시에 실패했어요.',
+      }
+      console.error(e)
+    })
   }
 </script>
 

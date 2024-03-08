@@ -48,7 +48,7 @@
     useWordList = !answerLengthElem.wordListDisabled
   }
 
-  function validateAnswers(..._args: any) {
+  function validateAnswers(..._args: unknown[]) {
     if (!formElement) {
       return
     }

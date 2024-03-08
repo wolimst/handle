@@ -11,18 +11,18 @@
 
   let type: NotificationType
   let message = ''
-  let prevTimeout: NodeJS.Timeout
+  let prevTimeout: number
 
-  function onChange(..._args: any) {
+  function onChange(..._args: unknown[]) {
     if (!$notification) {
       return
     }
 
-    clearTimeout(prevTimeout)
+    window.clearTimeout(prevTimeout)
     type = $notification.type
     message = $notification.message
     $notification.message = ''
-    prevTimeout = setTimeout(() => {
+    prevTimeout = window.setTimeout(() => {
       type = undefined
       message = ''
     }, ALERT_DURATION_MS)
@@ -34,7 +34,7 @@
     type = undefined
     message = ''
     $notification = { message: '' }
-    clearTimeout(prevTimeout)
+    window.clearTimeout(prevTimeout)
   })
 </script>
 

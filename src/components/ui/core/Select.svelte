@@ -8,7 +8,7 @@
   }
 
   type SelectEvent = {
-    select: Option
+    select: Option | undefined
   }
 </script>
 

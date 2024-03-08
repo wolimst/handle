@@ -76,7 +76,12 @@
       options={lengths.map((length) => {
         return { id: length, text: length.toString() }
       })}
-      on:select={(event) => (length = event.detail.id)}
+      on:select={(event) => {
+        if (event.detail) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          length = Number(event.detail.id)
+        }
+      }}
     />
 
     <div>

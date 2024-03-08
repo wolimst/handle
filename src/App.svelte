@@ -11,7 +11,7 @@
   import Router from 'svelte-spa-router'
   import { wrap } from 'svelte-spa-router/wrap'
 
-  const routes = new Map<string, any>()
+  const routes = new Map<string, unknown>()
   routes.set(ROUTES.home, Home)
   if (!PRODUCTION) {
     routes.set(ROUTES.fontViewer, FontViewer)

@@ -14,7 +14,7 @@
         .map((jamo) => Path.getDrawableString(jamo))
     )
   }
-  loadJamo()
+  loadJamo().catch((e) => console.error(e))
 
   const syllableColors: Path.SyllableColor = {
     background: undefined,
@@ -44,7 +44,7 @@
 
     page += 1
   }
-  loadSyllables()
+  loadSyllables().catch((e) => console.error(e))
 </script>
 
 <div class="tw-container tw-mx-auto tw-py-3">
