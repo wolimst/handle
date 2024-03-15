@@ -9,6 +9,11 @@ export function getAbsoluteUrl(relative_url: string): URL {
   return new URL(BASE_URL + relative_url, window.location.origin)
 }
 
+export function getCurrentAbsoluteUrl(): URL {
+  const path = get(location)
+  return getAbsoluteUrl(path)
+}
+
 export function isInGamePage(): boolean {
   const path = get(location)
   return ROUTES.game.some((route) => route === path)
