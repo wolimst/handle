@@ -1,9 +1,13 @@
 <script lang="ts">
   import PageNotFound from '@/NotFound.svelte'
   import Game from '@/components/wordle/Game.svelte'
-  import { initializeWordleStores } from '@/components/wordle/store'
+  import {
+    deactivateWordleStores,
+    initializeWordleStores,
+  } from '@/components/wordle/store'
   import { GAMES, N_GUESSES } from '@/constants'
   import * as Wordle from '@/lib/wordle'
+  import { onDestroy } from 'svelte'
 
   export let path: string
 
@@ -31,6 +35,10 @@
   }
 
   $: initialize(path)
+
+  onDestroy(() => {
+    deactivateWordleStores()
+  })
 </script>
 
 {#if pageStatus === 'loading'}

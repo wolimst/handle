@@ -2,8 +2,12 @@
   import GameGenerator from './custom-game/CustomGameGenerator.svelte'
   import PageNotFound from '@/NotFound.svelte'
   import Game from '@/components/wordle/Game.svelte'
-  import { initializeWordleStores } from '@/components/wordle/store'
+  import {
+    deactivateWordleStores,
+    initializeWordleStores,
+  } from '@/components/wordle/store'
   import * as Wordle from '@/lib/wordle'
+  import { onDestroy } from 'svelte'
 
   interface Param {
     code?: string
@@ -37,6 +41,10 @@
   }
 
   $: parse(params.code)
+
+  onDestroy(() => {
+    deactivateWordleStores()
+  })
 </script>
 
 {#if params.code}

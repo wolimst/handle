@@ -1,4 +1,5 @@
-import { BASE_URL, ROUTES } from '@/constants'
+import { game } from '@/components/wordle/store'
+import { BASE_URL } from '@/constants'
 import { location } from 'svelte-spa-router'
 import { get } from 'svelte/store'
 
@@ -15,8 +16,7 @@ export function getCurrentAbsoluteUrl(): URL {
 }
 
 export function isInGamePage(): boolean {
-  const path = get(location)
-  return ROUTES.game.some((route) => route === path)
+  return game && game.active
 }
 
 export function refreshIfAlreadyInPage(path: string) {

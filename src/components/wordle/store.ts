@@ -4,6 +4,7 @@ import * as Wordle from '@/lib/wordle'
 import { readable, writable, type Readable } from 'svelte/store'
 
 interface GameStore extends Readable<Wordle.GameData> {
+  active: boolean
   getGameType(): string
   submitGuess(): Wordle.GuessError | undefined
   getAnswers(): readonly string[] | undefined
@@ -35,6 +36,7 @@ export function initializeWordleStores(gameInstance: Wordle.Game) {
   const keyboardStore = writable(keyboardInstance.value)
 
   game = {
+    active: true,
     subscribe: gameStore.subscribe,
     getGameType: (): string => {
       return Wordle.getGameTypeString(
@@ -91,6 +93,40 @@ export function initializeWordleStores(gameInstance: Wordle.Game) {
       } else {
         return nWordlesRemaining
       }
+    },
+  }
+}
+
+export function deactivateWordleStores() {
+  game = {
+    active: false,
+    ...readable(),
+    getGameType: (): string => {
+      return ''
+    },
+    submitGuess: (): Wordle.GuessError | undefined => {
+      return undefined
+    },
+    getAnswers: (): readonly string[] | undefined => {
+      return undefined
+    },
+  }
+
+  keyboard = {
+    ...readable(),
+    setValue: (_value: string): Wordle.KeyboardError | undefined => {
+      return undefined
+    },
+    type: (_jamo: DubeolsikJamo): Wordle.KeyboardError | undefined => {
+      return undefined
+    },
+    delete() {},
+  }
+
+  ui = {
+    ...readable(),
+    nWordlesAtRow: (_rowIndex: number): number => {
+      return NaN
     },
   }
 }
