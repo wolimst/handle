@@ -24,3 +24,8 @@ export function refreshIfAlreadyInPage(path: string) {
     window.location.reload()
   }
 }
+
+export function getBackgroundColor(): string {
+  const bodyStyles = window.getComputedStyle(document.body)
+  return bodyStyles.backgroundColor
+}

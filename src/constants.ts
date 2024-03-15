@@ -86,7 +86,7 @@ export const CUSTOM_PAGE_RELATIVE_URL = ROUTES.custom
   .slice(0, 2)
   .join('/')
 
-export const WORDLE_NAMES = ['invalid', '한들', '두들', '세들']
+export const WORDLE_NAMES = ['', '한들', '두들', '세들', '네들']
 
 /**
  * A lookup table for the number of guesses of a game.
@@ -112,3 +112,5 @@ export const N_WORDLES_PER_ROW = [NaN, 4, 4, 3, 2, 2] as const
 
 export const ALERT_DURATION_MS = 3000
 export const WAIT_DURATION_TO_SHOW_STATS_MS = 1500
+
+export const DOM_ID_GAME_CONTAINER = 'game-container'

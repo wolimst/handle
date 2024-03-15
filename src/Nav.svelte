@@ -7,6 +7,7 @@
   import FontIcon from '@/components/ui/icons/Font.svelte'
   import GitHubIcon from '@/components/ui/icons/GitHub.svelte'
   import ListIcon from '@/components/ui/icons/List.svelte'
+  import Share from '@/components/wordle/Share.svelte'
   import Statistics from '@/components/wordle/Statistics.svelte'
   import { APP_NAME, PRODUCTION, ROUTES } from '@/constants'
 </script>
@@ -30,10 +31,11 @@
       </LinkButton>
     {/if}
 
-    <ToggleTheme />
-    <Help />
+    <Share />
     <Statistics />
+    <ToggleTheme />
     <Config />
+    <Help />
 
     <LinkButton url="https://github.com/wolimst/handle">
       <GitHubIcon />

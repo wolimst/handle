@@ -8,7 +8,10 @@
     getWinMessage,
   } from './message'
   import { game, keyboard, ui } from './store'
-  import { WAIT_DURATION_TO_SHOW_STATS_MS } from '@/constants'
+  import {
+    DOM_ID_GAME_CONTAINER,
+    WAIT_DURATION_TO_SHOW_STATS_MS,
+  } from '@/constants'
   import { notification } from '@/stores/app'
 
   function assert() {
@@ -51,14 +54,17 @@
 </script>
 
 <div
-  class="tw-container tw-min-h-full tw-mx-auto tw-flex tw-flex-nowrap tw-flex-col"
+  class="tw-container tw-min-h-full tw-mx-auto tw-flex tw-flex-nowrap tw-flex-col tw-items-center"
 >
-  <div class="tw-my-auto tw-py-1.5 md:tw-py-3 tw-mx-2">
+  <div
+    id={DOM_ID_GAME_CONTAINER}
+    class="tw-max-w-full tw-my-auto tw-py-1.5 md:tw-py-3 tw-px-1.5 md:tw-px-3"
+  >
     {#each { length: $ui.nRows } as _, rowIndex}
       <div class={$ui.nRows > 1 ? 'tw-mb-4 md:tw-mb-6' : ''}>
         {#each { length: $game.config.nGuesses } as _, guessIndex}
           <div
-            class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-4 tw-my-1"
+            class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-3 md:tw-gap-4 tw-my-1"
           >
             {#each { length: ui.nWordlesAtRow(rowIndex) } as _, colIndex}
               {@const wordleIndex = $ui.nWordlesPerRow * rowIndex + colIndex}
@@ -84,7 +90,9 @@
     {/each}
   </div>
 
-  <div class="tw-sticky tw-bottom-0 tw-mx-2 tw-bg-app-bg">
+  <div
+    class="tw-max-w-full tw-sticky tw-bottom-0 tw-px-1.5 md:tw-px-3 tw-bg-app-bg"
+  >
     <Keyboard on:submit={submitGuess} />
   </div>
 </div>
