@@ -28,12 +28,6 @@
     open = !open
   }
 
-  let blob: Promise<Blob>
-
-  function onOpen() {
-    blob = getGameAsBlob()
-  }
-
   function getDescription(): string {
     if (isInGamePage()) {
       return getGameDescription(get(game).config)
@@ -90,7 +84,7 @@
   }
 
   function shareGameAsImage() {
-    void blob.then((blob) => {
+    void getGameAsBlob().then((blob) => {
       const url = getCurrentAbsoluteUrl()
       const data: ShareData = {
         title: getDescription(),
@@ -102,7 +96,7 @@
   }
 
   function copyGameAsImage() {
-    void blob.then((blob) => {
+    void getGameAsBlob().then((blob) => {
       const clipboardItem = new ClipboardItem({
         [blob.type]: blob,
       })
@@ -115,7 +109,7 @@
   <ShareIcon width={22} />
 </ClickButton>
 
-<Modal bind:open title="공유하기 (Beta)" widthCss="20rem" on:open={onOpen}>
+<Modal bind:open title="공유하기 (Beta)" widthCss="20rem">
   <div class="tw-w-full tw-h-full tw-inline-flex tw-flex-col tw-gap-8 tw-py-4">
     <div class="tw-inline-flex tw-justify-between tw-items-center">
       <span>이 페이지를 공유하기</span>
