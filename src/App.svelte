@@ -32,8 +32,14 @@
   <Router {routes} />
 
   <div
-    class="tw-w-full tw-fixed tw-top-7 tw-flex tw-flex-nowrap tw-justify-center"
+    class="notification tw-w-full tw-fixed tw-top-7 tw-flex tw-flex-nowrap tw-justify-center"
   >
     <Notification />
   </div>
 </main>
+
+<style>
+  .notification {
+    z-index: 10000;
+  }
+</style>
