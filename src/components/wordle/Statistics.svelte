@@ -209,11 +209,13 @@
       class="tw-mt-4 tw-w-full tw-inline-flex tw-justify-around tw-items-center"
     >
       {#if nextGameCountdownMillis > 0}
-        <ClockIcon width={22} />
-        <span class="tw-ml-1.5 tw-text-sm tw-font-medium">다음 문제까지</span>
-        <span class="tw-ml-1 tw-font-medium tw-tabular-nums">
-          {time.millisecondsToHHMMSS(nextGameCountdownMillis)}
-        </span>
+        <div class="tw-inline-flex tw-items-center">
+          <ClockIcon width={22} />
+          <span class="tw-ml-1.5 tw-font-medium">다음 문제까지</span>
+          <span class="tw-ml-1 tw-font-medium tw-tabular-nums">
+            {time.millisecondsToHHMMSS(nextGameCountdownMillis)}
+          </span>
+        </div>
       {:else}
         {@const path = GAMES.find(
           (game) =>
