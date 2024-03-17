@@ -5,7 +5,8 @@
   import ClipboardIcon from '@/components/ui/icons/Clipboard.svelte'
   import ShareIcon from '@/components/ui/icons/Share.svelte'
   import { DOM_ID_GAME_CONTAINER } from '@/constants'
-  import { getGameShareString, getGameDescription } from '@/lib/wordle/share'
+  import { isDesktop, isMobileChromeOrSafari } from '@/lib/utils/browser'
+  import { getGameDescription, getGameShareString } from '@/lib/wordle/share'
   import {
     getBackgroundColor,
     getCurrentAbsoluteUrl,
@@ -139,7 +140,6 @@
       }
       open = false
     } catch (e) {
-      alert(e)
       console.error(e)
       $notification = {
         type: 'error',
@@ -158,9 +158,11 @@
     <div class="tw-inline-flex tw-justify-between tw-items-center">
       <span>이 페이지를 공유하기</span>
       <div class="tw-inline-flex tw-gap-5">
-        <ClickButton on:click={shareCurrentPage}>
-          <ShareIcon width={22}></ShareIcon>
-        </ClickButton>
+        {#if !isDesktop()}
+          <ClickButton on:click={shareCurrentPage}>
+            <ShareIcon width={22}></ShareIcon>
+          </ClickButton>
+        {/if}
         <ClickButton on:click={copyCurrentPage}>
           <ClipboardIcon width={22}></ClipboardIcon>
         </ClickButton>
@@ -171,9 +173,11 @@
       <div class="tw-w-full tw-inline-flex tw-justify-between tw-items-center">
         <span>텍스트로 결과 공유하기</span>
         <div class="tw-inline-flex tw-gap-5">
-          <ClickButton on:click={shareGameAsEmoji}>
-            <ShareIcon width={22} />
-          </ClickButton>
+          {#if isMobileChromeOrSafari()}
+            <ClickButton on:click={shareGameAsEmoji}>
+              <ShareIcon width={22} />
+            </ClickButton>
+          {/if}
           <ClickButton on:click={copyGameAsEmoji}>
             <ClipboardIcon width={22} />
           </ClickButton>
@@ -186,9 +190,11 @@
         >
           <span>이미지로 결과 공유하기</span>
           <div class="tw-inline-flex tw-gap-5">
-            <ClickButton on:click={shareGameAsImage}>
-              <ShareIcon width={22} />
-            </ClickButton>
+            {#if isMobileChromeOrSafari()}
+              <ClickButton on:click={shareGameAsImage}>
+                <ShareIcon width={22} />
+              </ClickButton>
+            {/if}
             <ClickButton on:click={copyGameAsImage}>
               <ClipboardIcon width={22} />
             </ClickButton>
