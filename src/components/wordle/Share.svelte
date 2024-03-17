@@ -5,14 +5,18 @@
   import ClipboardIcon from '@/components/ui/icons/Clipboard.svelte'
   import ShareIcon from '@/components/ui/icons/Share.svelte'
   import { DOM_ID_GAME_CONTAINER } from '@/constants'
-  import { isDesktop, isMobileChromeOrSafari } from '@/lib/utils/browser'
-  import { getGameDescription, getGameShareString } from '@/lib/wordle/share'
+  import { browser } from '@/lib/utils'
+  import {
+    copyResult,
+    getGameDescription,
+    getGameShareString,
+    shareResult,
+  } from '@/lib/wordle/share'
   import {
     getBackgroundColor,
     getCurrentAbsoluteUrl,
     isInGamePage,
   } from '@/routes/page'
-  import { notification } from '@/stores/app'
   import html2canvas from 'html2canvas'
   import { get } from 'svelte/store'
   import { game } from './store'
@@ -44,14 +48,14 @@
       title: description,
       url: url.href,
     }
-    void share(data)
+    void shareResult(data).then(() => (open = false))
   }
 
   function copyCurrentPage() {
     const description = getDescription()
     const url = getCurrentAbsoluteUrl()
     const text = `${description} ${url.href}`.trim()
-    void copy(text)
+    void copyResult(text).then(() => (open = false))
   }
 
   async function getGameAsBlob() {
@@ -77,12 +81,12 @@
 
   function shareGameAsEmoji() {
     const text = getGameShareString(get(game))
-    void share({ text })
+    void shareResult({ text }).then(() => (open = false))
   }
 
   function copyGameAsEmoji() {
     const text = getGameShareString(get(game))
-    void copy(text)
+    void copyResult(text).then(() => (open = false))
   }
 
   function shareGameAsImage() {
@@ -93,7 +97,7 @@
         url: url.href,
         files: [new File([blob], 'handle.png', { type: blob.type })],
       }
-      void share(data)
+      void shareResult(data).then(() => (open = false))
     })
   }
 
@@ -102,50 +106,8 @@
       const clipboardItem = new ClipboardItem({
         [blob.type]: blob,
       })
-      void copy([clipboardItem])
+      void copyResult([clipboardItem]).then(() => (open = false))
     })
-  }
-
-  async function share(data: ShareData) {
-    if (!navigator.canShare || !navigator.canShare(data)) {
-      $notification = {
-        type: 'error',
-        message: '앗, 브라우저에서 공유 기능이 지원되지 않아요.',
-      }
-      return
-    }
-
-    try {
-      await navigator.share(data)
-      open = false
-    } catch (e) {
-      console.error(e)
-      $notification = {
-        type: 'error',
-        message: '앗, 공유하기에 실패했어요.',
-      }
-    }
-  }
-
-  async function copy(data: string | ClipboardItem[]) {
-    try {
-      if (typeof data === 'string') {
-        await navigator.clipboard.writeText(data)
-      } else {
-        await navigator.clipboard.write(data)
-      }
-      $notification = {
-        type: 'success',
-        message: '클립보드에 복사했어요.',
-      }
-      open = false
-    } catch (e) {
-      console.error(e)
-      $notification = {
-        type: 'error',
-        message: `앗, 클립보드에 복사하지 못했어요.`,
-      }
-    }
   }
 </script>
 
@@ -158,7 +120,7 @@
     <div class="tw-inline-flex tw-justify-between tw-items-center">
       <span>이 페이지를 공유하기</span>
       <div class="tw-inline-flex tw-gap-5">
-        {#if !isDesktop()}
+        {#if !browser.isDesktop()}
           <ClickButton on:click={shareCurrentPage}>
             <ShareIcon width={22}></ShareIcon>
           </ClickButton>
@@ -173,7 +135,7 @@
       <div class="tw-w-full tw-inline-flex tw-justify-between tw-items-center">
         <span>텍스트로 결과 공유하기</span>
         <div class="tw-inline-flex tw-gap-5">
-          {#if isMobileChromeOrSafari()}
+          {#if browser.isMobileChromeOrSafari()}
             <ClickButton on:click={shareGameAsEmoji}>
               <ShareIcon width={22} />
             </ClickButton>
@@ -190,7 +152,7 @@
         >
           <span>이미지로 결과 공유하기</span>
           <div class="tw-inline-flex tw-gap-5">
-            {#if isMobileChromeOrSafari()}
+            {#if browser.isMobileChromeOrSafari()}
               <ClickButton on:click={shareGameAsImage}>
                 <ShareIcon width={22} />
               </ClickButton>

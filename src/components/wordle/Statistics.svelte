@@ -18,11 +18,13 @@
   import LinkButton from '@/components/ui/core/LinkButton.svelte'
   import Modal from '@/components/ui/core/Modal.svelte'
   import Select, { type Option } from '@/components/ui/core/Select.svelte'
+  import ClipboardIcon from '@/components/ui/icons/Clipboard.svelte'
   import ClockIcon from '@/components/ui/icons/Clock.svelte'
   import RefreshIcon from '@/components/ui/icons/Refresh.svelte'
+  import ShareIcon from '@/components/ui/icons/Share.svelte'
   import StatisticsIcon from '@/components/ui/icons/Statistics.svelte'
   import { GAMES, GAME_MODES, N_GUESSES, WORDLE_NAMES } from '@/constants'
-  import { time } from '@/lib/utils'
+  import { browser, time } from '@/lib/utils'
   import * as Wordle from '@/lib/wordle'
   import { isInGamePage, refreshIfAlreadyInPage } from '@/routes/page'
   import { defaultStats, savedata, statistics } from '@/stores/wordle'
@@ -124,6 +126,16 @@
     }
   }
 
+  function shareGameAsEmoji() {
+    const text = Wordle.getGameShareString(get(game))
+    void Wordle.shareResult({ text }).then(() => ($open = false))
+  }
+
+  function copyGameAsEmoji() {
+    const text = Wordle.getGameShareString(get(game))
+    void Wordle.copyResult(text).then(() => ($open = false))
+  }
+
   onDestroy(() => {
     window.clearInterval(countdownIntervalId)
   })
@@ -194,7 +206,7 @@
 
   {#if gameMode.id === 'daily' || gameMode.id === 'free'}
     <div
-      class="tw-mt-4 tw-w-full tw-inline-flex tw-justify-center tw-items-center"
+      class="tw-mt-4 tw-w-full tw-inline-flex tw-justify-around tw-items-center"
     >
       {#if nextGameCountdownMillis > 0}
         <ClockIcon width={22} />
@@ -222,6 +234,20 @@
             {gameMode.id === 'daily' ? '오늘의' : '새로운'} 문제 풀기
           </span>
         </LinkButton>
+      {/if}
+
+      {#if isInGamePage()}
+        {#if browser.isMobileChromeOrSafari()}
+          <ClickButton on:click={shareGameAsEmoji}>
+            <ShareIcon width={22} />
+            <span class="tw-ml-1.5 tw-font-medium"> 결과 공유 </span>
+          </ClickButton>
+        {:else}
+          <ClickButton on:click={copyGameAsEmoji}>
+            <ClipboardIcon width={22} />
+            <span class="tw-ml-1.5 tw-font-medium"> 결과 복사 </span>
+          </ClickButton>
+        {/if}
       {/if}
     </div>
   {/if}
