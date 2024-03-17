@@ -5,7 +5,7 @@
   import ClipboardIcon from '@/components/ui/icons/Clipboard.svelte'
   import ShareIcon from '@/components/ui/icons/Share.svelte'
   import { DOM_ID_GAME_CONTAINER } from '@/constants'
-  import { getGameDescription } from '@/lib/wordle/share'
+  import { getGameShareString, getGameDescription } from '@/lib/wordle/share'
   import {
     getBackgroundColor,
     getCurrentAbsoluteUrl,
@@ -41,7 +41,6 @@
     const url = getCurrentAbsoluteUrl()
     const data = {
       title: description,
-      text: '',
       url: url.href,
     }
     void share(data)
@@ -73,6 +72,16 @@
       return blob
     })
     return blob
+  }
+
+  function shareGameAsEmoji() {
+    const text = getGameShareString(get(game))
+    void share({ text })
+  }
+
+  function copyGameAsEmoji() {
+    const text = getGameShareString(get(game))
+    void copy(text)
   }
 
   function shareGameAsImage() {
@@ -159,6 +168,18 @@
     </div>
 
     {#if isInGamePage()}
+      <div class="tw-w-full tw-inline-flex tw-justify-between tw-items-center">
+        <span>텍스트로 결과 공유하기</span>
+        <div class="tw-inline-flex tw-gap-5">
+          <ClickButton on:click={shareGameAsEmoji}>
+            <ShareIcon width={22} />
+          </ClickButton>
+          <ClickButton on:click={copyGameAsEmoji}>
+            <ClipboardIcon width={22} />
+          </ClickButton>
+        </div>
+      </div>
+
       <div class="tw-inline-flex tw-flex-col tw-gap-3">
         <div
           class="tw-w-full tw-inline-flex tw-justify-between tw-items-center"
