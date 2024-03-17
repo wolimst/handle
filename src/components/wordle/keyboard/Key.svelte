@@ -7,7 +7,7 @@
   export let size: 'compact' | 'normal' | 'wide' = 'normal'
   export let disabled = false
 
-  let textColor = 'tw-text-app-text'
+  let textColor = 'tw-text-app-keyboard-text'
 
   const width = getWidth()
 
@@ -26,16 +26,16 @@
   }
 
   function getKeyHintColor(result?: Wordle.JamoResult): string {
-    textColor = 'tw-text-app-text-invert'
+    textColor = 'tw-text-app-keyboard-text-invert'
     switch (result) {
       case 'correct':
-        return 'tw-bg-app-wordle-correct'
+        return 'tw-bg-app-keyboard-correct'
       case 'present':
-        return 'tw-bg-app-wordle-present'
+        return 'tw-bg-app-keyboard-present'
       case 'absent':
-        return 'tw-bg-app-wordle-absent'
+        return 'tw-bg-app-keyboard-absent'
       default:
-        textColor = 'tw-text-app-text'
+        textColor = 'tw-text-app-keyboard-text'
         return 'tw-bg-transparent'
     }
   }
