@@ -62,7 +62,7 @@
           {title}
         </div>
 
-        <div class="tw-float-right tw-inline-flex tw-items-center">
+        <div class="modal-close">
           <ClickButton on:click={() => close()}><CloseIcon /></ClickButton>
         </div>
       </div>
@@ -111,6 +111,7 @@
   }
 
   .modal-header {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -122,6 +123,13 @@
     margin: auto;
     font-size: 1.2em;
     font-weight: bold;
+  }
+
+  .modal-close {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    right: 1.25rem;
   }
 
   .modal-content {
