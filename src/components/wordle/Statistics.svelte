@@ -162,23 +162,25 @@
     />
   </div>
 
-  <div class="tw-w-full tw-mt-6 tw-inline-flex tw-justify-evenly">
-    <div class="tw-w-1/4 tw-text-center">
-      <div class="tw-text-sm">플레이 횟수</div>
+  <div class="tw-w-full tw-mt-6 tw-inline-flex tw-justify-evenly tw-gap-1">
+    <div class="tw-grow tw-basis-0 tw-text-center">
+      <div class="tw-text-sm tw-whitespace-nowrap">플레이 횟수</div>
       <div class="tw-text-2xl tw-font-bold">{stats.nGamesPlayed}</div>
     </div>
-    <div class="tw-w-1/4 tw-text-center">
-      <div class="tw-text-sm">정답률</div>
+    <div class="tw-grow tw-basis-0 tw-text-center">
+      <div class="tw-text-sm tw-whitespace-nowrap">정답률</div>
       <div class="tw-text-2xl tw-font-bold">
         {Math.round((stats.nGamesWon / stats.nGamesPlayed) * 100) || 0}%
       </div>
     </div>
-    <div class="tw-w-1/4 tw-text-center">
-      <div class="tw-text-sm">연속 정답</div>
+    <div class="tw-grow tw-basis-0 tw-text-center">
+      <div class="tw-text-sm tw-whitespace-nowrap">연속 정답</div>
       <div class="tw-text-2xl tw-font-bold">{stats.winStreak}</div>
     </div>
-    <div class="tw-w-1/4 tw-text-center">
-      <div class="tw-text-sm">최다 연속 정답</div>
+    <div class="tw-grow tw-basis-0 tw-text-center">
+      <div class="tw-text-sm tw-tracking-tighter tw-whitespace-nowrap">
+        최다 연속 정답
+      </div>
       <div class="tw-text-2xl tw-font-bold">{stats.maxWinStreak}</div>
     </div>
   </div>
