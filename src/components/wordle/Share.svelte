@@ -4,6 +4,7 @@
   import Toggle from '@/components/ui/core/Toggle.svelte'
   import ClipboardIcon from '@/components/ui/icons/Clipboard.svelte'
   import ShareIcon from '@/components/ui/icons/Share.svelte'
+  import Spinner from '@/components/ui/icons/Spinner.svelte'
   import { DOM_ID_GAME_CONTAINER } from '@/constants'
   import { browser } from '@/lib/utils'
   import {
@@ -23,6 +24,7 @@
 
   let open = false
   let hideJamo = false
+  let loading = false
 
   function toggleModal() {
     open = !open
@@ -42,14 +44,14 @@
       title: description,
       url: url.href,
     }
-    void shareResult(data).then(() => (open = false))
+    return shareResult(data).then(() => (open = false))
   }
 
   function copyCurrentPage() {
     const description = getDescription()
     const url = getCurrentAbsoluteUrl()
     const text = `${description} ${url.href}`.trim()
-    void copyResult(text).then(() => (open = false))
+    return copyResult(text).then(() => (open = false))
   }
 
   async function getGameAsBlob() {
@@ -75,33 +77,38 @@
 
   function shareGameAsEmoji() {
     const text = getGameShareString(get(game))
-    void shareResult({ text }).then(() => (open = false))
+    return shareResult({ text }).then(() => (open = false))
   }
 
   function copyGameAsEmoji() {
     const text = getGameShareString(get(game))
-    void copyResult(text).then(() => (open = false))
+    return copyResult(text).then(() => (open = false))
   }
 
   function shareGameAsImage() {
-    void getGameAsBlob().then((blob) => {
+    return getGameAsBlob().then((blob) => {
       const url = getCurrentAbsoluteUrl()
       const data: ShareData = {
         title: getDescription(),
         url: url.href,
         files: [new File([blob], 'handle.png', { type: blob.type })],
       }
-      void shareResult(data).then(() => (open = false))
+      return shareResult(data).then(() => (open = false))
     })
   }
 
   function copyGameAsImage() {
-    void getGameAsBlob().then((blob) => {
+    return getGameAsBlob().then((blob) => {
       const clipboardItem = new ClipboardItem({
         [blob.type]: blob,
       })
-      void copyResult([clipboardItem]).then(() => (open = false))
+      return copyResult([clipboardItem]).then(() => (open = false))
     })
+  }
+
+  function withLoading(func: () => Promise<unknown>) {
+    loading = true
+    void func().finally(() => (loading = false))
   }
 </script>
 
@@ -147,13 +154,21 @@
           <span>이미지로 결과 공유하기</span>
           <div class="tw-inline-flex tw-gap-5">
             {#if browser.isMobileChromeOrSafari()}
-              <ClickButton on:click={shareGameAsImage}>
-                <ShareIcon width={22} />
+              {#if loading}
+                <Spinner />
+              {:else}
+                <ClickButton on:click={() => withLoading(shareGameAsImage)}>
+                  <ShareIcon width={22} />
+                </ClickButton>
+              {/if}
+            {/if}
+            {#if loading}
+              <Spinner />
+            {:else}
+              <ClickButton on:click={() => withLoading(copyGameAsImage)}>
+                <ClipboardIcon width={22} />
               </ClickButton>
             {/if}
-            <ClickButton on:click={copyGameAsImage}>
-              <ClipboardIcon width={22} />
-            </ClickButton>
           </div>
         </div>
 
