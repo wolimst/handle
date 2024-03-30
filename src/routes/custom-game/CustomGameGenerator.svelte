@@ -3,8 +3,8 @@
   import { CUSTOM_PAGE_RELATIVE_URL } from '@/constants'
   import * as Hangul from '@/lib/hangul'
   import * as Wordle from '@/lib/wordle'
-  import { getAbsoluteUrl } from '@/routes/page'
   import { notification } from '@/stores/app'
+  import { push } from 'svelte-spa-router'
 
   const ANSWER_LENGTHS = [
     {
@@ -104,21 +104,13 @@
       return
     }
 
-    const url = getAbsoluteUrl(CUSTOM_PAGE_RELATIVE_URL + '/' + code)
-    navigator.clipboard.writeText(url.toString()).then(
-      () => {
-        $notification = {
-          type: 'success',
-          message: '문제 주소를 클립보드에 복사했어요.',
-        }
-      },
-      () => {
-        $notification = {
-          type: 'error',
-          message: `앗, 문제 주소를 클립보드에 복사하지 못했어요.`,
-        }
+    push(`${CUSTOM_PAGE_RELATIVE_URL}/${code}`).catch((e) => {
+      $notification = {
+        type: 'error',
+        message: '앗, 문제 표시에 실패했어요.',
       }
-    )
+      console.error(e)
+    })
   }
 </script>
 
@@ -239,7 +231,7 @@
         type="submit"
         class="btn tw-w-full tw-my-4 tw-p-1.5 tw-rounded-lg tw-bg-app-primary"
       >
-        <span class="tw-text-gray-100 tw-font-bold"> 문제 주소 복사 </span>
+        <span class="tw-text-gray-100 tw-font-bold"> 문제 열기 </span>
       </button>
     </div>
   </form>

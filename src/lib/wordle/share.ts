@@ -57,7 +57,7 @@ export function getGameDescription(config: GameConfig): string {
     const day = dateString[2].replace(/^0/, '')
     result = `${gameTypeString} ${month}월${day}일`
   } else if (config.mode === 'custom') {
-    result = `${config.author || '익명'}님의 ${gameTypeString}`
+    result = `${config.author || '익명'}님의 ${gameTypeString}(${config.answerLength}글자${config.useWordList ? '' : ', 사전 미사용'})`
   } else {
     const mode = GAME_MODES.find((mode) => mode.id === config.mode)!
     result = `${gameTypeString} ${mode.name.replace(/\s+/, '')}`
