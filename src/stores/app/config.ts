@@ -9,6 +9,7 @@ const defaultConfig: Config = {
   showInputForm: false,
   switchEnterAndBackspacePosition: false,
   isBeingUpdated: false,
+  useShorterBox: false,
 }
 
 const store = persistentStore('config', defaultConfig)

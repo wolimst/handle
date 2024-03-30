@@ -27,6 +27,9 @@
     <Toggle bind:checked={$config.switchEnterAndBackspacePosition}>
       <Badge>입력</Badge> 과 <Badge>삭제</Badge> 키 위치 바꾸기
     </Toggle>
+    <Toggle bind:checked={$config.useShorterBox}>
+      미입력 상자를 작게 표시
+    </Toggle>
 
     <div class="tw-mt-auto">
       <Copyright />

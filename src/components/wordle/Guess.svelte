@@ -18,6 +18,7 @@
    */
   export let guess: Wordle.GuessResult | string | undefined = undefined
   export let answerLength: number
+  export let shorterBox = false
 
   type Guess = Wordle.GuessResult | string | undefined
 
@@ -81,6 +82,7 @@
   {#each { length: answerLength } as _, i}
     <div
       class="tw-w-14 md:tw-w-16 tw-aspect-square tw-border-2 tw-rounded-lg tw-border-solid tw-border-app-text-secondary tw-overflow-hidden"
+      class:shorter-box={shorterBox}
     >
       {#await drawables then d}
         {#if i < d.length}
@@ -92,3 +94,9 @@
     </div>
   {/each}
 </div>
+
+<style>
+  .shorter-box {
+    aspect-ratio: 5 / 3;
+  }
+</style>

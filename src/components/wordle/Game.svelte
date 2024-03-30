@@ -12,7 +12,7 @@
     DOM_ID_GAME_CONTAINER,
     WAIT_DURATION_TO_SHOW_STATS_MS,
   } from '@/constants'
-  import { notification } from '@/stores/app'
+  import { config, notification } from '@/stores/app'
 
   function assert() {
     if (game === undefined || keyboard === undefined || ui === undefined) {
@@ -81,7 +81,10 @@
                   answerLength={$game.config.answerLength}
                 />
               {:else}
-                <Guess answerLength={$game.config.answerLength} />
+                <Guess
+                  answerLength={$game.config.answerLength}
+                  shorterBox={$config.useShorterBox}
+                />
               {/if}
             {/each}
           </div>
