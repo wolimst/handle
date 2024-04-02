@@ -22,9 +22,17 @@
   import { get } from 'svelte/store'
   import { game } from './store'
 
+  interface Loading {
+    imageShare: boolean
+    imageCopy: boolean
+  }
+
   let open = false
   let hideJamo = false
-  let loading = false
+  let loading: Loading = {
+    imageShare: false,
+    imageCopy: false,
+  }
 
   function toggleModal() {
     open = !open
@@ -106,9 +114,11 @@
     })
   }
 
-  function withLoading(func: () => Promise<unknown>) {
-    loading = true
-    void func().finally(() => (loading = false))
+  function withLoading(property: keyof Loading, func: () => Promise<unknown>) {
+    loading[property] = true
+    void new Promise((r) => setTimeout(r, 50))
+      .then(() => func())
+      .finally(() => (loading[property] = false))
   }
 </script>
 
@@ -154,18 +164,22 @@
           <span>이미지로 결과 공유하기</span>
           <div class="tw-inline-flex tw-gap-5">
             {#if browser.isMobileChromeOrSafari()}
-              {#if loading}
+              {#if loading.imageShare}
                 <Spinner />
               {:else}
-                <ClickButton on:click={() => withLoading(shareGameAsImage)}>
+                <ClickButton
+                  on:click={() => withLoading('imageShare', shareGameAsImage)}
+                >
                   <ShareIcon width={22} />
                 </ClickButton>
               {/if}
             {/if}
-            {#if loading}
+            {#if loading.imageCopy}
               <Spinner />
             {:else}
-              <ClickButton on:click={() => withLoading(copyGameAsImage)}>
+              <ClickButton
+                on:click={() => withLoading('imageCopy', copyGameAsImage)}
+              >
                 <ClipboardIcon width={22} />
               </ClickButton>
             {/if}
