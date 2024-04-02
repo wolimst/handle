@@ -1,6 +1,9 @@
+<script lang="ts">
+  import GitHubIcon from '@/components/ui/icons/GitHub.svelte'
+</script>
+
 <div class="tw-text-xs tw-text-app-text-secondary">
-  <p>© 2022-present wolimst & 한들 Contributors</p>
-  <p class="tw-mt-1">
+  <p>
     단어 리스트는
     <a
       href="https://www.korean.go.kr/front/etcData/etcDataView.do?mn_id=208&etc_seq=71"
@@ -38,5 +41,19 @@
     >
       우리말샘</a
     >의 단어를 편집하여 제작하였습니다.
+  </p>
+
+  <p
+    class="tw-mt-2 tw-flex tw-flex-wrap tw-justify-between tw-items-center tw-gap-2"
+  >
+    <a
+      href="https://github.com/wolimst/handle"
+      target="_blank"
+      class="tw-text-app-text-secondary tw-flex tw-gap-1"
+    >
+      <GitHubIcon width={16} /> GitHub
+    </a>
+
+    <span> © 2022-present wolimst & 한들 Contributors </span>
   </p>
 </div>
