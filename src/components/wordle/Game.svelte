@@ -1,4 +1,5 @@
 <script lang="ts">
+  import confetti from 'canvas-confetti'
   import Guess from './Guess.svelte'
   import { openStatsModal } from './Statistics.svelte'
   import Keyboard from './keyboard/Keyboard.svelte'
@@ -47,6 +48,48 @@
         // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-argument
         window.setTimeout(openStatsModal, WAIT_DURATION_TO_SHOW_STATS_MS)
       }
+    }
+
+    const initDate = 1712502000000
+    if ($game.status === 'win' && new Date().valueOf() - initDate >= 0) {
+      const count = 200
+      const defaults: confetti.Options = {
+        origin: { y: 0.85 },
+        gravity: 0.95,
+        zIndex: 10001,
+      }
+
+      const fire = (particleRatio: number, opts: confetti.Options) =>
+        confetti({
+          ...defaults,
+          ...opts,
+          particleCount: Math.floor(count * particleRatio),
+        })
+
+      void fire(0.25, {
+        spread: 26,
+        startVelocity: 60,
+      })
+      void fire(0.2, {
+        spread: 35,
+        startVelocity: 50,
+      })
+      void fire(0.35, {
+        spread: 60,
+        startVelocity: 50,
+        decay: 0.91,
+        scalar: 0.8,
+      })
+      void fire(0.1, {
+        spread: 80,
+        startVelocity: 30,
+        decay: 0.92,
+        scalar: 1.2,
+      })
+      void fire(0.1, {
+        spread: 80,
+        startVelocity: 50,
+      })
     }
   }
 
