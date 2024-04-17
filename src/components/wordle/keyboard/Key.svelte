@@ -57,7 +57,7 @@
         <div class="tw-flex tw-flex-nowrap tw-justify-center tw-flex-auto">
           {#each { length: ui.nWordlesAtRow(rowIndex) } as _, colIndex}
             {@const wordleIndex = $ui.nWordlesPerRow * rowIndex + colIndex}
-            {@const wordle = $game.wordleData[wordleIndex]}
+            {@const wordle = $game.data.wordleData[wordleIndex]}
             <!-- eslint-disable-next-line @typescript-eslint/no-unsafe-argument -->
             <div class="tw-flex-auto {getKeyHintColor(wordle.keyHints[key])}" />
           {/each}

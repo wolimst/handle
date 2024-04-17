@@ -1,4 +1,4 @@
-import { Game, GameConfig, generateGameId, getGameTypeString } from './game'
+import { Game, GameConfig, generateConfigId, getGameTypeString } from './game'
 import type { GameData, GameMode, GuessError, Status } from './types'
 import { GAME_MODES } from '@/constants'
 import { toWord } from '@/lib/hangul'
@@ -116,7 +116,7 @@ describe('tests for Game class', () => {
       .concat(Array(config.nWordles).fill(ANSWER7_OR_HIGHER))
       .slice(0, config.nWordles)
       .map(toWord)
-    return new Game(config, answers)
+    return new Game(config, 'id', answers)
   }
 
   describe('game play and status checks using word list', () => {
@@ -173,10 +173,10 @@ describe('tests for Game class', () => {
           nGuesses
         )
         expect(() => {
-          new Game(config, [ANSWER1, ANSWER2].map(toWord))
+          new Game(config, 'id', [ANSWER1, ANSWER2].map(toWord))
         }).toThrowError()
         expect(() => {
-          new Game(config, ['짧'].map(toWord))
+          new Game(config, 'id', ['짧'].map(toWord))
         }).toThrowError()
       })
     })
@@ -452,7 +452,7 @@ describe('tests for getGameTypeString()', () => {
   })
 })
 
-describe('tests for generateGameId()', () => {
+describe('tests for generateConfigId()', () => {
   const nWordles = 1
   const answerLength = 2
 
@@ -463,24 +463,24 @@ describe('tests for generateGameId()', () => {
 
     it('should return same ids when the date is not changed', () => {
       vi.useFakeTimers().setSystemTime(new Date().setUTCHours(0))
-      const id1 = generateGameId('daily', nWordles, answerLength)
-      const id2 = generateGameId('daily', nWordles, answerLength)
+      const id1 = generateConfigId('daily', nWordles, answerLength)
+      const id2 = generateConfigId('daily', nWordles, answerLength)
       expect(id1).toStrictEqual(id2)
     })
 
     it('should return different ids if the date is changed', () => {
       vi.useFakeTimers().setSystemTime(new Date().setUTCHours(0))
-      const id1 = generateGameId('daily', nWordles, answerLength)
+      const id1 = generateConfigId('daily', nWordles, answerLength)
       vi.useFakeTimers().setSystemTime(new Date().setUTCHours(24))
-      const id2 = generateGameId('daily', nWordles, answerLength)
+      const id2 = generateConfigId('daily', nWordles, answerLength)
       expect(id1).not.toStrictEqual(id2)
     })
   })
 
   describe('game mode: free', () => {
     it('should return different ids for each calls', () => {
-      const id1 = generateGameId('free', nWordles, answerLength)
-      const id2 = generateGameId('free', nWordles, answerLength)
+      const id1 = generateConfigId('free', nWordles, answerLength)
+      const id2 = generateConfigId('free', nWordles, answerLength)
       expect(id1).not.toStrictEqual(id2)
     })
   })

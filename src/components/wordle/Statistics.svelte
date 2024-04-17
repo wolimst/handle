@@ -98,7 +98,7 @@
     window.clearInterval(countdownIntervalId)
     nextGameCountdownMillis = 0
     if (gameMode.id === 'daily') {
-      const gameId = Wordle.generateGameId(
+      const gameId = Wordle.generateConfigId(
         gameMode.id as Wordle.GameMode,
         gameType.nWordles,
         gameType.answerLength
@@ -113,26 +113,27 @@
 
   function onOpen() {
     if (isInGamePage()) {
-      const data = get(game)
+      const store = get(game)
       gameMode =
-        gameModeOptions.find((option) => option.id === data.config.mode) ||
-        gameMode
+        gameModeOptions.find(
+          (option) => option.id === store.data.config.mode
+        ) || gameMode
       gameType =
         gameTypeOptions.find(
           (option) =>
-            option.nWordles === data.config.nWordles &&
-            option.answerLength === data.config.answerLength
+            option.nWordles === store.data.config.nWordles &&
+            option.answerLength === store.data.config.answerLength
         ) || gameType
     }
   }
 
   function shareGameAsEmoji() {
-    const text = Wordle.getGameShareString(get(game))
+    const text = Wordle.getGameShareString(get(game).data)
     void Wordle.shareResult({ text }).then(() => ($open = false))
   }
 
   function copyGameAsEmoji() {
-    const text = Wordle.getGameShareString(get(game))
+    const text = Wordle.getGameShareString(get(game).data)
     void Wordle.copyResult(text).then(() => ($open = false))
   }
 

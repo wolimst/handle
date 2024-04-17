@@ -1,16 +1,19 @@
 import { N_WORDLES_PER_ROW } from '@/constants'
-import type { DubeolsikJamo } from '@/lib/hangul'
+import type { DubeolsikJamo, Word } from '@/lib/hangul'
 import * as Wordle from '@/lib/wordle'
 import { readable, writable, type Readable } from 'svelte/store'
 
-interface GameStore extends Readable<Wordle.GameData> {
+export interface GameStore {
   active: boolean
+  data: Wordle.GameData
   getGameType(): string
   submitGuess(): Wordle.GuessError | undefined
   getAnswers(): readonly string[] | undefined
 }
 
-interface KeyboardStore extends Readable<string> {
+export interface KeyboardStore {
+  active: boolean
+  value: string
   setValue(value: string): Wordle.KeyboardError | undefined
   type(jamo: DubeolsikJamo): Wordle.KeyboardError | undefined
   delete(): void
@@ -25,19 +28,21 @@ interface UIStore extends Readable<UIConstants> {
   nWordlesAtRow: (rowIndex: number) => number
 }
 
-export let game: GameStore
-export let keyboard: KeyboardStore
+export const game = writable<GameStore>()
+export const keyboard = writable<KeyboardStore>()
 export let ui: UIStore
 
-export function initializeWordleStores(gameInstance: Wordle.Game) {
+export function initializeWordleStores(
+  config: Wordle.GameConfig,
+  gameId: string,
+  answers?: readonly Word[]
+) {
+  const gameInstance = new Wordle.Game(config, gameId, answers)
   const keyboardInstance = gameInstance.keyboard
 
-  const gameStore = writable<Wordle.GameData>(gameInstance.data)
-  const keyboardStore = writable(keyboardInstance.value)
-
-  game = {
+  game.set({
     active: true,
-    subscribe: gameStore.subscribe,
+    data: gameInstance.data,
     getGameType: (): string => {
       return Wordle.getGameTypeString(
         gameInstance.data.config.mode,
@@ -47,36 +52,52 @@ export function initializeWordleStores(gameInstance: Wordle.Game) {
     },
     submitGuess: (): Wordle.GuessError | undefined => {
       const result = gameInstance.submitGuess()
-      gameStore.set(gameInstance.data)
-      keyboardStore.set(keyboardInstance.value)
+      game.update((store) => {
+        store.data = gameInstance.data
+        return store
+      })
+      keyboard.update((store) => {
+        store.value = keyboardInstance.value
+        return store
+      })
       return result
     },
     getAnswers: (): readonly string[] | undefined => {
       return gameInstance.answers
     },
-  }
+  })
 
-  keyboard = {
-    subscribe: keyboardStore.subscribe,
+  keyboard.set({
+    active: true,
+    value: keyboardInstance.value,
     setValue: (value: string): Wordle.KeyboardError | undefined => {
       const setError = keyboardInstance.setValue(value)
       if (setError === undefined) {
-        keyboardStore.set(value)
+        keyboard.update((store) => {
+          store.value = keyboardInstance.value
+          return store
+        })
       }
       return setError
     },
     type: (jamo: DubeolsikJamo): Wordle.KeyboardError | undefined => {
       const setError = keyboardInstance.type(jamo)
       if (setError === undefined) {
-        keyboardStore.set(keyboardInstance.value)
+        keyboard.update((store) => {
+          store.value = keyboardInstance.value
+          return store
+        })
       }
       return setError
     },
-    delete() {
+    delete: () => {
       keyboardInstance.delete()
-      keyboardStore.set(keyboardInstance.value)
+      keyboard.update((store) => {
+        store.value = keyboardInstance.value
+        return store
+      })
     },
-  }
+  })
 
   const nWordlesPerRow =
     N_WORDLES_PER_ROW[gameInstance.data.config.answerLength]
@@ -98,22 +119,23 @@ export function initializeWordleStores(gameInstance: Wordle.Game) {
 }
 
 export function deactivateWordleStores() {
-  game = {
-    active: false,
-    ...readable(),
-    getGameType: (): string => {
+  game.update((store) => {
+    store.active = false
+    store.getGameType = (): string => {
       return ''
-    },
-    submitGuess: (): Wordle.GuessError | undefined => {
+    }
+    store.submitGuess = (): Wordle.GuessError | undefined => {
       return undefined
-    },
-    getAnswers: (): readonly string[] | undefined => {
+    }
+    store.getAnswers = (): readonly string[] | undefined => {
       return undefined
-    },
-  }
+    }
+    return store
+  })
 
-  keyboard = {
-    ...readable(),
+  keyboard.set({
+    active: false,
+    value: '',
     setValue: (_value: string): Wordle.KeyboardError | undefined => {
       return undefined
     },
@@ -121,7 +143,7 @@ export function deactivateWordleStores() {
       return undefined
     },
     delete() {},
-  }
+  })
 
   ui = {
     ...readable(),

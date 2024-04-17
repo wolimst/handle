@@ -1,8 +1,8 @@
-import type { GameConfig } from './game'
 import type { GameData } from './types'
 import { GAME_MODES, WORDLE_NAMES } from '@/constants'
 import { getCurrentAbsoluteUrl } from '@/routes/page'
 import { notification } from '@/stores/app'
+import { savedata } from '@/stores/wordle'
 
 export async function shareResult(data: ShareData) {
   if (!navigator.canShare || !navigator.canShare(data)) {
@@ -46,27 +46,33 @@ export async function copyResult(data: string | ClipboardItem[]) {
   }
 }
 
-export function getGameDescription(config: GameConfig): string {
-  const wordleName = WORDLE_NAMES.at(config.nWordles)
-  const gameTypeString = wordleName || `워들×${config.nWordles}`
+export function getGameDescription(gameData: GameData): string {
+  const wordleName = WORDLE_NAMES.at(gameData.config.nWordles)
+  const gameTypeString = wordleName || `워들×${gameData.config.nWordles}`
 
   let result: string
-  if (config.mode === 'daily') {
-    const dateString = config.id.split('-').at(-1)!.split('.')
+  if (gameData.config.mode === 'daily') {
+    const dateString = gameData.config.id.split('-').at(-1)!.split('.')
     const month = dateString[1].replace(/^0/, '')
     const day = dateString[2].replace(/^0/, '')
     result = `${gameTypeString} ${month}월${day}일`
-  } else if (config.mode === 'custom') {
-    result = `${config.author || '익명'}님의 ${gameTypeString}(${config.answerLength}글자${config.useWordList ? '' : ', 사전 미사용'})`
+    const index = savedata
+      .loadByConfigId(gameData.config.id)
+      .findIndex((data) => data.id === gameData.id)
+    if (index >= 1) {
+      result += `+${index}`
+    }
+  } else if (gameData.config.mode === 'custom') {
+    result = `${gameData.config.author || '익명'}님의 문제${gameData.config.useWordList ? '' : '(사전 미사용)'}`
   } else {
-    const mode = GAME_MODES.find((mode) => mode.id === config.mode)!
+    const mode = GAME_MODES.find((mode) => mode.id === gameData.config.mode)!
     result = `${gameTypeString} ${mode.name.replace(/\s+/, '')}`
   }
   return result
 }
 
 export function getGameShareString(gameData: GameData): string {
-  const description = getGameDescription(gameData.config)
+  const description = getGameDescription(gameData)
   const guess = `${gameData.status === 'win' ? gameData.guesses.length : 'X'}/${gameData.config.nGuesses}`
   const result = getGameResultInEmoji(gameData)
   const url = getCurrentAbsoluteUrl().href.replace(/^(http(s?):\/\/)/, '')

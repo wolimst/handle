@@ -1,5 +1,6 @@
 <script lang="ts">
   import PageNotFound from '@/NotFound.svelte'
+  import SpinnerIcon from '@/components/ui/icons/Spinner.svelte'
   import Game from '@/components/wordle/Game.svelte'
   import {
     deactivateWordleStores,
@@ -29,8 +30,7 @@
       game.answerLength,
       N_GUESSES[game.nWordles][game.answerLength]
     )
-    const gameInstance = new Wordle.Game(config)
-    initializeWordleStores(gameInstance)
+    initializeWordleStores(config, config.id)
     pageStatus = 'success'
   }
 
@@ -42,7 +42,10 @@
 </script>
 
 {#if pageStatus === 'loading'}
-  Loading
+  <div class="tw-h-full tw-flex tw-items-center tw-justify-center">
+    <SpinnerIcon />
+    <span class="tw-font-bold tw-ml-2">로딩 중...</span>
+  </div>
 {:else if pageStatus === 'success'}
   <Game />
 {:else}

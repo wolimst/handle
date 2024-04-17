@@ -1,5 +1,6 @@
+import { PRODUCTION } from '@/constants'
 import * as Wordle from '@/lib/wordle'
-import { base64 } from '@/stores/encoder'
+import { base64, plaintext } from '@/stores/encoder'
 import { persistentStore } from '@/stores/localStore'
 import { get, type Readable } from 'svelte/store'
 
@@ -25,7 +26,8 @@ export interface Statistics {
 
 const defaultStorage: StatisticsStorage = {}
 
-const store = persistentStore('statistics', defaultStorage, base64)
+const encoder = PRODUCTION ? base64 : plaintext
+const store = persistentStore('statistics', defaultStorage, encoder)
 
 export const statistics: StatisticsStore = {
   subscribe: store.subscribe,

@@ -31,9 +31,9 @@
       return
     }
 
-    if ($game.status === 'playing') {
+    if ($game.data?.status === 'playing') {
       if (isJamoKey(key)) {
-        const error = keyboard.type(key)
+        const error = $keyboard.type(key)
         if (error) {
           $notification = {
             type: 'error',
@@ -41,7 +41,7 @@
           }
         }
       } else if (key === BACKSPACE_KEY) {
-        keyboard.delete()
+        $keyboard.delete()
       }
     }
   }

@@ -11,3 +11,8 @@ export const base64: Encoder = {
     decodeURIComponent(window.atob(data.slice(warningText.length))),
   encode: (data) => warningText + window.btoa(encodeURIComponent(data)),
 }
+
+export const plaintext: Encoder = {
+  decode: (data) => data,
+  encode: (data) => data,
+}

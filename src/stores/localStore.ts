@@ -1,10 +1,5 @@
-import type { Encoder } from './encoder'
+import { plaintext, type Encoder } from './encoder'
 import { writable } from 'svelte/store'
-
-const defaultEncoder: Encoder = {
-  decode: (data) => data,
-  encode: (data) => data,
-}
 
 /**
  * Get a persistent store using local storage
@@ -16,7 +11,7 @@ const defaultEncoder: Encoder = {
 export function persistentStore<T>(
   key: string,
   initial: T,
-  encoder: Encoder = defaultEncoder
+  encoder: Encoder = plaintext
 ) {
   const raw = localStorage.getItem(key)
   let parsedData: T | undefined = undefined

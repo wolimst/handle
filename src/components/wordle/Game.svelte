@@ -22,17 +22,17 @@
   }
 
   function submitGuess() {
-    const guessError = game.submitGuess()
+    const guessError = $game.submitGuess()
 
-    if ($game.status === 'win') {
+    if ($game.data.status === 'win') {
       $notification = {
         type: 'wordle-win',
         message: getWinMessage(),
       }
-    } else if ($game.status === 'lose') {
+    } else if ($game.data.status === 'lose') {
       $notification = {
         type: 'wordle-loss',
-        message: getLossMessage(game.getAnswers()!),
+        message: getLossMessage($game.getAnswers()!),
       }
     } else {
       if (guessError) {
@@ -43,15 +43,14 @@
       }
     }
 
-    if ($game.status !== 'playing') {
-      if ($game.config.useStatistics) {
+    if ($game.data.status !== 'playing') {
+      if ($game.data.config.useStatistics) {
         // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-argument
         window.setTimeout(openStatsModal, WAIT_DURATION_TO_SHOW_STATS_MS)
       }
     }
 
-    const initDate = 1712502000000
-    if ($game.status === 'win' && new Date().valueOf() - initDate >= 0) {
+    if ($game.data.status === 'win') {
       const count = 200
       const defaults: confetti.Options = {
         origin: { y: 0.85 },
@@ -105,27 +104,27 @@
   >
     {#each { length: $ui.nRows } as _, rowIndex}
       <div class={$ui.nRows > 1 ? 'tw-mb-4 md:tw-mb-6' : ''}>
-        {#each { length: $game.config.nGuesses } as _, guessIndex}
+        {#each { length: $game.data.config.nGuesses } as _, guessIndex}
           <div
             class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-3 md:tw-gap-4 tw-my-1"
           >
             {#each { length: ui.nWordlesAtRow(rowIndex) } as _, colIndex}
               {@const wordleIndex = $ui.nWordlesPerRow * rowIndex + colIndex}
-              {@const wordle = $game.wordleData[wordleIndex]}
+              {@const wordle = $game.data.wordleData[wordleIndex]}
 
               {#if guessIndex < wordle.guessResults.length}
                 <Guess
                   guess={wordle.guessResults[guessIndex]}
-                  answerLength={$game.config.answerLength}
+                  answerLength={$game.data.config.answerLength}
                 />
               {:else if wordle.status === 'playing' && guessIndex === wordle.guessResults.length}
                 <Guess
-                  guess={$keyboard}
-                  answerLength={$game.config.answerLength}
+                  guess={$keyboard.value}
+                  answerLength={$game.data.config.answerLength}
                 />
               {:else}
                 <Guess
-                  answerLength={$game.config.answerLength}
+                  answerLength={$game.data.config.answerLength}
                   shorterBox={$config.useShorterBox}
                 />
               {/if}

@@ -16,7 +16,7 @@ export function getCurrentAbsoluteUrl(): URL {
 }
 
 export function isInGamePage(): boolean {
-  return game && game.active
+  return game && get(game)?.active
 }
 
 export function refreshIfAlreadyInPage(path: string) {

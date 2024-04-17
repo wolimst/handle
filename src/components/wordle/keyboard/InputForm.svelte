@@ -3,11 +3,11 @@
   import { game, keyboard } from '../store'
   import { notification } from '@/stores/app'
 
-  $: value = $keyboard
+  $: value = $keyboard.value
   $: {
-    const setError = keyboard.setValue(value)
+    const setError = $keyboard.setValue(value)
     if (setError !== undefined) {
-      value = $keyboard
+      value = $keyboard.value
       $notification = {
         type: 'error',
         message: getKeyboardErrorMessage(setError),
@@ -26,6 +26,6 @@
     on:focus
     on:blur
     class="tw-w-full tw-px-2 tw-py-1 tw-rounded-lg tw-text-app-text tw-bg-transparent tw-border tw-border-app-text-secondary tw-shadow"
-    disabled={$game.status !== 'playing'}
+    disabled={$game.data.status !== 'playing'}
   />
 </form>

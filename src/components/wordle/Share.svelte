@@ -40,7 +40,7 @@
 
   function getDescription(): string {
     if (isInGamePage()) {
-      return getGameDescription(get(game).config)
+      return getGameDescription(get(game).data)
     }
     return '모아쓰는 한글 워들'
   }
@@ -84,12 +84,12 @@
   }
 
   function shareGameAsEmoji() {
-    const text = getGameShareString(get(game))
+    const text = getGameShareString(get(game).data)
     return shareResult({ text }).then(() => (open = false))
   }
 
   function copyGameAsEmoji() {
-    const text = getGameShareString(get(game))
+    const text = getGameShareString(get(game).data)
     return copyResult(text).then(() => (open = false))
   }
 
@@ -123,7 +123,7 @@
 </script>
 
 <ClickButton on:click={toggleModal}>
-  <ShareIcon width={22} />
+  <ShareIcon width={20} />
 </ClickButton>
 
 <Modal bind:open title="공유하기 (Beta)" widthCss="20rem">

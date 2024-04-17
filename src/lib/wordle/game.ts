@@ -9,15 +9,15 @@ import { time } from '@/lib/utils'
 import { savedata, statistics } from '@/stores/wordle'
 
 export class GameConfig {
-  readonly #id: string
-  readonly #author: string
-  readonly #mode: GameMode
-  readonly #nWordles: number
-  readonly #answerLength: number
-  readonly #nGuesses: number
-  readonly #useWordList: boolean
-  readonly #useSave: boolean
-  readonly #useStatistics: boolean
+  readonly id: string
+  readonly author: string
+  readonly mode: GameMode
+  readonly nWordles: number
+  readonly answerLength: number
+  readonly nGuesses: number
+  readonly useWordList: boolean
+  readonly useSave: boolean
+  readonly useStatistics: boolean
 
   private constructor(
     id: string,
@@ -28,16 +28,16 @@ export class GameConfig {
     nGuesses: number,
     useWordList: boolean
   ) {
-    this.#id = id
-    this.#author = author
-    this.#mode = mode
-    this.#nWordles = nWordles
-    this.#answerLength = answerLength
-    this.#nGuesses = nGuesses
-    this.#useWordList = useWordList
-    this.#useSave =
+    this.id = id
+    this.author = author
+    this.mode = mode
+    this.nWordles = nWordles
+    this.answerLength = answerLength
+    this.nGuesses = nGuesses
+    this.useWordList = useWordList
+    this.useSave =
       GAME_MODES.find((gameMode) => gameMode.id === mode)?.useSave || false
-    this.#useStatistics =
+    this.useStatistics =
       GAME_MODES.find((gameMode) => gameMode.id === mode)?.useStatistics ||
       false
   }
@@ -49,7 +49,7 @@ export class GameConfig {
     nGuesses: number,
     useWordList = true
   ): GameConfig {
-    const id = generateGameId(mode, nWordles, answerLength)
+    const id = generateConfigId(mode, nWordles, answerLength)
     const author = '한들'
     return new GameConfig(
       id,
@@ -81,45 +81,10 @@ export class GameConfig {
       useWordList
     )
   }
-
-  get id(): string {
-    return this.#id
-  }
-
-  get author(): string {
-    return this.#author
-  }
-
-  get mode(): GameMode {
-    return this.#mode
-  }
-
-  get nWordles(): number {
-    return this.#nWordles
-  }
-
-  get answerLength(): number {
-    return this.#answerLength
-  }
-
-  get nGuesses(): number {
-    return this.#nGuesses
-  }
-
-  get useWordList(): boolean {
-    return this.#useWordList
-  }
-
-  get useSave(): boolean {
-    return this.#useSave
-  }
-
-  get useStatistics(): boolean {
-    return this.#useStatistics
-  }
 }
 
 export class Game {
+  readonly #id: string
   readonly #config: GameConfig
   readonly #wordles: readonly _Wordle[]
   readonly #keyboard: Keyboard
@@ -133,8 +98,13 @@ export class Game {
    * @param answers answers of the wordles, if not provided, answers will be randomly selected from the answer list
    * @throws an error if some answers are not valid
    */
-  constructor(config: GameConfig, answers?: readonly Hangul.Word[]) {
+  constructor(
+    config: GameConfig,
+    id: string,
+    answers?: readonly Hangul.Word[]
+  ) {
     this.#config = config
+    this.#id = id
 
     if (answers) {
       if (answers.length !== config.nWordles) {
@@ -153,14 +123,14 @@ export class Game {
       .map((_, i) => {
         const answer =
           answers?.[i] ||
-          getRandomAnswer(config.answerLength, `${this.#config.id}-${i}`)
+          getRandomAnswer(config.answerLength, `${this.#id}-${i}`)
         return new _Wordle(config.nGuesses, answer)
       })
     this.#keyboard = new Keyboard(config.answerLength)
     this.#guesses = []
 
     if (config.useSave) {
-      const data = savedata.load(this.#config.id)
+      const data = savedata.load(this.#id)
       data?.guesses.forEach((guess) => this.#doSubmit(guess))
     }
   }
@@ -193,7 +163,7 @@ export class Game {
 
   get data(): GameData {
     return {
-      id: this.#config.id,
+      id: this.#id,
       config: this.#config,
       status: this.status,
       guesses: structuredClone(this.#guesses),
@@ -260,7 +230,7 @@ export function getGameTypeString(
   return `${mode.charAt(0)}-${nWordles}-${answerLength}`
 }
 
-export function generateGameId(
+export function generateConfigId(
   mode: GameMode,
   nWordles: number,
   answerLength: number
