@@ -10,6 +10,7 @@
   } from './message'
   import { game, keyboard, ui } from './store'
   import {
+    DAILY_BONUS_GUESS_COUNTS,
     DOM_ID_GAME_CONTAINER,
     WAIT_DURATION_TO_SHOW_STATS_MS,
   } from '@/constants'
@@ -65,30 +66,69 @@
           particleCount: Math.floor(count * particleRatio),
         })
 
-      void fire(0.25, {
-        spread: 26,
-        startVelocity: 60,
-      })
-      void fire(0.2, {
-        spread: 35,
-        startVelocity: 50,
-      })
-      void fire(0.35, {
-        spread: 60,
-        startVelocity: 50,
-        decay: 0.91,
-        scalar: 0.8,
-      })
-      void fire(0.1, {
-        spread: 80,
-        startVelocity: 30,
-        decay: 0.92,
-        scalar: 1.2,
-      })
-      void fire(0.1, {
-        spread: 80,
-        startVelocity: 50,
-      })
+      const fireFromBottom = (velocity = 1) => {
+        void fire(0.25, {
+          spread: 26,
+          startVelocity: 60 * velocity,
+        })
+        void fire(0.2, {
+          spread: 35,
+          startVelocity: 50 * velocity,
+        })
+        void fire(0.35, {
+          spread: 60,
+          startVelocity: 50 * velocity,
+          decay: 0.91,
+          scalar: 0.8,
+        })
+        void fire(0.1, {
+          spread: 80,
+          startVelocity: 30 * velocity,
+          decay: 0.92,
+          scalar: 1.2,
+        })
+        void fire(0.1, {
+          spread: 80,
+          startVelocity: 50 * velocity,
+        })
+      }
+
+      const fireFromLeft = () => {
+        void confetti({
+          ...defaults,
+          origin: {
+            x: 0.05,
+            y: 0.7,
+          },
+          angle: 70,
+        })
+      }
+
+      const fireFromRight = () => {
+        void confetti({
+          ...defaults,
+          origin: {
+            x: 0.95,
+            y: 0.7,
+          },
+          angle: 110,
+        })
+      }
+
+      fireFromBottom()
+
+      if (
+        $game.data.guesses.length <=
+        DAILY_BONUS_GUESS_COUNTS[$game.data.config.nWordles][
+          $game.data.config.answerLength
+        ]
+      ) {
+        window.setTimeout(fireFromLeft, 500)
+        window.setTimeout(fireFromRight, 750)
+        window.setTimeout(fireFromLeft, 1450)
+        window.setTimeout(fireFromRight, 1450)
+        window.setTimeout(() => fireFromBottom(1.3), 1520)
+      }
     }
   }
 

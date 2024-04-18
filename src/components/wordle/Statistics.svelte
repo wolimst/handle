@@ -98,16 +98,23 @@
     window.clearInterval(countdownIntervalId)
     nextGameCountdownMillis = 0
     if (gameMode.id === 'daily') {
-      const gameId = Wordle.generateConfigId(
+      const configId = Wordle.generateConfigId(
         gameMode.id as Wordle.GameMode,
         gameType.nWordles,
         gameType.answerLength
       )
-      const data = savedata.load(gameId)
-      if (data !== undefined && data.status !== 'playing') {
-        nextGameCountdownMillis = time.getMillisecondsToMidnightInKST()
-        countdownIntervalId = window.setInterval(countdownByOneSecond, 1000)
+
+      const data = savedata.loadByConfigId(configId).at(-1)
+      if (
+        data === undefined ||
+        (data.status === 'win' && Wordle.isDailyBonusAvailable(data)) ||
+        data.status === 'playing'
+      ) {
+        return
       }
+
+      nextGameCountdownMillis = time.getMillisecondsToMidnightInKST()
+      countdownIntervalId = window.setInterval(countdownByOneSecond, 1000)
     }
   }
 
@@ -135,6 +142,28 @@
   function copyGameAsEmoji() {
     const text = Wordle.getGameShareString(get(game).data)
     void share.copy(text).then(() => ($open = false))
+  }
+
+  function getNextGameTypeString(): string {
+    if (gameMode.id === 'daily') {
+      const configId = Wordle.generateConfigId(
+        gameMode.id as Wordle.GameMode,
+        gameType.nWordles,
+        gameType.answerLength
+      )
+      const dailyGames = savedata.loadByConfigId(configId)
+      const latestGame = dailyGames.at(-1)
+      if (
+        dailyGames.length > 1 ||
+        (latestGame && Wordle.isDailyBonusAvailable(latestGame))
+      ) {
+        return '보너스'
+      } else {
+        return '오늘의'
+      }
+    } else {
+      return '새로운'
+    }
   }
 
   onDestroy(() => {
@@ -236,7 +265,7 @@
         >
           <RefreshIcon width={22} />
           <span class="tw-ml-1 tw-font-medium">
-            {gameMode.id === 'daily' ? '오늘의' : '새로운'} 문제 풀기
+            {getNextGameTypeString()} 문제 풀기
           </span>
         </LinkButton>
       {/if}

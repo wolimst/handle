@@ -30,7 +30,8 @@
       game.answerLength,
       N_GUESSES[game.nWordles][game.answerLength]
     )
-    initializeWordleStores(config, config.id)
+    const gameId = Wordle.getGameId(config)
+    initializeWordleStores(config, gameId)
     pageStatus = 'success'
   }
 

@@ -110,6 +110,20 @@ export const N_GUESSES: readonly (readonly number[])[] = [
  */
 export const N_WORDLES_PER_ROW = [NaN, 4, 4, 3, 2, 2] as const
 
+/**
+ * A lookup table for the number of guesses to receive a bonus daily game.
+ *
+ * Row index represents the number of wordles in a game, and column index
+ * represents the answer length, e.g. if `nWordles = 2`, `answerLength = 1`
+ * then `count = DAILY_BONUS_GUESS_COUNTS[2][1]`
+ */
+export const DAILY_BONUS_GUESS_COUNTS: readonly (readonly number[])[] = [
+  [],
+  [NaN, NaN, 3],
+  [NaN, NaN, 4],
+  [NaN, NaN, 5],
+] as const
+
 export const ALERT_DURATION_MS = 3000
 export const WAIT_DURATION_TO_SHOW_STATS_MS = 1500
 

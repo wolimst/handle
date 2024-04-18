@@ -1,8 +1,14 @@
 import { Keyboard } from './keyboard'
-import type { GameData, GameMode, GuessError, Status } from './types'
+import type {
+  GameData,
+  GameMode,
+  GameSaveData,
+  GuessError,
+  Status,
+} from './types'
 import { _Wordle } from './wordle'
 import { getRandomAnswer, isInWordList } from './words'
-import { GAME_MODES } from '@/constants'
+import { DAILY_BONUS_GUESS_COUNTS, GAME_MODES } from '@/constants'
 import * as Hangul from '@/lib/hangul'
 import * as Path from '@/lib/path'
 import { time } from '@/lib/utils'
@@ -131,10 +137,14 @@ export class Game {
 
     if (config.useSave) {
       const data = savedata.load(this.#id)
-      data?.guesses.forEach((guess) => {
-        const word = Hangul.toWord(guess.value)
-        this.#doSubmit(word)
-      })
+      if (data) {
+        data.guesses.forEach((guess) => {
+          const word = Hangul.toWord(guess.value)
+          this.#doSubmit(word)
+        })
+      } else {
+        savedata.save(this.data)
+      }
     }
   }
 
@@ -256,4 +266,51 @@ export function generateConfigId(
       return _exhaustiveCheck
     }
   }
+}
+
+export function getGameId(config: GameConfig): string {
+  switch (config.mode) {
+    case 'daily': {
+      return getDailyGameId(config)
+    }
+    case 'free': {
+      return config.id
+    }
+    case 'custom':
+      return config.id
+    default: {
+      const _exhaustiveCheck: never = config.mode
+      return _exhaustiveCheck
+    }
+  }
+}
+
+function getDailyGameId(config: GameConfig): string {
+  if (config.mode !== 'daily') {
+    return config.id
+  }
+
+  const dailyGames = savedata.loadByConfigId(config.id)
+  const latestGame = dailyGames.at(-1)
+  if (!latestGame) {
+    return `${config.id}-000`
+  }
+
+  if (isDailyBonusAvailable(latestGame)) {
+    const index = String(dailyGames.length).padStart(3, '0')
+    return `${config.id}-${index}`
+  } else {
+    return latestGame.id
+  }
+}
+
+export function isDailyBonusAvailable(latestGame: GameData | GameSaveData) {
+  return (
+    latestGame.config.mode === 'daily' &&
+    latestGame.status === 'win' &&
+    latestGame.guesses.length <=
+      DAILY_BONUS_GUESS_COUNTS[latestGame.config.nWordles][
+        latestGame.config.answerLength
+      ]
+  )
 }
