@@ -1,7 +1,6 @@
 <script lang="ts">
   import ClickButton from '@/components/ui/core/ClickButton.svelte'
   import Modal from '@/components/ui/core/Modal.svelte'
-  import Toggle from '@/components/ui/core/Toggle.svelte'
   import ClipboardIcon from '@/components/ui/icons/Clipboard.svelte'
   import ShareIcon from '@/components/ui/icons/Share.svelte'
   import Spinner from '@/components/ui/icons/Spinner.svelte'
@@ -23,7 +22,6 @@
   }
 
   let open = false
-  let hideJamo = false
   let loading: Loading = {
     imageShare: false,
     imageCopy: false,
@@ -121,7 +119,7 @@
   <ShareIcon width={20} />
 </ClickButton>
 
-<Modal bind:open title="공유하기 (Beta)" widthCss="20rem">
+<Modal bind:open title="공유하기" widthCss="20rem">
   <div class="tw-w-full tw-h-full tw-inline-flex tw-flex-col tw-gap-8 tw-py-4">
     <div class="tw-inline-flex tw-justify-between tw-items-center">
       <span>이 페이지를 공유하기</span>
@@ -180,8 +178,6 @@
             {/if}
           </div>
         </div>
-
-        <Toggle bind:checked={hideJamo} disabled>글자 숨기기 (지원예정)</Toggle>
       </div>
     {/if}
   </div>
