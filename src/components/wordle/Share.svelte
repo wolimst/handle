@@ -6,13 +6,8 @@
   import ShareIcon from '@/components/ui/icons/Share.svelte'
   import Spinner from '@/components/ui/icons/Spinner.svelte'
   import { DOM_ID_GAME_CONTAINER } from '@/constants'
-  import { browser } from '@/lib/utils'
-  import {
-    copyResult,
-    getGameDescription,
-    getGameShareString,
-    shareResult,
-  } from '@/lib/wordle/share'
+  import { browser, share } from '@/lib/utils'
+  import { getGameDescription, getGameShareString } from '@/lib/wordle/share'
   import {
     getBackgroundColor,
     getCurrentAbsoluteUrl,
@@ -52,14 +47,14 @@
       title: description,
       url: url.href,
     }
-    return shareResult(data).then(() => (open = false))
+    return share.share(data).then(() => (open = false))
   }
 
   function copyCurrentPage() {
     const description = getDescription()
     const url = getCurrentAbsoluteUrl()
     const text = `${description} ${url.href}`.trim()
-    return copyResult(text).then(() => (open = false))
+    return share.copy(text).then(() => (open = false))
   }
 
   async function getGameAsBlob() {
@@ -85,12 +80,12 @@
 
   function shareGameAsEmoji() {
     const text = getGameShareString(get(game).data)
-    return shareResult({ text }).then(() => (open = false))
+    return share.share({ text }).then(() => (open = false))
   }
 
   function copyGameAsEmoji() {
     const text = getGameShareString(get(game).data)
-    return copyResult(text).then(() => (open = false))
+    return share.copy(text).then(() => (open = false))
   }
 
   function shareGameAsImage() {
@@ -101,7 +96,7 @@
         url: url.href,
         files: [new File([blob], 'handle.png', { type: blob.type })],
       }
-      return shareResult(data).then(() => (open = false))
+      return share.share(data).then(() => (open = false))
     })
   }
 
@@ -110,7 +105,7 @@
       const clipboardItem = new ClipboardItem({
         [blob.type]: blob,
       })
-      return copyResult([clipboardItem]).then(() => (open = false))
+      return share.copy([clipboardItem]).then(() => (open = false))
     })
   }
 

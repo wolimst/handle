@@ -55,3 +55,10 @@ export interface GameData {
   readonly status: Status
   readonly wordleData: readonly WordleData[]
 }
+
+export interface GameSaveData {
+  readonly id: string
+  readonly config: GameConfig
+  readonly guesses: readonly Omit<Hangul.Word, 'syllables'>[]
+  readonly status: Status
+}

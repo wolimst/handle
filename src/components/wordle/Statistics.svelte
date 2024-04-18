@@ -24,7 +24,7 @@
   import ShareIcon from '@/components/ui/icons/Share.svelte'
   import StatisticsIcon from '@/components/ui/icons/Statistics.svelte'
   import { GAMES, GAME_MODES, N_GUESSES, WORDLE_NAMES } from '@/constants'
-  import { browser, time } from '@/lib/utils'
+  import { browser, share, time } from '@/lib/utils'
   import * as Wordle from '@/lib/wordle'
   import { isInGamePage, refreshIfAlreadyInPage } from '@/routes/page'
   import { defaultStats, savedata, statistics } from '@/stores/wordle'
@@ -129,12 +129,12 @@
 
   function shareGameAsEmoji() {
     const text = Wordle.getGameShareString(get(game).data)
-    void Wordle.shareResult({ text }).then(() => ($open = false))
+    void share.share({ text }).then(() => ($open = false))
   }
 
   function copyGameAsEmoji() {
     const text = Wordle.getGameShareString(get(game).data)
-    void Wordle.copyResult(text).then(() => ($open = false))
+    void share.copy(text).then(() => ($open = false))
   }
 
   onDestroy(() => {

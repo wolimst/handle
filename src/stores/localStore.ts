@@ -27,7 +27,7 @@ export function persistentStore<T>(
   }
 
   if (!parsedData) {
-    localStorage.setItem(key, encoder.encode(JSON.stringify(initial, null, 2)))
+    localStorage.setItem(key, encoder.encode(JSON.stringify(initial, null, 0)))
   }
 
   const data = parsedData || initial
@@ -35,7 +35,7 @@ export function persistentStore<T>(
   const { subscribe, set } = writable(data)
 
   const persistentSet = (value: T) => {
-    localStorage.setItem(key, encoder.encode(JSON.stringify(value, null, 2)))
+    localStorage.setItem(key, encoder.encode(JSON.stringify(value, null, 0)))
     set(value)
   }
 
@@ -44,9 +44,31 @@ export function persistentStore<T>(
     persistentSet(updateFn(data))
   }
 
+  const exportData = (): string | undefined => {
+    return localStorage.getItem(key) || undefined
+  }
+
+  const importData = (encodedString: string) => {
+    let parsedData: T | undefined = undefined
+    try {
+      parsedData = JSON.parse(encoder.decode(encodedString)) as T
+      if (!parsedData) {
+        throw new Error('invalid import data')
+      }
+    } catch (_error) {
+      alert(`앗, 데이터가 올바르지 않아요. (${key})`)
+      return
+    }
+
+    localStorage.setItem(key, encodedString)
+    set(parsedData)
+  }
+
   return {
     subscribe,
     set: persistentSet,
     update: persistentUpdate,
+    export: exportData,
+    import: importData,
   }
 }

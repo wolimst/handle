@@ -3,7 +3,7 @@ import type { GameData, GameMode, GuessError, Status } from './types'
 import { _Wordle } from './wordle'
 import { getRandomAnswer, isInWordList } from './words'
 import { GAME_MODES } from '@/constants'
-import type * as Hangul from '@/lib/hangul'
+import * as Hangul from '@/lib/hangul'
 import * as Path from '@/lib/path'
 import { time } from '@/lib/utils'
 import { savedata, statistics } from '@/stores/wordle'
@@ -131,7 +131,10 @@ export class Game {
 
     if (config.useSave) {
       const data = savedata.load(this.#id)
-      data?.guesses.forEach((guess) => this.#doSubmit(guess))
+      data?.guesses.forEach((guess) => {
+        const word = Hangul.toWord(guess.value)
+        this.#doSubmit(word)
+      })
     }
   }
 

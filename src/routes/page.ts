@@ -4,7 +4,11 @@ import { location } from 'svelte-spa-router'
 import { get } from 'svelte/store'
 
 export function getAbsoluteUrl(relative_url: string): URL {
-  if (!relative_url.startsWith('/#')) {
+  if (
+    relative_url !== '' &&
+    relative_url !== '/' &&
+    !relative_url.startsWith('/#')
+  ) {
     relative_url = '/#' + relative_url
   }
   return new URL(BASE_URL + relative_url, window.location.origin)

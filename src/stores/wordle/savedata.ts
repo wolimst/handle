@@ -8,7 +8,7 @@ export interface SaveStorage {
   [gameId: string]: SaveData
 }
 
-export interface SaveData extends Wordle.GameData {
+export interface SaveData extends Wordle.GameSaveData {
   lastUpdatedDateISOString: string
 }
 
@@ -19,6 +19,8 @@ const store = persistentStore('savedata', defaultStorage, encoder)
 
 export const savedata = {
   subscribe: store.subscribe,
+  export: store.export,
+  import: store.import,
   save: save,
   load: load,
   loadPrevious: loadPrevious,
@@ -29,31 +31,42 @@ export const savedata = {
 const DAY_MS = 24 * 60 * 60 * 1000
 const RETENTION_PERIOD_DAY = 8
 
+function convert(data: Wordle.GameData): Wordle.GameSaveData {
+  return {
+    id: data.id,
+    config: data.config,
+    guesses: data.guesses.map((guess) => ({
+      value: guess.value,
+      length: guess.length,
+    })),
+    status: data.status,
+  }
+}
+
 function save(data: Wordle.GameData) {
   store.update(removeOldData)
   store.update((storage: SaveStorage): SaveStorage => {
     storage[data.id] = {
-      ...data,
+      ...convert(data),
       lastUpdatedDateISOString: new Date().toISOString(),
     }
     return storage
   })
 }
 
-function load(gameId: string): Wordle.GameData | undefined {
+function load(gameId: string): Wordle.GameSaveData | undefined {
   const data = structuredClone(get(savedata)[gameId])
   if (!data) {
     return undefined
   } else {
-    const { lastUpdatedDateISOString, ...result } = data
-    return result
+    return data
   }
 }
 
 function loadNeighbor(
   gameData: Wordle.GameData,
   previous: boolean
-): Wordle.GameData | undefined {
+): Wordle.GameSaveData | undefined {
   const data = get(savedata)
   if (!data) {
     return undefined
@@ -83,15 +96,17 @@ function loadNeighbor(
   return neighborData
 }
 
-function loadPrevious(gameData: Wordle.GameData): Wordle.GameData | undefined {
+function loadPrevious(
+  gameData: Wordle.GameData
+): Wordle.GameSaveData | undefined {
   return loadNeighbor(gameData, true)
 }
 
-function loadNext(gameData: Wordle.GameData): Wordle.GameData | undefined {
+function loadNext(gameData: Wordle.GameData): Wordle.GameSaveData | undefined {
   return loadNeighbor(gameData, false)
 }
 
-function loadByConfigId(configId: string): Wordle.GameData[] {
+function loadByConfigId(configId: string): Wordle.GameSaveData[] {
   const data = get(savedata)
   if (!data) {
     return []
