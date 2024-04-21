@@ -70,7 +70,7 @@
 </script>
 
 <ClickButton on:click={handleClick}>
-  <ConfigIcon />
+  <ConfigIcon width={22} />
 </ClickButton>
 
 <Modal bind:open title="설정" widthCss="25rem" heightCss="30rem">

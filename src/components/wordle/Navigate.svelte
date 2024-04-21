@@ -24,11 +24,11 @@
   disabled={savedata.loadPrevious($game.data) === undefined}
   on:click={navigateBack}
 >
-  <ArrowLeftIcon />
+  <ArrowLeftIcon width={20} />
 </ClickButton>
 <ClickButton
   disabled={savedata.loadNext($game.data) === undefined}
   on:click={navigateForward}
 >
-  <ArrowRightIcon />
+  <ArrowRightIcon width={20} />
 </ClickButton>

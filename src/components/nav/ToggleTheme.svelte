@@ -11,8 +11,8 @@
 
 <ClickButton on:click={toggle}>
   {#if $config.darkTheme}
-    <ThemeLightIcon />
+    <ThemeLightIcon width={22} />
   {:else}
-    <ThemeDarkIcon />
+    <ThemeDarkIcon width={22} />
   {/if}
 </ClickButton>

@@ -1,7 +1,6 @@
 <script lang="ts">
   import Config from '@/components/nav/Config.svelte'
   import Help from '@/components/nav/Help.svelte'
-  import ToggleTheme from '@/components/nav/ToggleTheme.svelte'
   import LinkButton from '@/components/ui/core/LinkButton.svelte'
   import AppIcon from '@/components/ui/icons/App.svelte'
   import FontIcon from '@/components/ui/icons/Font.svelte'
@@ -17,24 +16,24 @@
 </script>
 
 <nav
-  class="tw-inline-flex tw-justify-between tw-gap-3 md:tw-gap-4 tw-w-full tw-h-[var(--nav-height)] tw-px-3 md:tw-px-6 tw-py-2 tw-border-b tw-border-solid tw-border-app-text-secondary"
+  class="tw-inline-flex tw-justify-between tw-gap-2 md:tw-gap-4 tw-w-full tw-h-[var(--nav-height)] tw-px-1.5 md:tw-px-6 tw-border-b tw-border-solid tw-border-app-text-secondary"
 >
-  <div class="tw-inline-flex tw-items-center tw-gap-3 md:tw-gap-4">
+  <div class="tw-inline-flex tw-items-center tw-gap-2 md:tw-gap-4">
     <LinkButton url={ROUTES.home} useRouter underline={false}>
-      <AppIcon width={32} />
+      <AppIcon width={30} />
 
-      <span class="tw-ml-2 tw-font-medium">
+      <span class="tw-ml-1.5 tw-font-medium tw-break-keep tw-leading-tight">
         {title}
       </span>
     </LinkButton>
   </div>
-  <div class="tw-inline-flex tw-items-center tw-gap-3 md:tw-gap-4">
+  <div class="tw-inline-flex tw-items-center tw-gap-2 md:tw-gap-4">
     {#if !PRODUCTION}
       <LinkButton url={ROUTES.fontViewer} useRouter>
-        <FontIcon />
+        <FontIcon width={18} />
       </LinkButton>
       <LinkButton url={ROUTES.wordViewer} useRouter>
-        <ListIcon />
+        <ListIcon width={18} />
       </LinkButton>
       <span>&nbsp;</span>
     {/if}
@@ -45,7 +44,6 @@
 
     <Share />
     <Statistics />
-    <ToggleTheme />
     <Config />
     <Help />
   </div>

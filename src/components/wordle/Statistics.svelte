@@ -172,7 +172,7 @@
 </script>
 
 <ClickButton on:click={toggleModal}>
-  <StatisticsIcon />
+  <StatisticsIcon width={22} />
 </ClickButton>
 
 <Modal bind:open={$open} title="통계" widthCss="25rem" on:open={onOpen}>

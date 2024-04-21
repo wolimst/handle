@@ -98,7 +98,7 @@
 </script>
 
 <ClickButton on:click={handleClick}>
-  <HelpIcon />
+  <HelpIcon width={22} />
 </ClickButton>
 
 <Modal bind:open title="어떻게 하나요?" widthCss="30rem" on:close={onClose}>
