@@ -218,6 +218,18 @@ export class Game {
 
     if (this.#config.useSave) {
       savedata.save(this.data)
+      if (isDailyBonusAvailable(this.data)) {
+        const bonusGameId = getDailyGameId(this.data.config)
+        if (bonusGameId !== this.data.id) {
+          savedata.save({
+            id: getDailyGameId(this.data.config),
+            config: this.data.config,
+            guesses: [],
+            status: 'playing',
+            wordleData: [],
+          })
+        }
+      }
     }
 
     if (this.status !== 'playing' && this.#config.useStatistics) {
@@ -304,13 +316,13 @@ function getDailyGameId(config: GameConfig): string {
   }
 }
 
-export function isDailyBonusAvailable(latestGame: GameData | GameSaveData) {
+export function isDailyBonusAvailable(currentGame: GameData | GameSaveData) {
   return (
-    latestGame.config.mode === 'daily' &&
-    latestGame.status === 'win' &&
-    latestGame.guesses.length <=
-      DAILY_BONUS_GUESS_COUNTS[latestGame.config.nWordles][
-        latestGame.config.answerLength
+    currentGame.config.mode === 'daily' &&
+    currentGame.status === 'win' &&
+    currentGame.guesses.length <=
+      DAILY_BONUS_GUESS_COUNTS[currentGame.config.nWordles][
+        currentGame.config.answerLength
       ]
   )
 }
