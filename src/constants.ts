@@ -119,9 +119,9 @@ export const N_WORDLES_PER_ROW = [NaN, 4, 4, 3, 2, 2] as const
  */
 export const DAILY_BONUS_GUESS_COUNTS: readonly (readonly number[])[] = [
   [],
+  [NaN, NaN, 3],
   [NaN, NaN, 4],
   [NaN, NaN, 5],
-  [NaN, NaN, 6],
 ] as const
 
 export const ALERT_DURATION_MS = 3000

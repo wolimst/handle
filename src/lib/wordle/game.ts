@@ -222,7 +222,7 @@ export class Game {
         const bonusGameId = getDailyGameId(this.data.config)
         if (bonusGameId !== this.data.id) {
           savedata.save({
-            id: getDailyGameId(this.data.config),
+            id: bonusGameId,
             config: this.data.config,
             guesses: [],
             status: 'playing',
