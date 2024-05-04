@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "net.wolim.handle",
+      "sha256_cert_fingerprints": [
+        "DB:D4:48:6C:8D:DB:CF:EC:8F:26:47:CE:C0:C7:91:17:8A:6E:81:E2:C8:3C:E2:2A:C7:74:81:E4:2F:9D:00:EC"
+      ]
+    }
+  }
+]
