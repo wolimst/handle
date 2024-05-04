@@ -1,0 +1,43 @@
+{
+  "packageId": "net.wolim.handle",
+  "host": "wolimst.github.io",
+  "name": "한들 - 모아쓰는 한글 워들",
+  "launcherName": "한들",
+  "display": "standalone",
+  "themeColor": "#292C34",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#292C34",
+  "enableNotifications": true,
+  "startUrl": "/handle/",
+  "iconUrl": "https://wolimst.github.io/handle/resources/icons/icon-512.png",
+  "maskableIconUrl": "https://wolimst.github.io/handle/resources/icons/icon-maskable-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/home/lim/prj/handle/android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "2",
+  "appVersionCode": 2,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://wolimst.github.io/handle/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://wolimst.github.io/handle/",
+  "minSdkVersion": 19,
+  "orientation": "any",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "appVersion": "2"
+}
