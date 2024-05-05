@@ -38,7 +38,7 @@
       <span>&nbsp;</span>
     {/if}
 
-    {#if $game && $game.active}
+    {#if $game && $game.active && $game.data.config.mode === 'daily'}
       <Navigate />
     {/if}
 
