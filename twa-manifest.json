@@ -11,7 +11,7 @@
   "navigationDividerColor": "#FFFFFF",
   "navigationDividerColorDark": "#292C34",
   "backgroundColor": "#292C34",
-  "enableNotifications": true,
+  "enableNotifications": false,
   "startUrl": "/handle/",
   "iconUrl": "https://wolimst.github.io/handle/resources/icons/icon-512.png",
   "maskableIconUrl": "https://wolimst.github.io/handle/resources/icons/icon-maskable-512.png",
@@ -21,7 +21,7 @@
     "alias": "android"
   },
   "appVersionName": "1.0.0",
-  "appVersionCode": 5,
+  "appVersionCode": 7,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://wolimst.github.io/handle/manifest.webmanifest",
@@ -35,7 +35,7 @@
   "isMetaQuest": false,
   "fullScopeUrl": "https://wolimst.github.io/handle/",
   "minSdkVersion": 19,
-  "orientation": "any",
+  "orientation": "default",
   "fingerprints": [
     {
       "value": "DB:D4:48:6C:8D:DB:CF:EC:8F:26:47:CE:C0:C7:91:17:8A:6E:81:E2:C8:3C:E2:2A:C7:74:81:E4:2F:9D:00:EC"
