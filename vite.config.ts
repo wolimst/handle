@@ -15,6 +15,10 @@ export default defineConfig({
         short_name: '한들',
         description:
           '모아쓰는 한글 워들. 한글 단어를 정해진 횟수 안에 맞춰보세요! 다양한 플레이 모드가 준비되어 있어요.',
+        categories: ['games'],
+        screenshots: [],
+        related_applications: [],
+        prefer_related_applications: true,
         lang: 'ko',
         theme_color: '#292c34',
         background_color: '#292c34',
