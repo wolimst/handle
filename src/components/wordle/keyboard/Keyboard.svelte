@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getKeyboardErrorMessage } from '../message'
   import { game, keyboard } from '../store'
-  import InputForm from './InputForm.svelte'
   import Key from './Key.svelte'
   import BackspaceIcon from '@/components/ui/icons/Backspace.svelte'
   import * as Hangul from '@/lib/hangul'
@@ -18,8 +17,6 @@
 
   const ENTER_KEY = 'Enter'
   const BACKSPACE_KEY = 'Backspace'
-
-  let isFormFocused = false
 
   function isJamoKey(key: string): key is Hangul.DubeolsikJamo {
     return Hangul.getCodePointLength(key) === 1 && Hangul.isHangulJamo(key)
@@ -47,10 +44,6 @@
   }
 
   function handleKeyboardInputOutsideForm(event: KeyboardEvent) {
-    if (isFormFocused) {
-      return
-    }
-
     const key: string =
       Hangul.ALPHABET_JAMO_MAP_DUBEOLSIK[event.key] || event.key
     onClick(key)
@@ -64,16 +57,6 @@
     document.removeEventListener('keydown', handleKeyboardInputOutsideForm)
   })
 </script>
-
-{#if $config.showInputForm}
-  <div class="tw-flex tw-flex-nowrap tw-justify-center tw-my-1.5 md:tw-my-3">
-    <InputForm
-      on:submit
-      on:focus={() => (isFormFocused = true)}
-      on:blur={() => (isFormFocused = false)}
-    />
-  </div>
-{/if}
 
 <div
   class="tw-flex tw-flex-nowrap tw-justify-center tw-gap-1.5 tw-my-1.5 md:tw-mt-3"

@@ -5,7 +5,6 @@ export interface Data {
 export interface Config {
   showHelpOnLaunch: boolean
   darkTheme: boolean
-  showInputForm: boolean
   switchEnterAndBackspacePosition: boolean
   isBeingUpdated: boolean
   useShorterBox: boolean

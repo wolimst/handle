@@ -1,3 +1,4 @@
+<!-- TODO: TO BE REMOVED - keyboard input form is deprecated -->
 <script lang="ts">
   import { getKeyboardErrorMessage } from '../message'
   import { game, keyboard } from '../store'

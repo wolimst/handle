@@ -78,7 +78,6 @@
     <Toggle checked={$config.darkTheme} on:toggle={config.toggleTheme}>
       다크 모드
     </Toggle>
-    <Toggle bind:checked={$config.showInputForm}>키보드 입력 상자 표시</Toggle>
     <Toggle bind:checked={$config.switchEnterAndBackspacePosition}>
       <Badge>입력</Badge> 과 <Badge>삭제</Badge> 키 위치 바꾸기
     </Toggle>
