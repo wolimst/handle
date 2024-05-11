@@ -24,6 +24,14 @@
   routes.set('*', PageNotFound)
 </script>
 
+{#if PRODUCTION}
+  <script
+    defer
+    src="https://static.cloudflareinsights.com/beacon.min.js"
+    data-cf-beacon={'{"token": "56ce7e917d004e3a99327438feb854f8"}'}
+  ></script>
+{/if}
+
 <Nav />
 
 <main
