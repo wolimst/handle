@@ -219,11 +219,12 @@
     class="tw-w-full tw-mt-4 tw-px-2 tw-inline-flex tw-flex-col tw-items-center"
   >
     <div class="tw-font-medium">추측 횟수 분포</div>
-    {#each { length: N_GUESSES[gameType.nWordles][gameType.answerLength] } as _, i}
-      {@const guess = stats.guesses[i + 1] || 0}
+    {#each { length: N_GUESSES[gameType.nWordles][gameType.answerLength] - gameType.nWordles + 1 } as _, i}
+      {@const n = i + gameType.nWordles}
+      {@const guess = stats.guesses[n] || 0}
       {@const percentage = (guess / maxGuess) * 100 || 0}
       <div class="tw-text-sm tw-w-full tw-mt-1 tw-inline-flex tw-items-center">
-        <div class="tw-w-6 tw-text-center tw-mr-1">{i + 1}</div>
+        <div class="tw-w-6 tw-text-center tw-mr-1">{n}</div>
         <div class="tw-w-full">
           <div
             class="tw-px-1 tw-text-right tw-text-gray-100 tw-rounded tw-bg-app-primary"
