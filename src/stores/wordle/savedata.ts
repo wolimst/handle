@@ -29,7 +29,7 @@ export const savedata = {
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000
-const RETENTION_PERIOD_DAY = 8
+const RETENTION_PERIOD_DAY = 31
 
 function convert(data: Wordle.GameData): Wordle.GameSaveData {
   return {
@@ -44,7 +44,6 @@ function convert(data: Wordle.GameData): Wordle.GameSaveData {
 }
 
 function save(data: Wordle.GameData) {
-  store.update(removeOldData)
   store.update((storage: SaveStorage): SaveStorage => {
     storage[data.id] = {
       ...convert(data),
@@ -55,6 +54,7 @@ function save(data: Wordle.GameData) {
 }
 
 function load(gameId: string): Wordle.GameSaveData | undefined {
+  store.update(removeOldData)
   const data = structuredClone(get(savedata)[gameId])
   if (!data) {
     return undefined
