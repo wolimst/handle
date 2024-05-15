@@ -16,7 +16,33 @@ export default defineConfig({
         description:
           '모아쓰는 한글 워들. 한글 단어를 정해진 횟수 안에 맞춰보세요! 다양한 플레이 모드가 준비되어 있어요.',
         categories: ['games'],
-        screenshots: [],
+        screenshots: [
+          {
+            src: './resources/images/wide-icon.png',
+            sizes: '1024x500',
+            type: 'image/png',
+          },
+          {
+            src: './resources/images/screenshot01.png',
+            sizes: '990x1760',
+            type: 'image/png',
+          },
+          {
+            src: './resources/images/screenshot02.png',
+            sizes: '990x1760',
+            type: 'image/png',
+          },
+          {
+            src: './resources/images/screenshot03.png',
+            sizes: '990x1760',
+            type: 'image/png',
+          },
+          {
+            src: './resources/images/screenshot04.png',
+            sizes: '990x1760',
+            type: 'image/png',
+          },
+        ],
         related_applications: [],
         prefer_related_applications: true,
         lang: 'ko',
