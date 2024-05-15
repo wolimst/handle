@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "net.wolim.handle",
       "sha256_cert_fingerprints": [
-        "DB:D4:48:6C:8D:DB:CF:EC:8F:26:47:CE:C0:C7:91:17:8A:6E:81:E2:C8:3C:E2:2A:C7:74:81:E4:2F:9D:00:EC"
+        "DB:D4:48:6C:8D:DB:CF:EC:8F:26:47:CE:C0:C7:91:17:8A:6E:81:E2:C8:3C:E2:2A:C7:74:81:E4:2F:9D:00:EC",
+        "65:DA:C2:E7:96:8B:BA:C0:1D:17:1C:D8:51:A3:24:AF:D2:E9:FB:C0:8F:42:FE:59:5A:47:D3:8F:D7:F4:1A:D2"
       ]
     }
   }
