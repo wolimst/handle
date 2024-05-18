@@ -114,7 +114,7 @@
   }
 </script>
 
-<div class="tw-max-w-sm tw-mx-auto tw-py-3">
+<div class="tw-max-w-sm tw-mx-auto tw-p-3">
   <div class="tw-w-full tw-text-center tw-mt-3">
     나만의 문제를 만들어 공유해보세요!
   </div>

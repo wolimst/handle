@@ -88,6 +88,10 @@ body.modal-open {
   position: fixed;
 }
 
+p {
+  margin-bottom: 0.7rem;
+}
+
 a {
   color: var(--anchor-text-color);
   text-decoration: none;

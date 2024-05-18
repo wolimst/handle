@@ -85,8 +85,8 @@
       미입력 상자를 작게 표시
     </Toggle>
     <div class="tw-w-full tw-inline-flex tw-justify-between">
-      데이터
-      <div class="tw-inline-flex tw-justify-between tw-gap-4">
+      <span>데이터 (Beta)</span>
+      <div class="tw-inline-flex tw-justify-between tw-gap-2">
         <Badge><ClickButton on:click={exportData}>내보내기</ClickButton></Badge>
         <Badge><ClickButton on:click={importData}>가져오기</ClickButton></Badge>
       </div>

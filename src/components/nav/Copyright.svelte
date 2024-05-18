@@ -49,7 +49,7 @@
     <a
       href="https://github.com/wolimst/handle"
       target="_blank"
-      class="tw-text-app-text-secondary tw-flex tw-gap-1"
+      class="tw-underline tw-underline-offset-1 tw-text-app-text-secondary tw-flex tw-gap-1"
     >
       <GitHubIcon width={16} /> GitHub
     </a>
