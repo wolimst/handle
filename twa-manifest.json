@@ -1,6 +1,6 @@
 {
   "packageId": "net.wolim.handle",
-  "host": "wolimst.github.io",
+  "host": "handle.wolim.net",
   "name": "한들 - 모아쓰는 한글 워들",
   "launcherName": "한들",
   "display": "standalone",
@@ -12,19 +12,20 @@
   "navigationDividerColorDark": "#292C34",
   "backgroundColor": "#292C34",
   "enableNotifications": false,
-  "startUrl": "/handle/",
-  "iconUrl": "https://wolimst.github.io/handle/resources/icons/icon-512.png",
-  "maskableIconUrl": "https://wolimst.github.io/handle/resources/icons/icon-maskable-512.png",
+  "startUrl": "/",
+  "iconUrl": "https://handle.wolim.net/resources/icons/icon-512.png",
+  "maskableIconUrl": "https://handle.wolim.net/resources/icons/icon-maskable-512.png",
+  "monochromeIconUrl": "https://handle.wolim.net/resources/icons/icon-monochrome-192.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "/home/lim/prj/handle/android.keystore",
     "alias": "android"
   },
   "appVersionName": "1.0.0",
-  "appVersionCode": 7,
+  "appVersionCode": 8,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://wolimst.github.io/handle/manifest.webmanifest",
+  "webManifestUrl": "https://handle.wolim.net/manifest.webmanifest",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -33,12 +34,15 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://wolimst.github.io/handle/",
+  "fullScopeUrl": "https://handle.wolim.net/",
   "minSdkVersion": 19,
   "orientation": "default",
   "fingerprints": [
     {
       "value": "DB:D4:48:6C:8D:DB:CF:EC:8F:26:47:CE:C0:C7:91:17:8A:6E:81:E2:C8:3C:E2:2A:C7:74:81:E4:2F:9D:00:EC"
+    },
+    {
+      "value": "65:DA:C2:E7:96:8B:BA:C0:1D:17:1C:D8:51:A3:24:AF:D2:E9:FB:C0:8F:42:FE:59:5A:47:D3:8F:D7:F4:1A:D2"
     }
   ],
   "additionalTrustedOrigins": [],

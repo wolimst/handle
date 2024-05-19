@@ -22,8 +22,8 @@ plugins {
 
 def twaManifest = [
     applicationId: 'net.wolim.handle',
-    hostName: 'wolimst.github.io', // The domain being opened in the TWA.
-    launchUrl: '/handle/', // The start path for the TWA. Must be relative to the domain.
+    hostName: 'handle.wolim.net', // The domain being opened in the TWA.
+    launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: '한들 - 모아쓰는 한글 워들', // The application name.
     launcherName: '한들', // The name shown on the Android Launcher.
     themeColor: '#FFFFFF', // The color used for the status bar.
@@ -56,7 +56,7 @@ android {
         applicationId "net.wolim.handle"
         minSdkVersion 19
         targetSdkVersion 33
-        versionCode 7
+        versionCode 8
         versionName "1.0.0"
 
         // The name for the application
@@ -73,12 +73,12 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://wolimst.github.io/handle/manifest.webmanifest'
+            resValue "string", "webManifestUrl", 'https://handle.wolim.net/manifest.webmanifest'
         
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://wolimst.github.io/handle/'
+            resValue "string", "fullScopeUrl", 'https://handle.wolim.net/'
         
 
         
