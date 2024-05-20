@@ -8,7 +8,6 @@ export const FONT: Font = {
   // with each other
   name: 'Binggrae',
   urls: [
-    // TODO: Add default CDN
     `${BASE_URL}/resources/fonts/Binggrae.otf`,
     'https://fonts.cdnfonts.com/s/18622/Binggrae.woff',
   ],
@@ -78,7 +77,6 @@ async function loadFont() {
 
   loading = true
   for (const url of FONT.urls) {
-    // TODO use cache when available?
     fontInstance = await opentype.load(url).catch(() => undefined)
     if (fontInstance) {
       break
