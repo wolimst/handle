@@ -3,13 +3,12 @@
   import Help from '@/components/nav/Help.svelte'
   import LinkButton from '@/components/ui/core/LinkButton.svelte'
   import AppIcon from '@/components/ui/icons/App.svelte'
-  import FontIcon from '@/components/ui/icons/Font.svelte'
-  import ListIcon from '@/components/ui/icons/List.svelte'
+  import ChatIcon from '@/components/ui/icons/Chat.svelte'
   import Navigate from '@/components/wordle/Navigate.svelte'
   import Share from '@/components/wordle/Share.svelte'
   import Statistics from '@/components/wordle/Statistics.svelte'
   import { game } from '@/components/wordle/store'
-  import { APP_NAME, PRODUCTION, ROUTES } from '@/constants'
+  import { APP_NAME, ROUTES } from '@/constants'
   import { getGameDescription } from '@/lib/wordle'
 
   $: title = $game && $game.active ? getGameDescription($game.data) : APP_NAME
@@ -28,16 +27,6 @@
     </LinkButton>
   </div>
   <div class="tw-inline-flex tw-items-center tw-gap-2 md:tw-gap-4">
-    {#if !PRODUCTION}
-      <LinkButton url={ROUTES.fontViewer} useRouter>
-        <FontIcon width={18} />
-      </LinkButton>
-      <LinkButton url={ROUTES.wordViewer} useRouter>
-        <ListIcon width={18} />
-      </LinkButton>
-      <span>&nbsp;</span>
-    {/if}
-
     {#if $game && $game.active && $game.data.config.mode === 'daily'}
       <Navigate />
     {/if}
@@ -46,5 +35,11 @@
     <Statistics />
     <Config />
     <Help />
+    <LinkButton url={ROUTES.notice} useRouter underline={false}>
+      <ChatIcon width={21} />
+      <div
+        class="tw-absolute tw-w-4 tw-h-[var(--nav-height)] tw-border-b-2 tw-border-b-app-primary"
+      />
+    </LinkButton>
   </div>
 </nav>

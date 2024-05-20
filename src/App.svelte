@@ -5,6 +5,7 @@
   import { PRODUCTION, ROUTES } from '@/constants'
   import FontViewer from '@/routes/FontViewer.svelte'
   import Home from '@/routes/Home.svelte'
+  import Notice from '@/routes/Notice.svelte'
   import WordViewer from '@/routes/WordViewer.svelte'
   import Wordle from '@/routes/Wordle.svelte'
   import WordleCustom from '@/routes/WordleCustom.svelte'
@@ -13,6 +14,7 @@
 
   const routes = new Map<string, unknown>()
   routes.set(ROUTES.home, Home)
+  routes.set(ROUTES.notice, Notice)
   if (!PRODUCTION) {
     routes.set(ROUTES.fontViewer, FontViewer)
     routes.set(ROUTES.wordViewer, WordViewer)

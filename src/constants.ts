@@ -75,6 +75,7 @@ export const GAMES = [
 
 export const ROUTES = {
   home: '/',
+  notice: '/notice',
   fontViewer: '/font',
   wordViewer: '/words',
   game: GAMES.map((game) => game.link),
