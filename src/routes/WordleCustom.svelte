@@ -1,5 +1,5 @@
 <script lang="ts">
-  import GameGenerator from './custom-game/CustomGameGenerator.svelte'
+  import CustomGameGenerator from './custom-game/CustomGameGenerator.svelte'
   import PageNotFound from '@/NotFound.svelte'
   import SpinnerIcon from '@/components/ui/icons/Spinner.svelte'
   import Game from '@/components/wordle/Game.svelte'
@@ -36,7 +36,8 @@
     initializeWordleStores(
       parseResult.config,
       parseResult.config.id,
-      parseResult.answers
+      parseResult.answers,
+      parseResult.guesses
     )
     pageStatus = 'success'
   }
@@ -60,5 +61,5 @@
     <PageNotFound />
   {/if}
 {:else}
-  <GameGenerator />
+  <CustomGameGenerator />
 {/if}

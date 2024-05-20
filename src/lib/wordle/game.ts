@@ -32,7 +32,8 @@ export class GameConfig {
     nWordles: number,
     answerLength: number,
     nGuesses: number,
-    useWordList: boolean
+    useWordList: boolean,
+    useSave?: boolean
   ) {
     this.id = id
     this.author = author
@@ -42,7 +43,9 @@ export class GameConfig {
     this.nGuesses = nGuesses
     this.useWordList = useWordList
     this.useSave =
-      GAME_MODES.find((gameMode) => gameMode.id === mode)?.useSave || false
+      useSave === undefined
+        ? GAME_MODES.find((gameMode) => gameMode.id === mode)?.useSave || false
+        : useSave
     this.useStatistics =
       GAME_MODES.find((gameMode) => gameMode.id === mode)?.useStatistics ||
       false
@@ -74,7 +77,8 @@ export class GameConfig {
     nWordles: number,
     answerLength: number,
     nGuesses: number,
-    useWordList: boolean
+    useWordList: boolean,
+    useSave: boolean
   ): GameConfig {
     const mode: GameMode = 'custom'
     return new GameConfig(
@@ -84,7 +88,8 @@ export class GameConfig {
       nWordles,
       answerLength,
       nGuesses,
-      useWordList
+      useWordList,
+      useSave
     )
   }
 }
@@ -107,12 +112,13 @@ export class Game {
   constructor(
     config: GameConfig,
     id: string,
-    answers?: readonly Hangul.Word[]
+    answers?: readonly Hangul.Word[],
+    guesses?: readonly Hangul.Word[]
   ) {
     this.#config = config
     this.#id = id
 
-    if (answers) {
+    if (answers && answers.length > 0) {
       if (answers.length !== config.nWordles) {
         throw new Error(
           'the number of answers are not equal to the number of wordles'
@@ -121,6 +127,16 @@ export class Game {
 
       if (answers.some((answer) => answer.length !== config.answerLength)) {
         throw new Error('answer lengths are not consistent')
+      }
+    }
+
+    if (guesses && guesses.length > 0) {
+      if (guesses.some((guess) => guess.length !== config.answerLength)) {
+        throw new Error('guess lengths are not consistent')
+      }
+
+      if (config.useSave) {
+        throw new Error('guesses should not be provided when useSave is true')
       }
     }
 
@@ -145,6 +161,10 @@ export class Game {
       } else {
         savedata.save(this.data)
       }
+    } else if (guesses && guesses.length > 0) {
+      guesses.forEach((guess) => {
+        this.#doSubmit(guess)
+      })
     }
   }
 

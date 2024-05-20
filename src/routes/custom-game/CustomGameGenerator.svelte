@@ -87,13 +87,17 @@
     }
 
     const ans = answers.slice(0, nWordles).map(Hangul.toWord)
+    const guesses: readonly Hangul.Word[] = []
+    const useSave = true
     const code = Wordle.generateCode(
       author,
       nWordles,
       answerLength,
       nGuesses,
       useWordList,
-      ans
+      useSave,
+      ans,
+      guesses
     )
 
     if (!code) {

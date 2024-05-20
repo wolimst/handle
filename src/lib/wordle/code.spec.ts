@@ -11,9 +11,10 @@ import {
   parseCode,
 } from './code'
 import { getRandomAnswer } from './words'
-import { toWord } from '@/lib/hangul'
+import * as Hangul from '@/lib/hangul'
 
-const MAX_CODE_LENGTH = 100
+// TODO: make code length shorter
+const MAX_CODE_LENGTH = 300
 
 describe('generate code and parse code for valid config', () => {
   test('lower boundary', () => {
@@ -22,18 +23,22 @@ describe('generate code and parse code for valid config', () => {
       nWordles: MIN_N_WORDLES,
       answerLength: MIN_WORD_LIST_ANSWER_LEN,
       nGuesses: MIN_N_GUESSES,
+      useSave: true,
       useWordList: true,
     } as const
     const answers = Array(config.nWordles).fill(
       getRandomAnswer(config.answerLength, 'seed')
-    )
+    ) as Hangul.Word[]
+    const guesses: Hangul.Word[] = []
     const code = generateCode(
       config.author,
       config.nWordles,
       config.answerLength,
       config.nGuesses,
+      config.useSave,
       config.useWordList,
-      answers
+      answers,
+      guesses
     )
     expect(code).not.toBeUndefined()
     expect(code!.length).toBeLessThanOrEqual(MAX_CODE_LENGTH)
@@ -51,18 +56,22 @@ describe('generate code and parse code for valid config', () => {
       nWordles: 2,
       answerLength: 2,
       nGuesses: 8,
+      useSave: false,
       useWordList: true,
     } as const
     const answers = Array(config.nWordles).fill(
       getRandomAnswer(config.answerLength, 'seed')
-    )
+    ) as Hangul.Word[]
+    const guesses = [Hangul.toWord('한들')]
     const code = generateCode(
       config.author,
       config.nWordles,
       config.answerLength,
       config.nGuesses,
+      config.useSave,
       config.useWordList,
-      answers
+      answers,
+      guesses
     )
     expect(code).not.toBeUndefined()
     expect(code!.length).toBeLessThanOrEqual(MAX_CODE_LENGTH)
@@ -80,18 +89,22 @@ describe('generate code and parse code for valid config', () => {
       nWordles: MAX_N_WORDLES,
       answerLength: MAX_WORD_LIST_ANSWER_LEN,
       nGuesses: MAX_N_GUESSES,
+      useSave: false,
       useWordList: true,
     } as const
     const answers = Array(config.nWordles).fill(
       getRandomAnswer(config.answerLength, 'seed')
-    )
+    ) as Hangul.Word[]
+    const guesses = [Hangul.toWord('하늘'), Hangul.toWord('우주'), ...answers]
     const code = generateCode(
       config.author,
       config.nWordles,
       config.answerLength,
       config.nGuesses,
+      config.useSave,
       config.useWordList,
-      answers
+      answers,
+      guesses
     )
     expect(code).not.toBeUndefined()
     expect(code!.length).toBeLessThanOrEqual(MAX_CODE_LENGTH)
@@ -111,18 +124,22 @@ describe('generate code and parse code for valid config', () => {
         nWordles: MIN_N_WORDLES,
         answerLength: answerLength,
         nGuesses: MIN_N_GUESSES,
+        useSave: true,
         useWordList: false,
       }
       const answers = Array(config.nWordles)
         .fill(Array(answerLength).fill('가').join(''))
-        .map(toWord)
+        .map(Hangul.toWord)
+      const guesses: Hangul.Word[] = []
       const code = generateCode(
         config.author,
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useSave,
         config.useWordList,
-        answers
+        answers,
+        guesses
       )
       expect(code).not.toBeUndefined()
       expect(code!.length).toBeLessThanOrEqual(MAX_CODE_LENGTH)
@@ -145,18 +162,22 @@ describe('generate code for invalid config', () => {
       nWordles: MIN_N_WORDLES,
       answerLength: MIN_WORD_LIST_ANSWER_LEN,
       nGuesses: MIN_N_GUESSES,
+      useSave: false,
       useWordList: true,
     }
     const answers = Array(config.nWordles).fill(
       getRandomAnswer(config.answerLength, 'seed')
-    )
+    ) as Hangul.Word[]
+    const guesses: Hangul.Word[] = []
     const code = generateCode(
       config.author,
       config.nWordles,
       config.answerLength,
       config.nGuesses,
+      config.useSave,
       config.useWordList,
-      answers
+      answers,
+      guesses
     )
     expect(code).toBeUndefined()
   })
@@ -169,18 +190,22 @@ describe('generate code for invalid config', () => {
         nWordles: nWordles,
         answerLength: MIN_WORD_LIST_ANSWER_LEN,
         nGuesses: MIN_N_GUESSES,
+        useSave: true,
         useWordList: true,
       }
       const answers = Array(config.nWordles).fill(
         getRandomAnswer(config.answerLength, 'seed')
-      )
+      ) as Hangul.Word[]
+      const guesses: Hangul.Word[] = []
       const code = generateCode(
         config.author,
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useSave,
         config.useWordList,
-        answers
+        answers,
+        guesses
       )
       expect(code).toBeUndefined()
     })
@@ -194,21 +219,22 @@ describe('generate code for invalid config', () => {
         nWordles: MIN_N_WORDLES,
         answerLength: answerLength,
         nGuesses: MIN_N_GUESSES,
+        useSave: true,
         useWordList: true,
-        answers: Array(MIN_N_WORDLES)
-          .fill(Array(answerLength).fill('가').join(''))
-          .map(toWord),
       }
       const answers = Array(config.nWordles)
         .fill(Array(answerLength).fill('가').join(''))
-        .map(toWord)
+        .map(Hangul.toWord)
+      const guesses: Hangul.Word[] = []
       const code = generateCode(
         config.author,
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useSave,
         config.useWordList,
-        answers
+        answers,
+        guesses
       )
       expect(code).toBeUndefined()
     })
@@ -222,18 +248,22 @@ describe('generate code for invalid config', () => {
         nWordles: MIN_N_WORDLES,
         answerLength: MIN_WORD_LIST_ANSWER_LEN,
         nGuesses: nGuesses,
+        useSave: true,
         useWordList: true,
       }
       const answers = Array(config.nWordles).fill(
         getRandomAnswer(config.answerLength, 'seed')
-      )
+      ) as Hangul.Word[]
+      const guesses: Hangul.Word[] = []
       const code = generateCode(
         config.author,
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useSave,
         config.useWordList,
-        answers
+        answers,
+        guesses
       )
       expect(code).toBeUndefined()
     })
@@ -247,18 +277,22 @@ describe('generate code for invalid config', () => {
         nWordles: MIN_N_WORDLES,
         answerLength: MIN_WORD_LIST_ANSWER_LEN,
         nGuesses: MIN_N_GUESSES,
+        useSave: true,
         useWordList: true,
       }
       const answers = Array(nAnswers).fill(
         getRandomAnswer(config.answerLength, 'seed')
-      )
+      ) as Hangul.Word[]
+      const guesses: Hangul.Word[] = []
       const code = generateCode(
         config.author,
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useSave,
         config.useWordList,
-        answers
+        answers,
+        guesses
       )
       expect(code).toBeUndefined()
     })
@@ -272,21 +306,22 @@ describe('generate code for invalid config', () => {
         nWordles: MIN_N_WORDLES,
         answerLength: MIN_WORD_LIST_ANSWER_LEN,
         nGuesses: MIN_N_GUESSES,
+        useSave: true,
         useWordList: true,
-        answers: Array(MIN_N_WORDLES)
-          .fill(Array(answerLength).fill('가').join(''))
-          .map(toWord),
       }
       const answers = Array(config.nWordles)
         .fill(Array(answerLength).fill('가').join(''))
-        .map(toWord)
+        .map(Hangul.toWord)
+      const guesses: Hangul.Word[] = []
       const code = generateCode(
         config.author,
         config.nWordles,
         config.answerLength,
         config.nGuesses,
+        config.useSave,
         config.useWordList,
-        answers
+        answers,
+        guesses
       )
       expect(code).toBeUndefined()
     })

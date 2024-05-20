@@ -35,9 +35,10 @@ export let ui: UIStore
 export function initializeWordleStores(
   config: Wordle.GameConfig,
   gameId: string,
-  answers?: readonly Word[]
+  answers?: readonly Word[],
+  guesses?: readonly Word[]
 ) {
-  const gameInstance = new Wordle.Game(config, gameId, answers)
+  const gameInstance = new Wordle.Game(config, gameId, answers, guesses)
   const keyboardInstance = gameInstance.keyboard
 
   game.set({

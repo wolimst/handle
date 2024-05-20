@@ -17,7 +17,8 @@ function validate(
   answerLength: number,
   nGuesses: number,
   useWordList: boolean,
-  answers: readonly Hangul.Word[]
+  answers: readonly Hangul.Word[],
+  guesses: readonly Hangul.Word[]
 ): boolean {
   const assertInteger = (n: number, min: number, max: number) => {
     return Number.isInteger(n) && min <= n && n <= max
@@ -44,6 +45,16 @@ function validate(
     return true
   }
 
+  const assertGuessesInWordList = (
+    guesses: readonly Hangul.Word[],
+    useWordList: boolean
+  ) => {
+    if (useWordList) {
+      return guesses.every((guess) => Wordle.isInWordList(guess.value))
+    }
+    return true
+  }
+
   return (
     MIN_AUTHOR_LEN <= author.length &&
     author.length <= MAX_AUTHOR_LEN &&
@@ -53,7 +64,10 @@ function validate(
     nWordles <= nGuesses &&
     answers.length === nWordles &&
     answers.every((ans) => ans.length === answerLength) &&
-    assertAnswersInWordList(answers, useWordList)
+    assertAnswersInWordList(answers, useWordList) &&
+    guesses.length <= nGuesses &&
+    guesses.every((guess) => guess.length === answerLength) &&
+    assertGuessesInWordList(guesses, useWordList)
   )
 }
 
@@ -67,11 +81,21 @@ export function generateCode(
   nWordles: number,
   answerLength: number,
   nGuesses: number,
+  useSave: boolean,
   useWordList: boolean,
-  answers: readonly Hangul.Word[]
+  answers: readonly Hangul.Word[],
+  guesses: readonly Hangul.Word[]
 ): string | undefined {
   if (
-    !validate(author, nWordles, answerLength, nGuesses, useWordList, answers)
+    !validate(
+      author,
+      nWordles,
+      answerLength,
+      nGuesses,
+      useWordList,
+      answers,
+      guesses
+    )
   ) {
     return undefined
   }
@@ -92,8 +116,16 @@ export function generateCode(
     value: useWordList,
     encoder: booleanEncoder,
   }
+  const useSaveToken: Token<boolean> = {
+    value: useSave,
+    encoder: booleanEncoder,
+  }
   const answerSyllableTokens: Token<Hangul.DubeolsikSyllable[]> = {
     value: answers.flatMap((answer) => answer.syllables),
+    encoder: syllablesEncoder,
+  }
+  const guessSyllableTokens: Token<Hangul.DubeolsikSyllable[]> = {
+    value: guesses.flatMap((answer) => answer.syllables),
     encoder: syllablesEncoder,
   }
 
@@ -103,7 +135,9 @@ export function generateCode(
       nWordlesToken,
       nGuessesToken,
       useWordListToken,
+      useSaveToken,
       answerSyllableTokens,
+      guessSyllableTokens,
     ]
       .map((token: Token<unknown>) => token.encoder.encode(token.value))
       .join('')
@@ -115,6 +149,7 @@ export function generateCode(
 interface CodeParseResult {
   readonly config: GameConfig
   readonly answers: readonly Hangul.Word[]
+  readonly guesses: readonly Hangul.Word[]
 }
 
 export function parseCode(code: string): CodeParseResult | undefined {
@@ -136,11 +171,27 @@ export function parseCode(code: string): CodeParseResult | undefined {
     value: true,
     encoder: booleanEncoder,
   }
+  const useSave: Token<boolean> = {
+    value: true,
+    encoder: booleanEncoder,
+  }
   const answerSyllables: Token<Hangul.DubeolsikSyllable[]> = {
     value: [],
     encoder: syllablesEncoder,
   }
-  const tokens = [author, nWordles, nGuesses, useWordList, answerSyllables]
+  const guessSyllables: Token<Hangul.DubeolsikSyllable[]> = {
+    value: [],
+    encoder: syllablesEncoder,
+  }
+  const tokens = [
+    author,
+    nWordles,
+    nGuesses,
+    useWordList,
+    useSave,
+    answerSyllables,
+    guessSyllables,
+  ]
 
   try {
     tokens.forEach((token) => {
@@ -162,13 +213,24 @@ export function parseCode(code: string): CodeParseResult | undefined {
     answers.push(Hangul.toWord(answer))
   }
 
+  const guessCounts = Math.floor(guessSyllables.value.length / answerLength)
+  const guesses = []
+  for (let i = 0; i < guessCounts; i++) {
+    const guess = guessSyllables.value
+      .slice(i * answerLength, (i + 1) * answerLength)
+      .map((syllable) => syllable.value)
+      .join('')
+    guesses.push(Hangul.toWord(guess))
+  }
+
   const config = GameConfig.getCustomGameConfig(
     code,
     author.value,
     nWordles.value,
     answerLength,
     nGuesses.value,
-    useWordList.value
+    useWordList.value,
+    useSave.value
   )
 
   return validate(
@@ -177,9 +239,10 @@ export function parseCode(code: string): CodeParseResult | undefined {
     config.answerLength,
     config.nGuesses,
     config.useWordList,
-    answers
+    answers,
+    guesses
   )
-    ? { config, answers }
+    ? { config, answers, guesses }
     : undefined
 }
 
