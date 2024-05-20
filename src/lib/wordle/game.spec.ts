@@ -63,23 +63,26 @@ describe('tests for GameConfig class', () => {
     const author = 'author'
     const mode: GameMode = 'custom'
     for (const useWordList of [true, false]) {
-      const gameConfig = GameConfig.getCustomGameConfig(
-        id,
-        author,
-        nWordles,
-        answerLength,
-        nGuesses,
-        useWordList
-      )
-      expect(gameConfig.id).toStrictEqual(id)
-      expect(gameConfig.author).toStrictEqual(author)
-      expect(gameConfig.mode).toStrictEqual(mode)
-      expect(gameConfig.nWordles).toStrictEqual(nWordles)
-      expect(gameConfig.answerLength).toStrictEqual(answerLength)
-      expect(gameConfig.nGuesses).toStrictEqual(nGuesses)
-      expect(gameConfig.useWordList).toStrictEqual(useWordList)
-      expect(gameConfig.useSave).toBeTruthy()
-      expect(gameConfig.useStatistics).toBeFalsy()
+      for (const useSave of [true, false]) {
+        const gameConfig = GameConfig.getCustomGameConfig(
+          id,
+          author,
+          nWordles,
+          answerLength,
+          nGuesses,
+          useWordList,
+          useSave
+        )
+        expect(gameConfig.id).toStrictEqual(id)
+        expect(gameConfig.author).toStrictEqual(author)
+        expect(gameConfig.mode).toStrictEqual(mode)
+        expect(gameConfig.nWordles).toStrictEqual(nWordles)
+        expect(gameConfig.answerLength).toStrictEqual(answerLength)
+        expect(gameConfig.nGuesses).toStrictEqual(nGuesses)
+        expect(gameConfig.useWordList).toStrictEqual(useWordList)
+        expect(gameConfig.useSave).toStrictEqual(useSave)
+        expect(gameConfig.useStatistics).toBeFalsy()
+      }
     }
   })
 })
