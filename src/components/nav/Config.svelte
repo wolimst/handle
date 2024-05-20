@@ -8,8 +8,8 @@
   import { share } from '@/lib/utils'
   import { getAbsoluteUrl } from '@/routes/page'
   import { config, notification } from '@/stores/app'
-  import { base64 } from '@/stores/encoder'
   import { savedata, statistics } from '@/stores/wordle'
+  import * as lzString from 'lz-string'
 
   let open = false
 
@@ -29,7 +29,7 @@
       savedata: savedata.export(),
       statistics: statistics.export(),
     }
-    const exportString = base64.encode(JSON.stringify(data, null, 2))
+    const exportString = lzString.compressToUTF16(JSON.stringify(data, null, 0))
     await share.copy(exportString)
   }
 
@@ -40,7 +40,7 @@
     }
     let parsedData: Data | undefined = undefined
     try {
-      parsedData = JSON.parse(base64.decode(data)) as Data
+      parsedData = JSON.parse(lzString.decompressFromUTF16(data)) as Data
       if (
         !parsedData ||
         !Object.prototype.hasOwnProperty.call(parsedData, 'config') ||

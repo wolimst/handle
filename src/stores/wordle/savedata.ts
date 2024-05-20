@@ -9,6 +9,7 @@ export interface SaveStorage {
 }
 
 export interface SaveData extends Wordle.GameSaveData {
+  firstGuessDateISOString?: string
   lastUpdatedDateISOString: string
 }
 
@@ -29,24 +30,28 @@ export const savedata = {
 }
 
 const DAY_MS = 24 * 60 * 60 * 1000
-const RETENTION_PERIOD_DAY = 31
+const RETENTION_PERIOD_DAY = 15
 
 function convert(data: Wordle.GameData): Wordle.GameSaveData {
+  const { guesses, wordleData, ...savedata } = data
   return {
-    id: data.id,
-    config: data.config,
+    ...savedata,
     guesses: data.guesses.map((guess) => ({
       value: guess.value,
       length: guess.length,
     })),
-    status: data.status,
   }
 }
 
 function save(data: Wordle.GameData) {
   store.update((storage: SaveStorage): SaveStorage => {
+    const firstGuessDateISOString =
+      data.guesses.length === 1
+        ? new Date().toISOString()
+        : storage[data.id]?.firstGuessDateISOString
     storage[data.id] = {
       ...convert(data),
+      firstGuessDateISOString,
       lastUpdatedDateISOString: new Date().toISOString(),
     }
     return storage
