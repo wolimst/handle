@@ -77,9 +77,12 @@
     <Guess guess={help} answerLength={2} />
     <span class="tw-font-bold">주신 분들</span>
   </div>
-  <p class="tw-mt-4">TBD</p>
+  <p class="tw-mt-4">
+    한울님, 새하얗고하얀님, 최고잘해님, 교토최고미남님, <br />
+    보향성님
+  </p>
 
-  <details class="tw-mt-10 tw-text-xs">
+  <details class="tw-mt-48 tw-text-xs">
     <summary class="tw-text-app-text-secondary">
       <span class="tw-cursor-pointer"> 서포트 / 기부하기 </span>
     </summary>
