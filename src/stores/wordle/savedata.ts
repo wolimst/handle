@@ -22,6 +22,7 @@ export const savedata = {
   subscribe: store.subscribe,
   export: store.export,
   import: store.import,
+  reset: store.reset,
   save: save,
   load: load,
   loadPrevious: loadPrevious,

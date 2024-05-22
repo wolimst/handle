@@ -64,11 +64,17 @@ export function persistentStore<T>(
     set(parsedData)
   }
 
+  const resetData = () => {
+    localStorage.setItem(key, encoder.encode(JSON.stringify(initial, null, 0)))
+    set(initial)
+  }
+
   return {
     subscribe,
     set: persistentSet,
     update: persistentUpdate,
     export: exportData,
     import: importData,
+    reset: resetData,
   }
 }

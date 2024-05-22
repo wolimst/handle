@@ -7,6 +7,7 @@ import { get, type Readable } from 'svelte/store'
 interface StatisticsStore extends Readable<StatisticsStorage> {
   export: () => string | undefined
   import: (encodedString: string) => void
+  reset: () => void
   getStats(gameType: string): Statistics
   update(gameData: Wordle.GameData): void
 }
@@ -35,6 +36,7 @@ export const statistics: StatisticsStore = {
   subscribe: store.subscribe,
   export: store.export,
   import: store.import,
+  reset: store.reset,
   getStats: getStats,
   update: update,
 }

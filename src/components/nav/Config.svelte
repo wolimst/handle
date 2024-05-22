@@ -12,9 +12,20 @@
   import * as lzString from 'lz-string'
 
   let open = false
+  let inputImportData = false
+  let importDataForm: HTMLFormElement
 
   function handleClick() {
     open = !open
+
+    if (open) {
+      closeImportDataForm()
+    }
+  }
+
+  function closeImportDataForm() {
+    inputImportData = false
+    importDataForm?.reset()
   }
 
   interface Data {
@@ -34,10 +45,11 @@
   }
 
   function importData() {
-    const data = prompt('가져올 데이터를 입력해주세요.')
+    const data = new FormData(importDataForm).get('importData')?.toString()
     if (!data) {
       return
     }
+
     let parsedData: Data | undefined = undefined
     try {
       parsedData = JSON.parse(lzString.decompressFromUTF16(data)) as Data
@@ -64,8 +76,23 @@
       parsedData.config && config.import(parsedData.config)
       parsedData.savedata && savedata.import(parsedData.savedata)
       parsedData.statistics && statistics.import(parsedData.statistics)
+
+      closeImportDataForm()
+      alert('데이터를 가져왔어요! 페이지를 새로고침 할게요.')
+      window.location.href = getAbsoluteUrl('/').href
     }
-    window.location.href = getAbsoluteUrl('/').href
+  }
+
+  function cleanData() {
+    const answer = confirm('정말로 데이터를 초기화할까요? 되돌릴 수 없어요.')
+    if (answer) {
+      config.reset()
+      savedata.reset()
+      statistics.reset()
+
+      alert('데이터를 초기화했어요! 페이지를 새로고침 할게요.')
+      window.location.href = getAbsoluteUrl('/').href
+    }
   }
 </script>
 
@@ -85,10 +112,37 @@
       미입력 상자를 작게 표시
     </Toggle>
     <div class="tw-w-full tw-inline-flex tw-justify-between">
-      <span>데이터 (Beta)</span>
+      <span>데이터</span>
       <div class="tw-inline-flex tw-justify-between tw-gap-2">
-        <Badge><ClickButton on:click={exportData}>내보내기</ClickButton></Badge>
-        <Badge><ClickButton on:click={importData}>가져오기</ClickButton></Badge>
+        {#if inputImportData}
+          <form
+            bind:this={importDataForm}
+            on:submit|preventDefault={importData}
+          >
+            <input
+              id="importData"
+              name="importData"
+              class="tw-w-28 tw-px-2 tw-text-app-text tw-bg-transparent tw-border tw-rounded-lg tw-border-app-text-secondary tw-shadow"
+              required
+            />
+            <button type="submit" class="btn">
+              <Badge>입력</Badge>
+            </button>
+            <button class="btn" on:click={closeImportDataForm}>
+              <Badge>취소</Badge>
+            </button>
+          </form>
+        {:else}
+          <Badge
+            ><ClickButton on:click={exportData}>내보내기</ClickButton></Badge
+          >
+          <Badge
+            ><ClickButton on:click={() => (inputImportData = true)}>
+              가져오기
+            </ClickButton></Badge
+          >
+          <Badge><ClickButton on:click={cleanData}>초기화</ClickButton></Badge>
+        {/if}
       </div>
     </div>
 

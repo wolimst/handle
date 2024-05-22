@@ -37,9 +37,6 @@
     <Help />
     <LinkButton url={ROUTES.notice} useRouter underline={false}>
       <ChatIcon width={21} />
-      <div
-        class="tw-absolute tw-w-4 tw-h-[var(--nav-height)] tw-border-b-2 tw-border-b-app-primary"
-      />
     </LinkButton>
   </div>
 </nav>
