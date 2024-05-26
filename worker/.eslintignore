@@ -15,6 +15,3 @@ yarn.lock
 svelte.config.js
 tailwind.config.cjs
 vite.config.ts
-
-# Ignore subproject
-/worker
