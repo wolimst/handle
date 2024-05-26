@@ -14,20 +14,28 @@
 
 <script lang="ts">
   import { game } from './store'
+  import { openShareModal } from './Share.svelte'
   import ClickButton from '@/components/ui/core/ClickButton.svelte'
   import LinkButton from '@/components/ui/core/LinkButton.svelte'
   import Modal from '@/components/ui/core/Modal.svelte'
   import Select, { type Option } from '@/components/ui/core/Select.svelte'
-  import ClipboardIcon from '@/components/ui/icons/Clipboard.svelte'
+  import ArrowRightCircleIcon from '@/components/ui/icons/ArrowRightCircle.svelte'
   import ClockIcon from '@/components/ui/icons/Clock.svelte'
   import RefreshIcon from '@/components/ui/icons/Refresh.svelte'
   import ShareIcon from '@/components/ui/icons/Share.svelte'
+  import SpinnerIcon from '@/components/ui/icons/Spinner.svelte'
   import StatisticsIcon from '@/components/ui/icons/Statistics.svelte'
   import { GAMES, GAME_MODES, N_GUESSES, WORDLE_NAMES } from '@/constants'
-  import { browser, share, time } from '@/lib/utils'
+  import { time } from '@/lib/utils'
   import * as Wordle from '@/lib/wordle'
   import { isInGamePage, refreshIfAlreadyInPage } from '@/routes/page'
-  import { defaultStats, savedata, statistics } from '@/stores/wordle'
+  import { notification } from '@/stores/app'
+  import {
+    defaultStats,
+    leaderboard,
+    savedata,
+    statistics,
+  } from '@/stores/wordle'
   import { onDestroy } from 'svelte'
   import { get } from 'svelte/store'
 
@@ -35,7 +43,9 @@
     $open = !$open
   }
 
-  interface GameModeOption extends Option {}
+  interface GameModeOption extends Option {
+    id: string | number
+  }
   interface GameTypeOption extends Option {
     nWordles: number
     answerLength: number
@@ -71,6 +81,8 @@
   let nextGameCountdownMillis = 0
   let countdownIntervalId: number
 
+  let refreshingLeaderboard = false
+
   function countdownByOneSecond() {
     nextGameCountdownMillis -= 1000
     if (nextGameCountdownMillis <= 0) {
@@ -98,12 +110,15 @@
     window.clearInterval(countdownIntervalId)
     nextGameCountdownMillis = 0
     if (gameMode.id === 'daily') {
+      if ($leaderboard.nextUpdateDate < new Date()) {
+        void refreshLeaderboard()
+      }
+
       const configId = Wordle.generateConfigId(
         gameMode.id as Wordle.GameMode,
         gameType.nWordles,
         gameType.answerLength
       )
-
       const data = savedata.loadByConfigId(configId).at(-1)
       if (
         data === undefined ||
@@ -116,6 +131,18 @@
       nextGameCountdownMillis = time.getMillisecondsToMidnightInKST()
       countdownIntervalId = window.setInterval(countdownByOneSecond, 1000)
     }
+  }
+
+  async function refreshLeaderboard() {
+    refreshingLeaderboard = true
+    const result = await leaderboard.refresh()
+    if (!result) {
+      $notification = {
+        type: 'error',
+        message: '오늘의 기록을 불러오지 못했어요.',
+      }
+    }
+    refreshingLeaderboard = false
   }
 
   function onOpen() {
@@ -134,17 +161,10 @@
     }
   }
 
-  function shareGameAsEmoji() {
-    const text = Wordle.getGameShareString(get(game).data)
-    void share.share({ text }).then(() => ($open = false))
-  }
-
-  function copyGameAsEmoji() {
-    const text = Wordle.getGameShareString(get(game).data)
-    void share.copy(text).then(() => ($open = false))
-  }
-
-  function getNextGameTypeString(): string {
+  function getNextGameTypeString(
+    gameMode: GameModeOption,
+    gameType: GameTypeOption
+  ): string {
     if (gameMode.id === 'daily') {
       const configId = Wordle.generateConfigId(
         gameMode.id as Wordle.GameMode,
@@ -204,12 +224,12 @@
       </div>
     </div>
     <div class="tw-grow tw-basis-0 tw-text-center">
-      <div class="tw-text-sm tw-whitespace-nowrap">연속 정답</div>
+      <div class="tw-text-sm tw-whitespace-nowrap">🔥연속</div>
       <div class="tw-text-2xl tw-font-bold">{stats.winStreak}</div>
     </div>
     <div class="tw-grow tw-basis-0 tw-text-center">
       <div class="tw-text-sm tw-tracking-tighter tw-whitespace-nowrap">
-        최다 연속 정답
+        최다 연속
       </div>
       <div class="tw-text-2xl tw-font-bold">{stats.maxWinStreak}</div>
     </div>
@@ -218,7 +238,7 @@
   <div
     class="tw-w-full tw-mt-4 tw-px-2 tw-inline-flex tw-flex-col tw-items-center"
   >
-    <div class="tw-font-medium">추측 횟수 분포</div>
+    <div class="tw-font-medium">✅추측 횟수 분포</div>
     {#each { length: N_GUESSES[gameType.nWordles][gameType.answerLength] - gameType.nWordles + 1 } as _, i}
       {@const n = i + gameType.nWordles}
       {@const guess = stats.guesses[n] || 0}
@@ -237,15 +257,70 @@
     {/each}
   </div>
 
+  {#if gameMode.id === 'daily'}
+    <div
+      class="tw-w-full tw-mt-4 tw-px-2 tw-inline-flex tw-flex-col tw-items-center"
+    >
+      {#if leaderboard}
+        {@const configId = Wordle.generateConfigId(
+          gameMode.id,
+          gameType.nWordles,
+          gameType.answerLength
+        )}
+        <div
+          class="tw-w-full tw-relative tw-inline-flex tw-items-center tw-justify-center"
+        >
+          <div class="tw-font-medium tw-m-auto">✨오늘의 기록</div>
+          <div
+            class="tw-absolute tw-right-0 tw-inline-flex tw-items-center tw-gap-1"
+          >
+            {#if refreshingLeaderboard}
+              <SpinnerIcon width={18} />
+            {/if}
+            <ClickButton on:click={refreshLeaderboard}>
+              <RefreshIcon width={18} />
+            </ClickButton>
+          </div>
+        </div>
+        {#if !$leaderboard.data[configId] || $leaderboard.data[configId].length === 0}
+          <div class="tw-text-sm tw-mt-1">첫 도전자가 되어보세요!</div>
+        {:else}
+          <div class="leaderboard tw-w-full tw-mt-1 tw-text-sm tw-gap-1">
+            {#each $leaderboard.data[configId] as item, i}
+              <div>
+                {#if i === 0}
+                  🥇
+                {:else if i === 1}
+                  🥈
+                {:else if i === 2}
+                  🥉
+                {/if}
+              </div>
+              <div class="tw-justify-self-start">
+                {item.user.name}
+              </div>
+              <div class="tw-ml-1">✅</div>
+              <div>{item.guesses.length}</div>
+              <div class="tw-ml-1">🔥</div>
+              <div>
+                {item.user.streak}
+              </div>
+            {/each}
+          </div>
+        {/if}
+      {/if}
+    </div>
+  {/if}
+
   {#if gameMode.id === 'daily' || gameMode.id === 'free'}
     <div
-      class="tw-mt-4 tw-w-full tw-inline-flex tw-justify-around tw-items-center"
+      class="tw-mt-5 tw-w-full tw-inline-flex tw-justify-around tw-items-center"
     >
       {#if nextGameCountdownMillis > 0}
         <div class="tw-inline-flex tw-items-center">
-          <ClockIcon width={22} />
+          <ClockIcon width={18} />
           <span class="tw-ml-1.5 tw-font-medium">다음 문제까지</span>
-          <span class="tw-ml-1 tw-font-medium tw-tabular-nums">
+          <span class="tw-ml-1 tw-font-medium tw-tabular-nums tw-text-sm">
             {time.millisecondsToHHMMSS(nextGameCountdownMillis)}
           </span>
         </div>
@@ -264,26 +339,34 @@
             path && refreshIfAlreadyInPage(path)
           }}
         >
-          <RefreshIcon width={22} />
+          <ArrowRightCircleIcon width={18} />
           <span class="tw-ml-1 tw-font-medium">
-            {getNextGameTypeString()} 문제 풀기
+            {getNextGameTypeString(gameMode, gameType)} 문제 풀기
           </span>
         </LinkButton>
       {/if}
 
       {#if isInGamePage()}
-        {#if browser.isMobileChromeOrSafari()}
-          <ClickButton on:click={shareGameAsEmoji}>
-            <ShareIcon width={22} />
-            <span class="tw-ml-1.5 tw-font-medium"> 결과 공유 </span>
-          </ClickButton>
-        {:else}
-          <ClickButton on:click={copyGameAsEmoji}>
-            <ClipboardIcon width={22} />
-            <span class="tw-ml-1.5 tw-font-medium"> 결과 복사 </span>
-          </ClickButton>
-        {/if}
+        <ClickButton
+          on:click={() => {
+            closeStatsModal()
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            openShareModal()
+          }}
+        >
+          <ShareIcon width={18} />
+          <span class="tw-ml-1.5 tw-font-medium"> 공유하기 </span>
+        </ClickButton>
       {/if}
     </div>
   {/if}
 </Modal>
+
+<style>
+  .leaderboard {
+    display: grid;
+    grid-template-columns:
+      max-content auto max-content max-content max-content
+      max-content;
+  }
+</style>

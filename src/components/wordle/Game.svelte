@@ -15,6 +15,7 @@
     WAIT_DURATION_TO_SHOW_STATS_MS,
   } from '@/constants'
   import { config, notification } from '@/stores/app'
+  import { leaderboard } from '@/stores/wordle'
 
   function assert() {
     if (game === undefined || keyboard === undefined || ui === undefined) {
@@ -23,6 +24,8 @@
   }
 
   function submitGuess() {
+    const statusBeforeSubmit = $game.data.status
+
     const guessError = $game.submitGuess()
 
     if ($game.data.status === 'win') {
@@ -44,6 +47,15 @@
       }
     }
 
+    if (
+      statusBeforeSubmit === 'playing' &&
+      $game.data.status === 'win' &&
+      $config.submitResult
+    ) {
+      // TODO?: handle submit error
+      void leaderboard.submitResult($game.data)
+    }
+
     if ($game.data.status !== 'playing') {
       if ($game.data.config.useStatistics) {
         // eslint-disable-next-line @typescript-eslint/no-implied-eval, @typescript-eslint/no-unsafe-argument
@@ -54,7 +66,7 @@
     if ($game.data.status === 'win') {
       const count = 200
       const defaults: confetti.Options = {
-        origin: { y: 0.85 },
+        origin: { y: 0.92 },
         gravity: 0.95,
         zIndex: 10001,
       }
@@ -125,9 +137,9 @@
       ) {
         window.setTimeout(fireFromLeft, 500)
         window.setTimeout(fireFromRight, 750)
-        window.setTimeout(fireFromLeft, 1450)
-        window.setTimeout(fireFromRight, 1450)
-        window.setTimeout(() => fireFromBottom(1.3), 1520)
+        window.setTimeout(fireFromLeft, 1445)
+        window.setTimeout(fireFromRight, 1445)
+        window.setTimeout(() => fireFromBottom(1.4), 1445)
       }
     }
   }

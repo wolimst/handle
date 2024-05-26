@@ -1,0 +1,9 @@
+name = "handle-worker"
+main = "./src/index.ts"
+compatibility_date = "2022-10-10"
+
+# Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
+# Docs: https://developers.cloudflare.com/workers/runtime-apis/kv
+[[kv_namespaces]]
+binding = "KV"
+id = "9e8cf86145ba4e73bdb3a1e63566ad15"

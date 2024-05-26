@@ -4,6 +4,7 @@ import type {
   GameMode,
   GameSaveData,
   GuessError,
+  Metadata,
   Status,
 } from './types'
 import { _Wordle } from './wordle'
@@ -97,6 +98,7 @@ export class GameConfig {
 export class Game {
   readonly #id: string
   readonly #config: GameConfig
+  readonly #metadata: Metadata
   readonly #wordles: readonly _Wordle[]
   readonly #keyboard: Keyboard
 
@@ -117,6 +119,11 @@ export class Game {
   ) {
     this.#config = config
     this.#id = id
+
+    this.#metadata = {
+      firstGuessDateISOString: new Date(0).toISOString(),
+      lastUpdatedDateISOString: new Date().toISOString(),
+    }
 
     if (answers && answers.length > 0) {
       if (answers.length !== config.nWordles) {
@@ -201,6 +208,7 @@ export class Game {
       status: this.status,
       guesses: structuredClone(this.#guesses),
       wordleData: this.#wordles.map((wordle) => wordle.data),
+      metadata: this.#metadata,
     }
   }
 
@@ -236,6 +244,12 @@ export class Game {
 
     this.#keyboard.setValue('')
 
+    this.#metadata.lastUpdatedDateISOString = new Date().toISOString()
+    if (this.#guesses.length === 1) {
+      this.#metadata.firstGuessDateISOString =
+        this.#metadata.lastUpdatedDateISOString
+    }
+
     if (this.#config.useSave) {
       savedata.save(this.data)
       if (isDailyBonusAvailable(this.data)) {
@@ -247,6 +261,10 @@ export class Game {
             guesses: [],
             status: 'playing',
             wordleData: [],
+            metadata: {
+              firstGuessDateISOString: new Date(0).toISOString(),
+              lastUpdatedDateISOString: new Date().toISOString(),
+            },
           })
         }
       }

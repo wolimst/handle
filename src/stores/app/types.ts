@@ -4,6 +4,9 @@ export interface Data {
 
 export interface Config {
   showHelpOnLaunch: boolean
+  userId: string
+  userName: string
+  submitResult: boolean
   darkTheme: boolean
   switchEnterAndBackspacePosition: boolean
   isBeingUpdated: boolean

@@ -26,11 +26,8 @@ export function persistentStore<T>(
     }
   }
 
-  if (!parsedData) {
-    localStorage.setItem(key, encoder.encode(JSON.stringify(initial, null, 0)))
-  }
-
-  const data = parsedData || initial
+  const data: T = structuredClone(Object.assign({}, initial, parsedData))
+  localStorage.setItem(key, encoder.encode(JSON.stringify(data, null, 0)))
 
   const { subscribe, set } = writable(data)
 

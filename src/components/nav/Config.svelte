@@ -12,6 +12,8 @@
   import * as lzString from 'lz-string'
 
   let open = false
+  let inputUsername = false
+  let usernameForm: HTMLFormElement
   let inputImportData = false
   let importDataForm: HTMLFormElement
 
@@ -19,11 +21,13 @@
     open = !open
 
     if (open) {
-      closeImportDataForm()
+      closeForms()
     }
   }
 
-  function closeImportDataForm() {
+  function closeForms() {
+    inputUsername = false
+    usernameForm?.reset()
     inputImportData = false
     importDataForm?.reset()
   }
@@ -42,6 +46,15 @@
     }
     const exportString = lzString.compressToUTF16(JSON.stringify(data, null, 0))
     await share.copy(exportString)
+  }
+
+  function updateUsername() {
+    const username = new FormData(usernameForm).get('username')?.toString()
+    if (!username) {
+      return
+    }
+    $config.userName = username
+    closeForms()
   }
 
   function importData() {
@@ -77,14 +90,14 @@
       parsedData.savedata && savedata.import(parsedData.savedata)
       parsedData.statistics && statistics.import(parsedData.statistics)
 
-      closeImportDataForm()
+      closeForms()
       alert('데이터를 가져왔어요! 페이지를 새로고침 할게요.')
       window.location.href = getAbsoluteUrl('/').href
     }
   }
 
   function cleanData() {
-    const answer = confirm('정말로 데이터를 초기화할까요? 되돌릴 수 없어요.')
+    const answer = confirm('정말로 데이터를 초기화할까요? 되돌릴 수 없어요!')
     if (answer) {
       config.reset()
       savedata.reset()
@@ -100,8 +113,44 @@
   <ConfigIcon width={22} />
 </ClickButton>
 
-<Modal bind:open title="설정" widthCss="25rem" heightCss="30rem">
+<Modal bind:open title="설정" widthCss="25rem" heightCss="32rem">
   <div class="tw-w-full tw-h-full tw-inline-flex tw-flex-col tw-gap-4">
+    <div class="tw-w-full tw-inline-flex tw-justify-between tw-gap-2">
+      <span>닉네임</span>
+      {#if inputUsername}
+        <form
+          bind:this={usernameForm}
+          on:submit|preventDefault={updateUsername}
+          class="tw-inline-flex tw-justify-between tw-gap-1"
+        >
+          <!-- svelte-ignore a11y-autofocus -->
+          <input
+            id="username"
+            name="username"
+            type="text"
+            class="tw-w-32 tw-px-2 tw-text-sm tw-text-app-text tw-bg-transparent tw-border tw-rounded-lg tw-border-app-text-secondary tw-shadow"
+            maxlength="8"
+            placeholder="8글자 이내"
+            autofocus
+            required
+          />
+          <button type="submit" class="btn">
+            <Badge>입력</Badge>
+          </button>
+          <button class="btn" on:click={closeForms}>
+            <Badge>취소</Badge>
+          </button>
+        </form>
+      {:else}
+        <span class="tw-grow"><Badge>{$config.userName}</Badge></span>
+        <div class="tw-inline-flex tw-justify-between tw-gap-1">
+          <ClickButton on:click={() => (inputUsername = true)}>
+            <Badge>변경</Badge>
+          </ClickButton>
+        </div>
+      {/if}
+    </div>
+    <Toggle checked={$config.submitResult}>오늘의 기록 송신</Toggle>
     <Toggle checked={$config.darkTheme} on:toggle={config.toggleTheme}>
       다크 모드
     </Toggle>
@@ -113,37 +162,39 @@
     </Toggle>
     <div class="tw-w-full tw-inline-flex tw-justify-between">
       <span>데이터</span>
-      <div class="tw-inline-flex tw-justify-between tw-gap-2">
-        {#if inputImportData}
-          <form
-            bind:this={importDataForm}
-            on:submit|preventDefault={importData}
-          >
-            <input
-              id="importData"
-              name="importData"
-              class="tw-w-28 tw-px-2 tw-text-app-text tw-bg-transparent tw-border tw-rounded-lg tw-border-app-text-secondary tw-shadow"
-              required
-            />
-            <button type="submit" class="btn">
-              <Badge>입력</Badge>
-            </button>
-            <button class="btn" on:click={closeImportDataForm}>
-              <Badge>취소</Badge>
-            </button>
-          </form>
-        {:else}
-          <Badge
-            ><ClickButton on:click={exportData}>내보내기</ClickButton></Badge
-          >
-          <Badge
-            ><ClickButton on:click={() => (inputImportData = true)}>
-              가져오기
-            </ClickButton></Badge
-          >
-          <Badge><ClickButton on:click={cleanData}>초기화</ClickButton></Badge>
-        {/if}
-      </div>
+      {#if inputImportData}
+        <form
+          bind:this={importDataForm}
+          on:submit|preventDefault={importData}
+          class="tw-inline-flex tw-justify-between tw-gap-1"
+        >
+          <!-- svelte-ignore a11y-autofocus -->
+          <input
+            id="importData"
+            name="importData"
+            type="text"
+            class="tw-w-28 tw-px-2 tw-text-sm tw-text-app-text tw-bg-transparent tw-border tw-rounded-lg tw-border-app-text-secondary tw-shadow"
+            autofocus
+            required
+          />
+          <button type="submit" class="btn">
+            <Badge>입력</Badge>
+          </button>
+          <button class="btn" on:click={closeForms}>
+            <Badge>취소</Badge>
+          </button>
+        </form>
+      {:else}
+        <div class="tw-inline-flex tw-justify-between tw-gap-1">
+          <ClickButton on:click={exportData}>
+            <Badge>내보내기</Badge>
+          </ClickButton>
+          <ClickButton on:click={() => (inputImportData = true)}>
+            <Badge>가져오기</Badge>
+          </ClickButton>
+          <ClickButton on:click={cleanData}><Badge>초기화</Badge></ClickButton>
+        </div>
+      {/if}
     </div>
 
     <div class="tw-mt-auto">
