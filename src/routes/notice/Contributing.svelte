@@ -81,30 +81,4 @@
     한울님, 새하얗고하얀님, 최고잘해님, 교토최고미남님, <br />
     보향성님
   </p>
-
-  <details class="tw-mt-48 tw-text-xs">
-    <summary class="tw-text-app-text-secondary">
-      <span class="tw-cursor-pointer"> 서포트 / 기부하기 </span>
-    </summary>
-
-    <p class="tw-mt-4">
-      관심을 가져주셔서 정말 감사드려요!🩷 <br />
-      하지만 한들에 대한 지원은 받고있지 않아요. <br />
-      혹시,
-      <a
-        href="https://www.effectivealtruism.org/"
-        target="_blank"
-        class="tw-underline tw-underline-offset-1 tw-text-app-text"
-      >
-        효과적 이타주의(Effective Altruism)</a
-      >에 관심이 생기신다면 <br />
-      <a
-        href="https://www.givewell.org/"
-        target="_blank"
-        class="tw-underline tw-underline-offset-1 tw-text-app-text"
-      >
-        GiveWell</a
-      > 등의 단체를 통해 기부를 해보시는 것은 어떠신가요?
-    </p>
-  </details>
 </div>

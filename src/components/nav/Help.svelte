@@ -152,17 +152,7 @@
 
   <ul class="tw-mt-0.5 tw-pl-4 tw-text-sm tw-leading-loose tw-list-disc">
     <li>
-      자모는
-      <a
-        href="https://ko.wikipedia.org/wiki/%EB%91%90%EB%B2%8C%EC%8B%9D_%EC%9E%90%ED%8C%90"
-        target="_blank"
-        class="tw-underline tw-underline-offset-1 tw-text-app-text"
-        >두벌식 키보드</a
-      >의 키 입력 횟수에 따라 구분되어요.
-    </li>
-    <li>
-      입력에 1개의 키만 필요한 자모,
-      <Badge>Shift</Badge> 키로 입력하는 쌍자음
+      쌍자음
       <Badge>ㄲ</Badge>
       <Badge>ㄸ</Badge>
       <Badge>ㅃ</Badge>
@@ -174,14 +164,14 @@
       은 하나의 문자로 취급해요.
     </li>
     <li>
-      입력에 2개의 키가 필요한
+      서로 다른 2개의 자모가 조합된
       <Badge>ㄳ</Badge>
       <Badge>ㄶ</Badge>
       <Badge>ㄺ</Badge>
       <Badge>ㅘ</Badge>
       <Badge>ㅝ</Badge>
       <Badge>ㅢ</Badge>
-      등의 자모는 2개의 개별 문자로 취급해요.
+      등은 2개의 자모를 개별 문자로 취급해요.
     </li>
   </ul>
 
