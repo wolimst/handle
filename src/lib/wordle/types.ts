@@ -48,12 +48,18 @@ export interface WordleData {
   readonly status: Status
 }
 
+export interface Metadata {
+  firstGuessDateISOString: string
+  lastUpdatedDateISOString: string
+}
+
 export interface GameData {
   readonly id: string
   readonly config: GameConfig
   readonly guesses: readonly Hangul.Word[]
   readonly status: Status
   readonly wordleData: readonly WordleData[]
+  readonly metadata: Metadata
 }
 
 export interface GameSaveData {
@@ -61,4 +67,26 @@ export interface GameSaveData {
   readonly config: GameConfig
   readonly guesses: readonly Omit<Hangul.Word, 'syllables'>[]
   readonly status: Status
+  readonly metadata: Metadata
+}
+
+export interface Leaderboard {
+  nextUpdateDate: Date
+  data: LeaderboardData
+}
+
+export interface LeaderboardData {
+  [key: string]: LeaderboardItem[]
+}
+
+export interface LeaderboardItem {
+  configId: string
+  gameId: string
+  user: {
+    id?: string
+    name: string
+    streak: number
+  }
+  guesses: string[]
+  duration: number
 }

@@ -5,12 +5,7 @@ import { persistentStore } from '@/stores/localStore'
 import { get } from 'svelte/store'
 
 export interface SaveStorage {
-  [gameId: string]: SaveData
-}
-
-export interface SaveData extends Wordle.GameSaveData {
-  firstGuessDateISOString?: string
-  lastUpdatedDateISOString: string
+  [gameId: string]: Wordle.GameSaveData
 }
 
 const defaultStorage: SaveStorage = {}
@@ -46,15 +41,7 @@ function convert(data: Wordle.GameData): Wordle.GameSaveData {
 
 function save(data: Wordle.GameData) {
   store.update((storage: SaveStorage): SaveStorage => {
-    const firstGuessDateISOString =
-      data.guesses.length === 1
-        ? new Date().toISOString()
-        : storage[data.id]?.firstGuessDateISOString
-    storage[data.id] = {
-      ...convert(data),
-      firstGuessDateISOString,
-      lastUpdatedDateISOString: new Date().toISOString(),
-    }
+    storage[data.id] = convert(data)
     return storage
   })
 }
@@ -96,10 +83,7 @@ function loadNeighbor(
   }
 
   const neighborDataId = sortedIds[index - 1]
-  const { lastUpdatedDateISOString, ...neighborData } = structuredClone(
-    data[neighborDataId]
-  )
-  return neighborData
+  return structuredClone(data[neighborDataId])
 }
 
 function loadPrevious(
@@ -121,21 +105,29 @@ function loadByConfigId(configId: string): Wordle.GameSaveData[] {
   const sortedIds = Object.keys(data)
     .filter((key) => key.startsWith(configId))
     .toSorted()
-  const result = sortedIds.map((id) => {
-    const { lastUpdatedDateISOString, ...result } = structuredClone(data[id])
-    return result
-  })
+  const result = sortedIds.map((id) => structuredClone(data[id]))
   return result
 }
 
 function removeOldData(storage: SaveStorage): SaveStorage {
   const now = new Date()
   const entries = Object.entries(storage).filter(([, data]) => {
-    const lastUpdated = new Date(data.lastUpdatedDateISOString)
+    const gameDate = data.metadata?.lastUpdatedDateISOString
+      ? new Date(data.metadata?.lastUpdatedDateISOString)
+      : getKSTDate(data.config)
     const dayDiff = Math.round(
-      Math.abs(now.getTime() - lastUpdated.getTime()) / DAY_MS
+      Math.abs(now.getTime() - gameDate.getTime()) / DAY_MS
     )
     return Number.isSafeInteger(dayDiff) && dayDiff < RETENTION_PERIOD_DAY
   })
   return Object.fromEntries(entries)
+}
+
+function getKSTDate(config: Wordle.GameConfig): Date {
+  if (config.mode !== 'daily') {
+    return new Date(0)
+  }
+  const [year, month, day] = config.id.split('-')[3].split('.')
+  const date = new Date(`20${year}-${month}-${day} GMT+0900`)
+  return date
 }

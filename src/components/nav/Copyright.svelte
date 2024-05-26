@@ -40,7 +40,7 @@
       class="tw-underline tw-underline-offset-1 tw-text-app-text-secondary"
     >
       우리말샘</a
-    >의 단어를 편집하여 제작하였습니다.
+    >을 활용하였습니다.
   </p>
 
   <p

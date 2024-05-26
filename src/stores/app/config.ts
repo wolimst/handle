@@ -2,9 +2,13 @@ import { notification } from './notification'
 import type { Config } from './types'
 import { persistentStore } from '@/stores/localStore'
 import { get } from 'svelte/store'
+import { v4 as uuidv4 } from 'uuid'
 
 const defaultConfig: Config = {
   showHelpOnLaunch: true,
+  submitResult: true,
+  userId: uuidv4(),
+  userName: '익명',
   darkTheme: window.matchMedia('(prefers-color-scheme: dark)').matches,
   switchEnterAndBackspacePosition: false,
   isBeingUpdated: false,

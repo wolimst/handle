@@ -4,6 +4,17 @@
 
 <div class="tw-max-w-sm tw-text-sm">
   <div class="tw-mb-8">
+    <p class="tw-text-sm">🔔 2024-05-26 업데이트</p>
+    <p>
+      <Badge>오늘의 문제</Badge> 의 랭킹을 <Badge>통계</Badge> 에서 확인할 수 있어요.
+    </p>
+    <p>
+      <Badge>설정</Badge> 에서
+      <Badge>닉네임</Badge> 과 <Badge>기록 송신 여부</Badge> 를 변경할 수 있어요.
+    </p>
+  </div>
+
+  <div class="tw-mb-8">
     <p class="tw-text-sm">🔔 2024-05-20 테스터 모집 중!</p>
     <p>
       안드로이드 어플 출시를 준비중입니다. <br />

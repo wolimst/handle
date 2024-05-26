@@ -1,3 +1,17 @@
+<script context="module" lang="ts">
+  import { writable } from 'svelte/store'
+
+  const open = writable(false)
+
+  export function openShareModal() {
+    open.set(true)
+  }
+
+  export function closeShareModal() {
+    open.set(false)
+  }
+</script>
+
 <script lang="ts">
   import ClickButton from '@/components/ui/core/ClickButton.svelte'
   import Modal from '@/components/ui/core/Modal.svelte'
@@ -21,14 +35,13 @@
     imageCopy: boolean
   }
 
-  let open = false
   let loading: Loading = {
     imageShare: false,
     imageCopy: false,
   }
 
   function toggleModal() {
-    open = !open
+    $open = !$open
   }
 
   function getDescription(): string {
@@ -45,14 +58,14 @@
       title: description,
       url: url.href,
     }
-    return share.share(data).then(() => (open = false))
+    return share.share(data).then(() => ($open = false))
   }
 
   function copyCurrentPage() {
     const description = getDescription()
     const url = getCurrentAbsoluteUrl()
     const text = `${description} ${url.href}`.trim()
-    return share.copy(text).then(() => (open = false))
+    return share.copy(text).then(() => ($open = false))
   }
 
   async function getGameAsBlob() {
@@ -78,12 +91,12 @@
 
   function shareGameAsEmoji() {
     const text = getGameShareString(get(game).data)
-    return share.share({ text }).then(() => (open = false))
+    return share.share({ text }).then(() => ($open = false))
   }
 
   function copyGameAsEmoji() {
     const text = getGameShareString(get(game).data)
-    return share.copy(text).then(() => (open = false))
+    return share.copy(text).then(() => ($open = false))
   }
 
   function shareGameAsImage() {
@@ -94,7 +107,7 @@
         url: url.href,
         files: [new File([blob], 'handle.png', { type: blob.type })],
       }
-      return share.share(data).then(() => (open = false))
+      return share.share(data).then(() => ($open = false))
     })
   }
 
@@ -103,7 +116,7 @@
       const clipboardItem = new ClipboardItem({
         [blob.type]: blob,
       })
-      return share.copy([clipboardItem]).then(() => (open = false))
+      return share.copy([clipboardItem]).then(() => ($open = false))
     })
   }
 
@@ -119,7 +132,7 @@
   <ShareIcon width={20} />
 </ClickButton>
 
-<Modal bind:open title="공유하기" widthCss="20rem">
+<Modal bind:open={$open} title="공유하기" widthCss="20rem">
   <div class="tw-w-full tw-h-full tw-inline-flex tw-flex-col tw-gap-8 tw-py-4">
     <div class="tw-inline-flex tw-justify-between tw-items-center">
       <span>이 페이지를 공유하기</span>

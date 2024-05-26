@@ -1,5 +1,5 @@
 import { Game, GameConfig, generateConfigId, getGameTypeString } from './game'
-import type { GameData, GameMode, GuessError, Status } from './types'
+import type { GameMode, GuessError, Status } from './types'
 import { GAME_MODES } from '@/constants'
 import { toWord } from '@/lib/hangul'
 
@@ -132,7 +132,7 @@ describe('tests for Game class', () => {
 
         expect(game.status).toStrictEqual(PLAYING)
         expect(game.answers).toBeUndefined()
-        expect(game.data).toStrictEqual<GameData>({
+        expect(game.data).toMatchObject({
           id: game.data.id,
           config: game.data.config,
           status: PLAYING,
@@ -181,6 +181,34 @@ describe('tests for Game class', () => {
         expect(() => {
           new Game(config, 'id', ['짧'].map(toWord))
         }).toThrowError()
+      })
+
+      test('check metadata after submitting a guess', () => {
+        const game = initGame(nWordles, nGuesses)
+
+        const date = new Date()
+
+        game.keyboard.setValue('하늘')
+        const guessError1 = game.submitGuess()
+        expect(guessError1).toBeUndefined()
+        expect(
+          new Date(game.data.metadata.firstGuessDateISOString)
+        ).greaterThanOrEqual(date)
+        expect(game.data.metadata.firstGuessDateISOString).toEqual(
+          game.data.metadata.lastUpdatedDateISOString
+        )
+        const firstGuessDateISOString =
+          game.data.metadata.firstGuessDateISOString
+
+        game.keyboard.setValue('인연')
+        const guessError2 = game.submitGuess()
+        expect(guessError2).toBeUndefined()
+        expect(game.data.metadata.firstGuessDateISOString).toEqual(
+          firstGuessDateISOString
+        )
+        expect(new Date(game.data.metadata.firstGuessDateISOString)).lessThan(
+          new Date(game.data.metadata.lastUpdatedDateISOString)
+        )
       })
     })
 

@@ -23,6 +23,10 @@
   }
 
   function onClick(key: string) {
+    if (!$keyboard.active) {
+      return
+    }
+
     if (key === ENTER_KEY) {
       dispatch('submit')
       return
