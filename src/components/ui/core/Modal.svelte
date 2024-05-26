@@ -1,6 +1,7 @@
 <script lang="ts">
   import ClickButton from '@/components/ui/core/ClickButton.svelte'
   import CloseIcon from '@/components/ui/icons/Close.svelte'
+  import { game, keyboard } from '@/components/wordle/store'
   import { createEventDispatcher } from 'svelte'
   import { fly } from 'svelte/transition'
 
@@ -20,12 +21,18 @@
   function onOpen() {
     document.body.classList.add('modal-open')
     dispatch('open')
+    if ($keyboard) {
+      $keyboard.active = false
+    }
   }
 
   function close() {
     open = false
     document.body.classList.remove('modal-open')
     dispatch('close')
+    if ($keyboard) {
+      $keyboard.active = $game ? $game.active : false
+    }
   }
 
   $: open && onOpen()
