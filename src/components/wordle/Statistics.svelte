@@ -19,13 +19,21 @@
   import LinkButton from '@/components/ui/core/LinkButton.svelte'
   import Modal from '@/components/ui/core/Modal.svelte'
   import Select, { type Option } from '@/components/ui/core/Select.svelte'
+  import ArrowLeftIcon from '@/components/ui/icons/ArrowLeft.svelte'
+  import ArrowRightIcon from '@/components/ui/icons/ArrowRight.svelte'
   import ArrowRightCircleIcon from '@/components/ui/icons/ArrowRightCircle.svelte'
   import ClockIcon from '@/components/ui/icons/Clock.svelte'
   import RefreshIcon from '@/components/ui/icons/Refresh.svelte'
   import ShareIcon from '@/components/ui/icons/Share.svelte'
   import SpinnerIcon from '@/components/ui/icons/Spinner.svelte'
   import StatisticsIcon from '@/components/ui/icons/Statistics.svelte'
-  import { GAMES, GAME_MODES, N_GUESSES, WORDLE_NAMES } from '@/constants'
+  import {
+    GAMES,
+    GAME_MODES,
+    N_GUESSES,
+    RETENTION_PERIOD_DAY,
+    WORDLE_NAMES,
+  } from '@/constants'
   import { time } from '@/lib/utils'
   import * as Wordle from '@/lib/wordle'
   import { isInGamePage, refreshIfAlreadyInPage } from '@/routes/page'
@@ -81,6 +89,7 @@
   let nextGameCountdownMillis = 0
   let countdownIntervalId: number
 
+  let leaderboardDate = time.getCurrentKSTDate()
   let refreshingLeaderboard = false
 
   function countdownByOneSecond() {
@@ -88,6 +97,14 @@
     if (nextGameCountdownMillis <= 0) {
       window.clearInterval(countdownIntervalId)
     }
+  }
+
+  function decreaseLeaderboardDate() {
+    leaderboardDate = new Date(leaderboardDate.getTime() - time.DAY_MS)
+  }
+
+  function increaseLeaderboardDate() {
+    leaderboardDate = new Date(leaderboardDate.getTime() + time.DAY_MS)
   }
 
   function updateStatistics() {
@@ -238,7 +255,9 @@
   <div
     class="tw-w-full tw-mt-4 tw-px-2 tw-inline-flex tw-flex-col tw-items-center"
   >
-    <div class="tw-font-medium">✅추측 횟수 분포</div>
+    <div class="tw-font-medium">
+      <span class="tw-mr-0.5">✅</span><span>추측 횟수 분포</span>
+    </div>
     {#each { length: N_GUESSES[gameType.nWordles][gameType.answerLength] - gameType.nWordles + 1 } as _, i}
       {@const n = i + gameType.nWordles}
       {@const guess = stats.guesses[n] || 0}
@@ -265,25 +284,56 @@
         {@const configId = Wordle.generateConfigId(
           gameMode.id,
           gameType.nWordles,
-          gameType.answerLength
+          gameType.answerLength,
+          leaderboardDate
         )}
         <div
-          class="tw-w-full tw-relative tw-inline-flex tw-items-center tw-justify-center"
+          class="tw-w-full tw-relative tw-inline-flex tw-items-center tw-justify-center tw-gap-1.5"
         >
-          <div class="tw-font-medium tw-m-auto">✨오늘의 기록</div>
+          <ClickButton
+            on:click={decreaseLeaderboardDate}
+            disabled={time.getCurrentKSTDate().getTime() -
+              leaderboardDate.getTime() >=
+              RETENTION_PERIOD_DAY * time.DAY_MS}
+          >
+            <ArrowLeftIcon width={16} />
+          </ClickButton>
+          <div class="tw-font-medium">
+            <span class="tw-mr-0.5">✨</span><span>
+              {#if leaderboardDate.getTime() !== time
+                  .getCurrentKSTDate()
+                  .getTime()}{`${leaderboardDate.getMonth() + 1}월${leaderboardDate.getDate()}일`}{:else}오늘{/if}의
+              기록</span
+            >
+          </div>
+          <ClickButton
+            on:click={increaseLeaderboardDate}
+            disabled={leaderboardDate.getTime() ===
+              time.getCurrentKSTDate().getTime()}
+          >
+            <ArrowRightIcon width={16} />
+          </ClickButton>
           <div
             class="tw-absolute tw-right-0 tw-inline-flex tw-items-center tw-gap-1"
           >
             {#if refreshingLeaderboard}
-              <SpinnerIcon width={18} />
+              <SpinnerIcon width={16} />
             {/if}
             <ClickButton on:click={refreshLeaderboard}>
-              <RefreshIcon width={18} />
+              <RefreshIcon width={16} />
             </ClickButton>
           </div>
         </div>
         {#if !$leaderboard.data[configId] || $leaderboard.data[configId].length === 0}
-          <div class="tw-text-sm tw-mt-1">첫 도전자가 되어보세요!</div>
+          <div class="tw-text-sm tw-mt-1">
+            {#if leaderboardDate.getTime() === time
+                .getCurrentKSTDate()
+                .getTime()}
+              첫 도전자가 되어보세요!
+            {:else}
+              앗, 플레이 기록이 없어요
+            {/if}
+          </div>
         {:else}
           <div class="leaderboard tw-w-full tw-mt-1 tw-text-sm tw-gap-1">
             {#each $leaderboard.data[configId] as item, i}

@@ -3,8 +3,8 @@ import { Router, cors, error } from 'itty-router'
 import { z } from 'zod'
 
 const LEADERBOARD_KEY = 'leaderboard'
-const LEADERBOARD_ITEM_MAX_LENGTH = 3
-const RETENTION_PERIOD_DAY = 7
+const LEADERBOARD_ITEM_MAX_LENGTH = 5
+const RETENTION_PERIOD_DAY = 15
 const DAY_MS = 24 * 60 * 60 * 1000
 
 function validate(obj: unknown): obj is LeaderboardItem {

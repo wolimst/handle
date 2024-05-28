@@ -296,14 +296,15 @@ export function getGameTypeString(
 export function generateConfigId(
   mode: GameMode,
   nWordles: number,
-  answerLength: number
+  answerLength: number,
+  date?: Date
 ): string {
   const gameType = getGameTypeString(mode, nWordles, answerLength)
 
   switch (mode) {
     case 'daily': {
-      const date = time.getShortDateStringInKST()
-      return `${gameType}-${date}`
+      const dateString = time.getShortDateStringInKST(date)
+      return `${gameType}-${dateString}`
     }
     case 'free': {
       const n = Math.floor(Math.random() * 2 ** 32)

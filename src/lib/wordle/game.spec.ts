@@ -497,6 +497,11 @@ describe('tests for generateConfigId()', () => {
       const id1 = generateConfigId('daily', nWordles, answerLength)
       const id2 = generateConfigId('daily', nWordles, answerLength)
       expect(id1).toStrictEqual(id2)
+
+      const date = new Date()
+      const id3 = generateConfigId('daily', nWordles, answerLength, date)
+      const id4 = generateConfigId('daily', nWordles, answerLength, date)
+      expect(id3).toStrictEqual(id4)
     })
 
     it('should return different ids if the date is changed', () => {
@@ -505,6 +510,21 @@ describe('tests for generateConfigId()', () => {
       vi.useFakeTimers().setSystemTime(new Date().setUTCHours(24))
       const id2 = generateConfigId('daily', nWordles, answerLength)
       expect(id1).not.toStrictEqual(id2)
+
+      const date1 = new Date()
+      date1.setUTCHours(0)
+      const date2 = new Date()
+      date2.setUTCHours(24)
+      const id3 = generateConfigId('daily', nWordles, answerLength, date1)
+      const id4 = generateConfigId('daily', nWordles, answerLength, date2)
+      expect(id3).not.toStrictEqual(id4)
+    })
+
+    it('should return same ids when the date is not changed', () => {
+      vi.useFakeTimers().setSystemTime(new Date().setUTCHours(0))
+      const id1 = generateConfigId('daily', nWordles, answerLength)
+      const id2 = generateConfigId('daily', nWordles, answerLength)
+      expect(id1).toStrictEqual(id2)
     })
   })
 

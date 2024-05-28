@@ -130,6 +130,8 @@ export const WAIT_DURATION_TO_SHOW_STATS_MS = 1500
 
 export const DOM_ID_GAME_CONTAINER = 'game-container'
 
+export const RETENTION_PERIOD_DAY = 15
+
 export const WORKER_URL_GET_LEADERBOARD =
   'https://api.handle.wolim.net/leaderboard'
 export const WORKER_URL_POST_RESULT = 'https://api.handle.wolim.net/result'

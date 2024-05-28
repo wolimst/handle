@@ -1,4 +1,5 @@
-import { PRODUCTION } from '@/constants'
+import { PRODUCTION, RETENTION_PERIOD_DAY } from '@/constants'
+import { time } from '@/lib/utils'
 import * as Wordle from '@/lib/wordle'
 import { base64, plaintext } from '@/stores/encoder'
 import { persistentStore } from '@/stores/localStore'
@@ -24,9 +25,6 @@ export const savedata = {
   loadNext: loadNext,
   loadByConfigId: loadByConfigId,
 }
-
-const DAY_MS = 24 * 60 * 60 * 1000
-const RETENTION_PERIOD_DAY = 15
 
 function convert(data: Wordle.GameData): Wordle.GameSaveData {
   const { guesses, wordleData, ...savedata } = data
@@ -116,7 +114,7 @@ function removeOldData(storage: SaveStorage): SaveStorage {
       ? new Date(data.metadata?.lastUpdatedDateISOString)
       : getKSTDate(data.config)
     const dayDiff = Math.round(
-      Math.abs(now.getTime() - gameDate.getTime()) / DAY_MS
+      Math.abs(now.getTime() - gameDate.getTime()) / time.DAY_MS
     )
     return Number.isSafeInteger(dayDiff) && dayDiff < RETENTION_PERIOD_DAY
   })

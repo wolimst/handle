@@ -1,7 +1,8 @@
-const KST_OFFSET_HOURS = -9
-const SECOND_MS = 1_000
-const MINUTE_MS = 60_000
-const HOUR_MS = 3_600_000
+export const KST_OFFSET_HOURS = -9
+export const SECOND_MS = 1_000
+export const MINUTE_MS = SECOND_MS * 60
+export const HOUR_MS = MINUTE_MS * 60
+export const DAY_MS = HOUR_MS * 24
 
 export function getMillisecondsToMidnightInKST(): number {
   const midnight = new Date().setUTCHours(24 + KST_OFFSET_HOURS, 0, 0, 0)
@@ -19,8 +20,17 @@ export function millisecondsToHHMMSS(milliseconds: number): string {
   return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
 }
 
-export function getShortDateStringInKST(): string {
-  return new Date()
+export function getCurrentKSTDate(): Date {
+  return new Date(
+    new Date().toLocaleDateString('ko', {
+      timeZone: 'Asia/Seoul',
+    }) + ' GMT+0900'
+  )
+}
+
+export function getShortDateStringInKST(date?: Date): string {
+  const _date = date || new Date()
+  return _date
     .toLocaleDateString('ko', {
       timeZone: 'Asia/Seoul',
       year: '2-digit',
