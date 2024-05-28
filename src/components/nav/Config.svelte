@@ -150,7 +150,7 @@
         </div>
       {/if}
     </div>
-    <Toggle checked={$config.submitResult}>오늘의 기록 송신</Toggle>
+    <Toggle bind:checked={$config.submitResult}>오늘의 기록 송신</Toggle>
     <Toggle checked={$config.darkTheme} on:toggle={config.toggleTheme}>
       다크 모드
     </Toggle>
