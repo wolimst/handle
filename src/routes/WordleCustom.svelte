@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CustomGameGenerator from './custom-game/CustomGameGenerator.svelte'
+  import CustomGameGenerator from './CustomGameGenerator.svelte'
   import PageNotFound from '@/NotFound.svelte'
   import SpinnerIcon from '@/components/ui/icons/Spinner.svelte'
   import Game from '@/components/wordle/Game.svelte'

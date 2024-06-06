@@ -16,10 +16,10 @@
 </script>
 
 <div
-  class="tw-container tw-min-h-full tw-mx-auto tw-p-3 tw-flex tw-flex-col tw-flex-nowrap tw-items-center"
+  class="tw-max-w-sm tw-min-h-full tw-mx-auto tw-p-3 tw-flex tw-flex-col tw-flex-nowrap tw-items-center"
 >
   <div
-    class="tw-mx-auto tw-mb-6 tw-inline-flex tw-justify-center tw-gap-8 tw-px-4 tw-border-b tw-border-app-text-secondary md:tw-text-lg tw-font-medium"
+    class="tw-w-full tw-mb-6 tw-inline-flex tw-justify-evenly tw-gap-2 tw-border-b tw-border-app-text-secondary md:tw-text-lg tw-font-medium"
   >
     {#each menus as menu}
       <ClickButton on:click={() => ($selected = menu)}>

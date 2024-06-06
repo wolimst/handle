@@ -118,17 +118,17 @@
   }
 </script>
 
-<div class="tw-max-w-sm tw-mx-auto tw-p-3">
-  <div class="tw-w-full tw-text-center tw-mt-3">
+<div class="tw-max-w-sm tw-mx-auto">
+  <div class="tw-w-full tw-text-center tw-mb-5">
     나만의 문제를 만들어 공유해보세요!
   </div>
 
   <form
     bind:this={formElement}
     on:submit|preventDefault={submit}
-    class="tw-flex tw-flex-col tw-gap-3 tw-mt-5"
+    class="tw-flex tw-flex-col tw-gap-3"
   >
-    <div class="">
+    <div>
       <label for="author" class="tw-block tw-mb-2 tw-font-medium">
         출제자
       </label>
@@ -144,7 +144,7 @@
       />
     </div>
 
-    <div class="">
+    <div>
       <label for="nWordles" class="tw-block tw-mb-2 tw-font-medium">
         워들 수
       </label>
@@ -161,7 +161,7 @@
       />
     </div>
 
-    <div class="">
+    <div>
       <label for="nGuesses" class="tw-block tw-mb-2 tw-font-medium">
         추측 횟수
       </label>
@@ -181,7 +181,7 @@
       />
     </div>
 
-    <div class="">
+    <div>
       <label for="answerLength" class="tw-block tw-mb-2 tw-font-medium">
         정답 글자 수
       </label>
@@ -202,7 +202,7 @@
     </div>
 
     {#each { length: Math.min(Math.max(nWordles, 1), Wordle.MAX_N_WORDLES) || 1 } as _, i}
-      <div class="">
+      <div>
         <label for="answers" class="tw-block tw-mb-2 tw-font-medium">
           정답 {i + 1}
         </label>

@@ -6,7 +6,6 @@
 </script>
 
 <script lang="ts">
-  import CustomTab from './custom-game/CustomTab.svelte'
   import Badge from '@/components/ui/core/Badge.svelte'
   import ClickButton from '@/components/ui/core/ClickButton.svelte'
   import LinkButton from '@/components/ui/core/LinkButton.svelte'
@@ -14,10 +13,11 @@
   import Wordle2Icon from '@/components/ui/icons/Wordle2.svelte'
   import Wordle3Icon from '@/components/ui/icons/Wordle3.svelte'
   import { GAMES, GAME_MODES } from '@/constants'
+  import CustomGameGenerator from '@/routes/CustomGameGenerator.svelte'
 
   const icons = [undefined, Wordle1Icon, Wordle2Icon, Wordle3Icon] as const
 
-  const descriptions = [
+  const gameDescriptions = [
     'invalid',
     '일반적인 워들 게임입니다.',
     '워들 2문제를 동시에 풀어보세요.',
@@ -25,40 +25,42 @@
   ] as const
 </script>
 
-<div class="tw-container tw-mx-auto tw-py-3">
+<div
+  class="tw-max-w-sm tw-min-h-full tw-mx-auto tw-p-3 tw-flex tw-flex-col tw-flex-nowrap tw-items-center"
+>
   <div
-    class="tw-flex tw-flex-nowrap tw-justify-center tw-text-lg tw-font-medium"
+    class="tw-w-full tw-mb-6 tw-inline-flex tw-justify-evenly tw-gap-2 tw-border-b tw-border-app-text-secondary md:tw-text-lg tw-font-medium"
   >
-    <div
-      class="tw-inline-flex tw-gap-8 tw-px-2 tw-border-b tw-border-app-text-secondary"
-    >
-      {#each GAME_MODES as mode}
-        <ClickButton
-          on:click={() => ($gameMode = mode.id)}
-          disabled={mode.disabled}
-        >
-          <div class="tab-button" class:selected={$gameMode === mode.id}>
-            {mode.name}
-          </div>
-        </ClickButton>
-      {/each}
-    </div>
+    {#each GAME_MODES as mode}
+      <ClickButton
+        on:click={() => ($gameMode = mode.id)}
+        disabled={mode.disabled}
+      >
+        <div class="tab-button" class:selected={$gameMode === mode.id}>
+          {mode.name}
+        </div>
+      </ClickButton>
+    {/each}
   </div>
 
   {#if $gameMode === 'custom'}
-    <CustomTab />
+    <CustomGameGenerator />
   {:else}
-    <div
-      class="tw-mt-6 tw-flex tw-flex-wrap tw-justify-center tw-items-stretch tw-gap-3"
-    >
+    <div class="tw-w-full tw-flex tw-flex-col tw-gap-3">
       {#each GAMES.filter((game) => game.mode === $gameMode) as game}
         <LinkButton url={game.link} useRouter underline={false}>
-          <div class="card tw-shadow-md">
-            <div class="tw-inline-flex tw-items-end tw-gap-2 tw-mb-4">
-              <svelte:component this={icons[game.nWordles]} />
-              <Badge rounded="lg">{game.answerLength}글자</Badge>
+          <div
+            class="tw-w-full tw-px-2.5 tw-py-5 tw-flex tw-gap-1.5 tw-border tw-border-app-text-secondary tw-rounded-lg tw-shadow-md"
+          >
+            <svelte:component this={icons[game.nWordles]} />
+            <div
+              class="tw-flex tw-flex-col tw-justify-evenly tw-items-start tw-gap-1"
+            >
+              <Badge>{game.answerLength}글자</Badge>
+              <span class="tw-text-sm tw-break-keep"
+                >{gameDescriptions[game.nWordles]}</span
+              >
             </div>
-            <span class="tw-text-sm">{descriptions[game.nWordles]}</span>
           </div>
         </LinkButton>
       {/each}
@@ -79,20 +81,5 @@
 
   .tab-button.selected {
     border-color: var(--primary-color);
-  }
-
-  .card {
-    max-width: 13rem;
-    height: 100%;
-
-    overflow: hidden;
-    padding: 1.4rem;
-
-    text-align: left;
-    word-break: keep-all;
-
-    border: 1px solid;
-    border-color: var(--text-color-secondary);
-    border-radius: 0.5rem;
   }
 </style>

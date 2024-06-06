@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let widthPerSyllable: number = 48
-  export let gapRem: number = 0.125
+  export let widthPerSyllable: number = 52
+  export let gapRem: number = 0.2
 </script>
 
 <div class="tw-inline-flex tw-justify-center" style:gap={`${gapRem}rem`}>
