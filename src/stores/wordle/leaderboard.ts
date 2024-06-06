@@ -1,7 +1,6 @@
 import { WORKER_URL_GET_LEADERBOARD, WORKER_URL_POST_RESULT } from '@/constants'
 import * as Wordle from '@/lib/wordle'
 import { config } from '@/stores/app'
-import { statistics } from '@/stores/wordle'
 import { get, writable } from 'svelte/store'
 
 const store = writable<Wordle.Leaderboard>({
@@ -48,20 +47,12 @@ function createLeaderboardItem(
 ): Wordle.LeaderboardItem {
   const { userId, userName } = get(config)
 
-  const gameTypeString = Wordle.getGameTypeString(
-    gameData.config.mode,
-    gameData.config.nWordles,
-    gameData.config.answerLength
-  )
-  const streak = statistics.getStats(gameTypeString).winStreak
-
   return {
     configId: gameData.config.id,
     gameId: gameData.id,
     user: {
       id: userId,
       name: userName,
-      streak,
     },
     guesses: gameData.guesses.map((guess) => guess.value),
     duration:

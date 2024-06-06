@@ -15,7 +15,6 @@ function validate(obj: unknown): obj is LeaderboardItem {
       user: z.object({
         id: z.string(),
         name: z.string().max(8),
-        streak: z.number().min(0).safe(),
       }),
       guesses: z.array(z.string()),
       duration: z.number().min(0).safe(),
@@ -83,7 +82,6 @@ function removeUserId(leaderboard: Leaderboard): Leaderboard {
         ...item,
         user: {
           name: item.user.name,
-          streak: item.user.streak,
         },
       })),
     ])
@@ -91,7 +89,11 @@ function removeUserId(leaderboard: Leaderboard): Leaderboard {
 }
 
 const { preflight, corsify } = cors({
-  origin: ['https://handle.wolim.net', 'https://wolimst.github.io'],
+  origin: [
+    'https://handle.wolim.net',
+    'https://wolimst.github.io',
+    'http://localhost:8080',
+  ],
   credentials: true,
 })
 

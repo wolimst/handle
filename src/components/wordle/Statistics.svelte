@@ -194,7 +194,7 @@
         dailyGames.length > 1 ||
         (latestGame && Wordle.isDailyBonusAvailable(latestGame))
       ) {
-        return '보너스'
+        return '🔥보너스'
       } else {
         return '오늘의'
       }
@@ -222,16 +222,16 @@
     />
 
     <Select
-      title="워들 타입"
+      title="게임 종류"
       options={gameTypeOptions}
       bind:selected={gameType}
       on:select={updateStatistics}
     />
   </div>
 
-  <div class="tw-w-full tw-mt-6 tw-inline-flex tw-justify-evenly tw-gap-1">
+  <div class="tw-w-full tw-mt-6 tw-inline-flex tw-justify-evenly tw-gap-0.5">
     <div class="tw-grow tw-basis-0 tw-text-center">
-      <div class="tw-text-sm tw-whitespace-nowrap">플레이 횟수</div>
+      <div class="tw-text-sm tw-whitespace-nowrap">플레이</div>
       <div class="tw-text-2xl tw-font-bold">{stats.nGamesPlayed}</div>
     </div>
     <div class="tw-grow tw-basis-0 tw-text-center">
@@ -241,7 +241,7 @@
       </div>
     </div>
     <div class="tw-grow tw-basis-0 tw-text-center">
-      <div class="tw-text-sm tw-whitespace-nowrap">🔥연속</div>
+      <div class="tw-text-sm tw-whitespace-nowrap">연속</div>
       <div class="tw-text-2xl tw-font-bold">{stats.winStreak}</div>
     </div>
     <div class="tw-grow tw-basis-0 tw-text-center">
@@ -335,8 +335,11 @@
             {/if}
           </div>
         {:else}
-          <div class="leaderboard tw-w-full tw-mt-1 tw-text-sm tw-gap-1">
+          <div
+            class="leaderboard tw-items-center tw-w-full tw-mt-1 tw-text-sm tw-gap-0.5"
+          >
             {#each $leaderboard.data[configId] as item, i}
+              {@const bonusCount = Number(item.gameId.split('-').at(-1))}
               <div>
                 {#if i === 0}
                   🥇
@@ -349,12 +352,15 @@
               <div class="tw-justify-self-start">
                 {item.user.name}
               </div>
+              <div class="tw-ml-1">
+                {#if bonusCount && bonusCount > 0}
+                  🔥<span data-tooltip="보너스"
+                    >+{Number(item.gameId.split('-').at(-1))}
+                  </span>
+                {/if}
+              </div>
               <div class="tw-ml-1">✅</div>
               <div>{item.guesses.length}</div>
-              <div class="tw-ml-1">🔥</div>
-              <div>
-                {item.user.streak}
-              </div>
             {/each}
           </div>
         {/if}
@@ -405,7 +411,7 @@
           }}
         >
           <ShareIcon width={18} />
-          <span class="tw-ml-1.5 tw-font-medium"> 공유하기 </span>
+          <span class="tw-ml-1.5 tw-font-medium">공유하기</span>
         </ClickButton>
       {/if}
     </div>
@@ -415,8 +421,6 @@
 <style>
   .leaderboard {
     display: grid;
-    grid-template-columns:
-      max-content auto max-content max-content max-content
-      max-content;
+    grid-template-columns: max-content auto max-content max-content max-content;
   }
 </style>

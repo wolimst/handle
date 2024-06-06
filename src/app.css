@@ -113,3 +113,25 @@ a:hover {
   filter: brightness(0.6);
   cursor: not-allowed;
 }
+
+[data-tooltip] {
+  position: relative;
+  text-decoration: underline dotted;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus::after {
+  content: attr(data-tooltip);
+
+  position: absolute;
+  left: 0;
+  bottom: -30px;
+  width: auto;
+  white-space: nowrap;
+
+  background-color: var(--text-color-invert);
+  color: var(--text-color);
+  border-radius: 3px;
+  box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.7);
+  padding: 0.2rem 0.5rem;
+}

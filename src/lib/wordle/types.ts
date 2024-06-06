@@ -85,7 +85,6 @@ export interface LeaderboardItem {
   user: {
     id?: string
     name: string
-    streak: number
   }
   guesses: string[]
   duration: number
