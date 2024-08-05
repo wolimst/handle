@@ -49,6 +49,12 @@
       >
         <TrophyIcon />
       </div>
+    {:else if type === 'wordle-bonus-win'}
+      <div
+        class="tw-w-6 tw-h-6 tw-text-2xl tw-inline-flex tw-justify-center tw-items-center tw-flex-shrink-0"
+      >
+        🔥
+      </div>
     {:else if type === 'wordle-loss'}
       <div
         class="tw-w-6 tw-h-6 tw-inline-flex tw-justify-center tw-items-center tw-flex-shrink-0 tw-text-amber-400"
@@ -69,7 +75,7 @@
       </div>
     {/if}
 
-    <div class="tw-ml-3 tw-text-sm">
+    <div class="tw-ml-2.5 tw-text-sm">
       {message}
     </div>
   </div>

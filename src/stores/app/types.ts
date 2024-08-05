@@ -14,6 +14,6 @@ export interface Config {
 }
 
 export interface Notification {
-  type?: 'error' | 'success' | 'wordle-win' | 'wordle-loss'
+  type?: 'error' | 'success' | 'wordle-win' | 'wordle-bonus-win' | 'wordle-loss'
   message: string
 }

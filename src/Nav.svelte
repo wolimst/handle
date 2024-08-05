@@ -35,7 +35,7 @@
     <Statistics />
     <Config />
     <Help />
-    <LinkButton url={ROUTES.notice} useRouter underline={false}>
+    <LinkButton url={'https://forms.gle/iApSG3nJg9V17j1A7'} underline={false}>
       <ChatIcon width={21} />
     </LinkButton>
   </div>

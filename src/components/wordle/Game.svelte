@@ -5,15 +5,16 @@
   import Keyboard from './keyboard/Keyboard.svelte'
   import {
     getGuessErrorMessage,
+    getDailyBonusWinMessage,
     getLossMessage,
     getWinMessage,
   } from './message'
   import { game, keyboard, ui } from './store'
   import {
-    DAILY_BONUS_GUESS_COUNTS,
     DOM_ID_GAME_CONTAINER,
     WAIT_DURATION_TO_SHOW_STATS_MS,
   } from '@/constants'
+  import * as Wordle from '@/lib/wordle'
   import { config, notification } from '@/stores/app'
   import { leaderboard } from '@/stores/wordle'
 
@@ -28,7 +29,12 @@
 
     const guessError = $game.submitGuess()
 
-    if ($game.data.status === 'win') {
+    if (Wordle.isDailyBonusAvailable($game.data)) {
+      $notification = {
+        type: 'wordle-bonus-win',
+        message: getDailyBonusWinMessage(),
+      }
+    } else if ($game.data.status === 'win') {
       $notification = {
         type: 'wordle-win',
         message: getWinMessage(),
@@ -129,12 +135,7 @@
 
       fireFromBottom()
 
-      if (
-        $game.data.guesses.length <=
-        DAILY_BONUS_GUESS_COUNTS[$game.data.config.nWordles][
-          $game.data.config.answerLength
-        ]
-      ) {
+      if (Wordle.isDailyBonusAvailable($game.data)) {
         window.setTimeout(fireFromLeft, 500)
         window.setTimeout(fireFromRight, 750)
         window.setTimeout(fireFromLeft, 1445)

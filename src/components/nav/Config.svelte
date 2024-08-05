@@ -113,7 +113,7 @@
   <ConfigIcon width={22} />
 </ClickButton>
 
-<Modal bind:open title="설정" widthCss="25rem" heightCss="32rem">
+<Modal bind:open title="설정" widthCss="25rem" heightCss="34rem">
   <div class="tw-w-full tw-h-full tw-inline-flex tw-flex-col tw-gap-4">
     <div class="tw-w-full tw-inline-flex tw-justify-between tw-gap-2">
       <span>닉네임</span>

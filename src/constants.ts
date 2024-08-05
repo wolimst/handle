@@ -75,7 +75,6 @@ export const GAMES = [
 
 export const ROUTES = {
   home: '/',
-  notice: '/notice',
   fontViewer: '/font',
   wordViewer: '/words',
   game: GAMES.map((game) => game.link),
@@ -125,7 +124,7 @@ export const DAILY_BONUS_GUESS_COUNTS: readonly (readonly number[])[] = [
   [NaN, NaN, 5],
 ] as const
 
-export const ALERT_DURATION_MS = 3000
+export const ALERT_DURATION_MS = 4000
 export const WAIT_DURATION_TO_SHOW_STATS_MS = 1500
 
 export const DOM_ID_GAME_CONTAINER = 'game-container'
