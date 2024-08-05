@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 const LEADERBOARD_KEY = 'leaderboard'
 const LEADERBOARD_ITEM_MAX_LENGTH = 5
-const RETENTION_PERIOD_DAY = 15
+const RETENTION_PERIOD_DAY = 16
 const DAY_MS = 24 * 60 * 60 * 1000
 
 function validate(obj: unknown): obj is LeaderboardItem {
@@ -91,8 +91,7 @@ function removeUserId(leaderboard: Leaderboard): Leaderboard {
 const { preflight, corsify } = cors({
   origin: [
     'https://handle.wolim.net',
-    'https://wolimst.github.io',
-    'http://localhost:8080',
+    // 'http://localhost:8080',
   ],
   credentials: true,
 })

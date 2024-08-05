@@ -1,9 +1,9 @@
-name: deploy
+name: deploy-old
 
 on:
   workflow_dispatch:
-  release:
-    types: [released]
+  # release:
+  #   types: [released]
 
 concurrency:
   group: ${{ github.workflow }}
