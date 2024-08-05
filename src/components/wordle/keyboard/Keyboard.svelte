@@ -131,7 +131,11 @@
       on:click={() => onClick(ENTER_KEY)}
       on:submit
     >
-      입력
+      {#if $game.data?.status === 'win'}
+        🎉
+      {:else}
+        입력
+      {/if}
     </Key>
   {/if}
 </div>
