@@ -1,6 +1,7 @@
 <script lang="ts">
   import SuccessIcon from './components/ui/icons/Success.svelte'
   import EmojiDizzyIcon from '@/components/ui/icons/EmojiDizzy.svelte'
+  import SpinnerIcon from '@/components/ui/icons/Spinner.svelte'
   import TrophyIcon from '@/components/ui/icons/Trophy.svelte'
   import WarningIcon from '@/components/ui/icons/Warning.svelte'
   import { ALERT_DURATION_MS } from '@/constants'
@@ -72,6 +73,12 @@
         class="tw-w-6 tw-h-6 tw-inline-flex tw-justify-center tw-items-center tw-flex-shrink-0 tw-text-emerald-500"
       >
         <SuccessIcon />
+      </div>
+    {:else if type === 'loading'}
+      <div
+        class="tw-w-5 tw-h-5 tw-inline-flex tw-justify-center tw-items-center tw-flex-shrink-0"
+      >
+        <SpinnerIcon width={22} />
       </div>
     {/if}
 

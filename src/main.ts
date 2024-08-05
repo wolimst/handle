@@ -32,23 +32,24 @@ function skipInAppBrowser() {
 
 const updateSW = registerSW({
   onNeedRefresh() {
-    const answer = confirm('새로운 버전이 있어요. 업데이트를 적용할까요?')
-    if (answer) {
-      updateSW(true)
-        .then(() => {
-          config.update((config) => {
-            config.isBeingUpdated = true
-            return config
-          })
+    notification.set({
+      type: 'loading',
+      message: '새로운 업데이트가 있어요. 잠시만 기다려주세요.',
+    })
+    updateSW(true)
+      .then(() => {
+        config.update((config) => {
+          config.isBeingUpdated = true
+          return config
         })
-        .catch((e) => {
-          notification.set({
-            type: 'error',
-            message: '앗, 업데이트에 실패했어요.',
-          })
-          console.error(e)
+      })
+      .catch((e) => {
+        notification.set({
+          type: 'error',
+          message: '앗, 업데이트에 실패했어요.',
         })
-    }
+        console.error(e)
+      })
   },
 })
 
