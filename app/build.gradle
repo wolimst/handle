@@ -51,13 +51,14 @@ def twaManifest = [
 ]
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 35
+    namespace "net.wolim.handle"
     defaultConfig {
         applicationId "net.wolim.handle"
         minSdkVersion 19
-        targetSdkVersion 33
-        versionCode 8
-        versionName "1.0.0"
+        targetSdkVersion 35
+        versionCode 10
+        versionName "1.0.2"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name

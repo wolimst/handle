@@ -21,8 +21,9 @@
     "path": "/home/lim/prj/handle/android.keystore",
     "alias": "android"
   },
-  "appVersionName": "1.0.0",
-  "appVersionCode": 8,
+  "appVersion": "1.0.2",
+  "appVersionName": "1.0.2",
+  "appVersionCode": 10,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://handle.wolim.net/manifest.webmanifest",
@@ -39,13 +40,12 @@
   "orientation": "default",
   "fingerprints": [
     {
-      "value": "DB:D4:48:6C:8D:DB:CF:EC:8F:26:47:CE:C0:C7:91:17:8A:6E:81:E2:C8:3C:E2:2A:C7:74:81:E4:2F:9D:00:EC"
+      "value": "5A:D4:1B:8D:7F:32:64:52:96:49:62:33:B3:F7:BA:AC:DE:59:75:E8:11:07:1E:9E:81:66:7E:3F:E7:2F:B7:7E"
     },
     {
       "value": "65:DA:C2:E7:96:8B:BA:C0:1D:17:1C:D8:51:A3:24:AF:D2:E9:FB:C0:8F:42:FE:59:5A:47:D3:8F:D7:F4:1A:D2"
     }
   ],
   "additionalTrustedOrigins": [],
-  "retainedBundles": [],
-  "appVersion": "1.0.0"
+  "retainedBundles": []
 }
